@@ -1,8 +1,6 @@
-use stylist::yew::use_style;
 use yew::prelude::*;
 use yew::Renderer;
 use yew_router::prelude::*;
-use yew_router::switch::SwitchProps;
 
 #[derive(Routable, PartialEq, Eq, Clone)]
 pub enum RootRoute {
