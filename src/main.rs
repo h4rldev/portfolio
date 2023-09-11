@@ -35,7 +35,7 @@ fn root_route(routes: RootRoute) -> Html {
         <>
             <p class="text-4xl">{ "H4rl" }</p>
             <button class="border-4"><a href="/#/about">{ "About" }</a></button>
-            <button class="border-4"><a href="/#//blog">{ "Blog" }</a></button>
+            <button class="border-4"><a href="/#/blog">{ "Blog" }</a></button>
             <button class="border-4"><a href="/#/404">{ "404" }</a></button>
         </>
         },
