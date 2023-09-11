@@ -43,7 +43,7 @@ jobs:
 
       - name: Build with Trunk 🏗️
         run: |
-          trunk build --public-url h4rldev.github.io --release
+          trunk build --release
 
       - name: Deploy to Github Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4.4.3
