@@ -33,9 +33,7 @@ fn root_route(routes: RootRoute) -> Html {
     match routes {
         RootRoute::Index => html! { <p class="text-4xl">{ "H4rl" }</p> },
         RootRoute::Route => html! {
-            <main>
-                    <Switch<Route> render={switch} />
-            </main>
+            <Switch<Route> render={switch} />
         },
     }
 }
@@ -44,9 +42,7 @@ fn root_route(routes: RootRoute) -> Html {
 fn app() -> Html {
     html! {
         <BrowserRouter>
-            <main>
-                <Switch<RootRoute> render={root_route} />
-            </main>
+            <Switch<RootRoute> render={root_route} />
         </BrowserRouter>
     }
 }
