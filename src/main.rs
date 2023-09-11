@@ -41,9 +41,9 @@ fn root_route(routes: RootRoute) -> Html {
 #[function_component(App)]
 fn app() -> Html {
     html! {
-        <HashRouter>
+        <BrowserRouter>
             <Switch<RootRoute> render={root_route} />
-        </HashRouter>
+        </BrowserRouter>
     }
 }
 
