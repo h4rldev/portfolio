@@ -31,7 +31,14 @@ fn switch(routes: Route) -> Html {
 
 fn root_route(routes: RootRoute) -> Html {
     match routes {
-        RootRoute::Index => html! { <p class="text-4xl">{ "H4rl" }</p> },
+        RootRoute::Index => html! {
+        <>
+            <p class="text-4xl">{ "H4rl" }</p>
+            <button><a href="/about">{ "About" }</a></button>
+            <button><a href="/blog">{ "Blog" }</a></button>
+            <button><a href="/404">{ "404" }</a></button>
+        </>
+        },
         RootRoute::Route => html! {
             <Switch<Route> render={switch} />
         },
