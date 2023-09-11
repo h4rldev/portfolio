@@ -1,0 +1,52 @@
+permissions:
+  actions: write
+  checks: write
+  deployments: write
+  packages: write
+  pages: write
+  contents: write
+  id-token: write
+  issues: none
+  discussions: none
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+
+name: Build Yew.rs page and deploy to Github Pages
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4.0.0
+        with:
+          persist-credentials: false
+
+      - name: Install Rust 🦀
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          override: true
+          components: rustfmt, clippy
+
+      - uses: jetli/trunk-action@v0.4.0
+        with:
+          version: "latest"
+
+      - name: Build with Trunk 🏗️
+        run: |
+          trunk build --public-url h4rldev.github.io --release
+
+      - name: Deploy to Github Pages 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.4.3
+        with:
+          branch: gh-pages
+          folder: dist
