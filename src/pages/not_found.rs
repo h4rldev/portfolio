@@ -1,4 +1,4 @@
-use crate::RootRoute;
+use crate::GoBack;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -9,18 +9,10 @@ pub fn title() -> Html {
     }
 }
 
-#[function_component(Bottom)]
-pub fn bottom() -> Html {
-    let navigator = use_navigator().unwrap();
-    let onclick = Callback::from(move |_| {
-        navigator.replace(&RootRoute::Index);
-    });
-    html! {
-
-        <footer>
-            { "Go back to " } <a class="hover:text-teal-200" href="" target="_self" {onclick}>{ "Home" }</a> { "?"}
-        </footer>
-    }
+pub fn back_listener(nav: Navigator) -> Callback<MouseEvent> {
+    Callback::from(move |_| {
+        nav.back();
+    })
 }
 
 #[function_component(NotFound)]
@@ -29,7 +21,7 @@ pub fn main() -> Html {
         <>
             <Title />
             <p>{ "Not found.." }</p>
-            <Bottom />
+            <GoBack />
         </>
     }
 }

@@ -12,15 +12,15 @@ pub fn title() -> Html {
 fn click_listener(nav: Navigator, name: &str) -> Callback<MouseEvent> {
     match name {
         "about" => Callback::from(move |_| {
-            nav.replace(&Route::About);
+            nav.push(&Route::About);
         }),
 
         "blog" => Callback::from(move |_| {
-            nav.replace(&Route::Blog);
+            nav.push(&Route::Blog);
         }),
 
         _ => Callback::from(move |_| {
-            nav.replace(&Route::NotFound);
+            nav.push(&Route::NotFound);
         }),
     }
 }

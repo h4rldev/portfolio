@@ -1,4 +1,4 @@
-use crate::pages::not_found::Bottom;
+use crate::GoBack;
 use yew::prelude::*;
 
 #[function_component(Title)]
@@ -14,7 +14,7 @@ pub fn main() -> Html {
         <>
             <Title />
             <p>{ "This is the blog page." }</p>
-            <Bottom />
+            <GoBack />
         </>
     }
 }
