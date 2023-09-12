@@ -26,6 +26,8 @@ jobs:
       - name: Checkout main 🛎️
         uses: actions/checkout@v4.0.0
         with:
+          ref: main
+          path: main
           persist-credentials: false
 
       - name: Install Rust 🦀
@@ -54,13 +56,13 @@ jobs:
         uses: actions/checkout@v4.0.0
         with:
           ref: pages
+          path: pages
           fetch-depth: 0
 
       - name: Move contents to branch
         run: |
           git pull
           ls -la
-          cp -r dist/* .
           git add .
           git commit -m "Move /dist contents to pages branch"
 
