@@ -62,8 +62,7 @@ jobs:
 
       - name: Move contents to branch
         run: |
-          ls -la
-          mv dist/* ../pages/
+          mv main/dist/* ../pages/
           cd ../pages
           ls -la
           git pull
