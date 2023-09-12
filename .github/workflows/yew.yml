@@ -59,7 +59,7 @@ jobs:
 
       - name: Copy folder contents
         run: |
-          rsync -av main/dist/ pages/
+          rsync -av ../main/dist/ pages/
 
       - name: Commit and push
         run: |
