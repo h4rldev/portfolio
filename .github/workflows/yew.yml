@@ -46,11 +46,6 @@ jobs:
         run: |
           trunk build --release
 
-      - name: Setup Git Config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
       - name: Checkout pages 🛎️
         uses: actions/checkout@v4.0.0
         with:
@@ -58,9 +53,15 @@ jobs:
           path: pages
           fetch-depth: 0
 
+      - name: Setup Git Config
+        run: |
+          cp -r dist/* pages
+          cd pages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Move contents to branch
         run: |
-          cd pages
           ls -la
           git add .
           git commit -m "Move /dist contents to pages branch"
