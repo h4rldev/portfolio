@@ -55,6 +55,7 @@ jobs:
       - name: Move contents to branch
         run: |
           ls -la
+          git pull
           git add -f dist/*
           git commit -m "Move /dist contents to pages branch"
 
