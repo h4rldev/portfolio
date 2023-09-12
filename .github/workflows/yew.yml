@@ -55,13 +55,14 @@ jobs:
 
       - name: Setup Git Config
         run: |
-          cp -r dist/* pages
-          cd pages
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Move contents to branch
         run: |
+          ls -la
+          cp -r dist/* pages
+          cd pages
           ls -la
           git add .
           git commit -m "Move /dist contents to pages branch"
