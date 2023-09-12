@@ -45,9 +45,27 @@ jobs:
         run: |
           trunk build --release
 
-      - name: Move dist content to pages branch
-        uses: planetoftheweb/copy-to-branches@v1.3
-        env:
-          branches: pages
-          key: main
-          files: dist
+      - name: Checkout base branch
+        uses: actions/checkout@v4.0.0
+        with:
+          ref: main
+          path: main
+
+      - name: Checkout target branch
+        uses: actions/checkout@v4.0.0
+        with:
+          ref: pages
+          path: pages
+
+      - name: Copy folder contents
+        run: |
+          rsync -av base/path/to/folder/ target/path/to/folder/
+
+      - name: Commit and push
+        run: |
+          cd target
+          git config --global user.name 'actions'
+          git config --global user.email 'actions@github.com'
+          git add .
+          git commit -m "Moved folder contents from base branch"
+          git push
