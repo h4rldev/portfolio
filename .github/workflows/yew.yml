@@ -17,6 +17,7 @@ name: Build Yew.rs page and deploy to Github Pages
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build_and_deploy:
