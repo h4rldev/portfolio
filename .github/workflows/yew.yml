@@ -50,12 +50,12 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global advice.addIgnoredFile false
 
       - name: Move contents to branch
         run: |
           ls -la
-          git add dist/*
-          git config --global advice.addIgnoredFile false
+          git add -f dist/*
           git commit -m "Move /dist contents to pages branch"
 
       - name: Push to pages branch
