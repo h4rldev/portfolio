@@ -46,13 +46,6 @@ jobs:
         run: |
           trunk build --release
 
-      - name: Checkout pages 🛎️
-        uses: actions/checkout@v4.0.0
-        with:
-          ref: pages
-          path: pages
-          fetch-depth: 0
-
       - name: Setup Git Config
         run: |
           git config --global user.name "github-actions[bot]"
@@ -61,12 +54,8 @@ jobs:
       - name: Move contents to branch
         run: |
           ls -la
-          cp -r dist/* pages
-          cd pages
-          ls -la
-          git add .
+          git add dist/*
           git commit -m "Move /dist contents to pages branch"
-          git pull
 
       - name: Push to pages branch
         uses: ad-m/github-push-action@master
