@@ -5,7 +5,7 @@ use yew_router::prelude::*;
 #[function_component(Title)]
 pub fn title() -> Html {
     html! {
-        <h1>{ "H4rl's Site" }</h1>
+        <h1 class="font-medium text-xl subpixel-antialiased">{ "H4rl's Site" }</h1>
     }
 }
 
@@ -32,11 +32,9 @@ pub fn main() -> Html {
     html! {
         <>
             <Title />
-            <p> { "Navigate to: \n" }
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "about")} class="px-10">{ "About" }</a>
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "blog")} class="px-10">{ "Blog" }</a>
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "404")} class="px-10">{ "404" }</a>
-            </p>
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "about")} class="hover:bg-blue">{ "About" }</a> <br />
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "blog")} class="hover:bg-blue">{ "Blog" }</a> <br />
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "404")} class="hover:bg-blue">{ "404" }</a>
         </>
     }
 }
