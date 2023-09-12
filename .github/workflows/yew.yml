@@ -62,8 +62,8 @@ jobs:
 
       - name: Move contents to branch
         run: |
-          mv main/dist/* ../pages/
-          cd ../pages
+          mv ${GITHUB_WORKSPACE}/main/dist/* ${GITHUB_WORKSPACE}/pages/
+          cd ${GITHUB_WORKSPACE}/pages
           ls -la
           git pull
           git add -f .
