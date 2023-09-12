@@ -1,6 +1,9 @@
+use pages::{about::About, blog::Blog, index::Index, not_found::NotFound};
 use yew::prelude::*;
 use yew::Renderer;
 use yew_router::prelude::*;
+
+mod pages;
 
 #[derive(Routable, PartialEq, Eq, Clone)]
 pub enum RootRoute {
@@ -23,21 +26,16 @@ pub enum Route {
 
 fn switch(routes: Route) -> Html {
     match routes {
-        Route::About => html! { <p>{ "About" }</p> },
-        Route::NotFound => html! { <p>{ "Not Found" }</p> },
-        Route::Blog => html! { <p>{ "Blog" }</p> },
+        Route::About => html! { <About />  },
+        Route::NotFound => html! { <NotFound /> },
+        Route::Blog => html! { <Blog /> },
     }
 }
 
 fn root_route(routes: RootRoute) -> Html {
     match routes {
         RootRoute::Index => html! {
-        <>
-            <p class="text-4xl">{ "H4rl" }</p>
-            <button class="border-4"><a href="/about">{ "About" }</a></button>
-            <button class="border-4"><a href="/blog">{ "Blog" }</a></button>
-            <button class="border-4"><a href="/404">{ "404" }</a></button>
-        </>
+            <Index />
         },
         RootRoute::Route => html! {
             <BrowserRouter>
