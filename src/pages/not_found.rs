@@ -18,7 +18,7 @@ pub fn bottom() -> Html {
     html! {
 
         <footer>
-            { "Go back to " } <a href="" target="_self" {onclick}>{ "Home" }</a> { "?"}
+            { "Go back to " } <a class="hover:text-teal-200" href="" target="_self" {onclick}>{ "Home" }</a> { "?"}
         </footer>
     }
 }

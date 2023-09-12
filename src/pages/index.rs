@@ -32,9 +32,9 @@ pub fn main() -> Html {
     html! {
         <>
             <Title />
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "about")} class="hover:bg-blue">{ "About" }</a> <br />
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "blog")} class="hover:bg-blue">{ "Blog" }</a> <br />
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "404")} class="hover:bg-blue">{ "404" }</a>
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "about")} class="hover:text-teal-200">{ "About" }</a> <br />
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "blog")} class="hover:text-teal-200">{ "Blog" }</a> <br />
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "404")} class="hover:text-teal-200">{ "404" }</a>
         </>
     }
 }
