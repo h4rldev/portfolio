@@ -62,6 +62,7 @@ jobs:
 
       - name: Move contents to branch
         run: |
+          ls -la
           mv dist/* ../pages/
           cd ../pages
           ls -la
