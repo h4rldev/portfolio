@@ -62,6 +62,7 @@ jobs:
 
       - name: Move contents to branch
         run: |
+          git rm -fr ${GITHUB_WORKSPACE}/pages/*
           mv ${GITHUB_WORKSPACE}/main/dist/* ${GITHUB_WORKSPACE}/pages/
           cd ${GITHUB_WORKSPACE}/pages
           ls -la
