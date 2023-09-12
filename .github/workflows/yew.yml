@@ -39,14 +39,15 @@ jobs:
 
       - uses: jetli/trunk-action@v0.4.0
         with:
-          version: "latest"
+          version: latest
 
       - name: Build with Trunk 🏗️
         run: |
           trunk build --release
 
-      - name: Deploy to Github Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.4.3
-        with:
-          branch: gh-pages
-          folder: dist
+      - name: Move dist content to pages branch
+        uses: planetoftheweb/copy-to-branches@v1.3
+        env:
+          branches: pages
+          key: main
+          files: dist
