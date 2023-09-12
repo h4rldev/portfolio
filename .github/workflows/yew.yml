@@ -36,9 +36,6 @@ jobs:
           ref: pages
           path: pages
 
-      - name: Enter main
-        run: cd main
-
       - name: Install Rust 🦀
         uses: actions-rs/toolchain@v1.0.6
         with:
@@ -54,6 +51,7 @@ jobs:
 
       - name: Build with Trunk 🏗️
         run: |
+          cd main
           trunk build --release
 
       - name: Setup Git Config
