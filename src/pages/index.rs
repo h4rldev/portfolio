@@ -33,9 +33,9 @@ pub fn main() -> Html {
         <>
             <Title />
             <p> { "Navigate to: \n" }
-            <a onclick={click_listener(navigator.clone(), "about")} class="px-10">{ "About" }</a>
-            <a onclick={click_listener(navigator.clone(), "blog")} class="px-10">{ "Blog" }</a>
-            <a onclick={click_listener(navigator.clone(), "404")} class="px-10">{ "404" }</a>
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "about")} class="px-10">{ "About" }</a>
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "blog")} class="px-10">{ "Blog" }</a>
+            <a href="" target="_self" onclick={click_listener(navigator.clone(), "404")} class="px-10">{ "404" }</a>
             </p>
         </>
     }
