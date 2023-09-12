@@ -17,8 +17,6 @@ name: Build Yew.rs page and deploy to Github Pages
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   build_and_deploy:
@@ -45,27 +43,12 @@ jobs:
         run: |
           trunk build --release
 
-      - name: Checkout base branch
-        uses: actions/checkout@v4.0.0
-        with:
-          ref: main
-          path: main
-
-      - name: Checkout target branch
-        uses: actions/checkout@v4.0.0
-        with:
-          ref: pages
-          path: pages
-
-      - name: Copy folder contents
+      - name: Create New Branch and Move Contents
         run: |
-          rsync -av ../main/dist/ pages/
-
-      - name: Commit and push
-        run: |
-          cd target
-          git config --global user.name 'actions'
-          git config --global user.email 'actions@github.com'
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git checkout -b target-branch
+          cp -r dist/* .
           git add .
-          git commit -m "Moved folder contents from base branch"
-          git push
+          git commit -m "Move /dist contents to target branch"
+          git push origin target-branch
