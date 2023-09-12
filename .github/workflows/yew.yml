@@ -47,8 +47,8 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git checkout -b target-branch
+          git checkout -b pages
           cp -r dist/* .
           git add .
           git commit -m "Move /dist contents to target branch"
-          git push origin target-branch
+          git push origin pages
