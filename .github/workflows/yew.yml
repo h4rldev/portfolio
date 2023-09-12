@@ -59,6 +59,11 @@ jobs:
           git add -f dist/*
           git commit -m "Move /dist contents to pages branch"
 
+      - name: Checkout pages 🛎️
+        uses: actions/checkout@v4.0.0
+        with:
+          ref: pages
+
       - name: Push to pages branch
         uses: ad-m/github-push-action@master
         with:
