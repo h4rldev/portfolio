@@ -1,6 +1,5 @@
-use crate::Route;
+use crate::GoTo;
 use yew::prelude::*;
-use yew_router::prelude::*;
 
 #[function_component(Title)]
 pub fn title() -> Html {
@@ -9,32 +8,14 @@ pub fn title() -> Html {
     }
 }
 
-fn click_listener(nav: Navigator, name: &str) -> Callback<MouseEvent> {
-    match name {
-        "about" => Callback::from(move |_| {
-            nav.push(&Route::About);
-        }),
-
-        "blog" => Callback::from(move |_| {
-            nav.push(&Route::Blog);
-        }),
-
-        _ => Callback::from(move |_| {
-            nav.push(&Route::NotFound);
-        }),
-    }
-}
-
 #[function_component(Index)]
 pub fn main() -> Html {
-    let navigator = use_navigator().unwrap();
-
     html! {
         <>
             <Title />
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "about")} class="hover:text-teal-200">{ "About" }</a> <br />
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "blog")} class="hover:text-teal-200">{ "Blog" }</a> <br />
-            <a href="" target="_self" onclick={click_listener(navigator.clone(), "404")} class="hover:text-teal-200">{ "404" }</a>
+            <GoTo route={String::from("About")} />
+            <GoTo route={String::from("Blog")} />
+            <GoTo route={String::from("asdljuasdkjhaskdgj")} />
         </>
     }
 }

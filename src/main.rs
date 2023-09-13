@@ -41,53 +41,30 @@ fn switch(routes: Route) -> Html {
 
 #[derive(Properties, Clone, PartialEq, Eq)]
 pub struct GoToProps {
-    #[prop_or(Route::Index)]
-    pub route: Route,
-    #[prop_or(("Go to ".to_string(), Route::Index.to_string(), "?".to_string()))]
-    pub message: (String, String, String),
+    #[prop_or(Route::Index.to_string())]
+    pub route: String,
+    #[prop_or(("Go to ".to_string(), "?".to_string()))]
+    pub message: (String, String),
 }
 
 #[function_component(GoTo)]
 fn goto(props: &GoToProps) -> Html {
-    let route: Route = props.route.clone();
-    let message: (String, String, String) = props.message.clone();
+    let message: (String, String) = props.message.clone();
     let navigator = use_navigator().unwrap();
-    let push_route = route.clone();
+    let route = match props.route.as_str() {
+        "Index" => Route::Index,
+        "About" => Route::About,
+        "Blog" => Route::Blog,
+        _ => Route::NotFound,
+    };
     let onclick = Callback::from(move |_| {
-        navigator.push(&push_route);
+        navigator.push(&route);
     });
-    match route {
-        Route::About => {
-            html! {
-            <p>{ message.0.as_str() }
-                <a href="" target="_self" {onclick} class="hover:text-teal-200">{ message.1.as_str() }</a>
-                { message.2.as_str() }
-            </p>
-            }
-        }
-        Route::Blog => {
-            html! {
-                <p>{ message.0.as_str() }
-                    <a href="" target="_self" {onclick} class="hover:text-teal-200">{ message.1.as_str() }</a>
-                    { message.2.as_str() }
-                </p>
-            }
-        }
-        Route::Index => {
-            html! {
-                <p>{ message.0.as_str() }
-                    <a href="" target="_self" {onclick} class="hover:text-teal-200">{ message.1.as_str() }</a>
-                    { message.2.as_str() }
-                </p>
-            }
-        }
-        _ => {
-            html! {
-                <p>{ message.0.as_str() }
-                    <a href="" target="_self" {onclick} class="hover:text-teal-200">{ message.1.as_str() }</a>
-                </p>
-            }
-        }
+    html! {
+        <>
+            { message.0.as_str() }
+            <a href="" target="_self" {onclick} class="hover:text-teal-200">{ message.1.as_str() }</a>
+        </>
     }
 }
 
