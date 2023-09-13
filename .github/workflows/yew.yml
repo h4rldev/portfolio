@@ -62,12 +62,12 @@ jobs:
 
       - name: Move contents to branch
         run: |
-          git rm -fr ${GITHUB_WORKSPACE}/pages/*
-          mv ${GITHUB_WORKSPACE}/main/dist/* ${GITHUB_WORKSPACE}/pages/
-          cd ${GITHUB_WORKSPACE}/pages
-          ls -la
+          cd ${{ github.workspace }}/pages
           git pull
-          git add -f .
+          rm -r *
+          mv ${{ github.workspace }}/main/dist/* ${{ github.workspace }}/pages/
+          ls -la
+          git add -A
           git commit -m "Move /dist contents to pages branch"
 
       - name: Push to pages branch
