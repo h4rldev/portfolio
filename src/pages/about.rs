@@ -1,4 +1,4 @@
-use crate::GoBack;
+use crate::GoTo;
 use yew::prelude::*;
 
 #[function_component(Title)]
@@ -21,7 +21,7 @@ pub fn main() -> Html {
         <>
             <Title />
             <p>{ "This is the about page." }</p>
-            <GoBack />
+            <GoTo />
         </>
     }
 }

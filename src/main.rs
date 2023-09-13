@@ -6,15 +6,9 @@ use yew_router::prelude::*;
 mod pages;
 
 #[derive(Routable, PartialEq, Eq, Clone)]
-pub enum RootRoute {
+pub enum Route {
     #[at("/")]
     Index,
-    #[at("/:s")]
-    Route,
-}
-
-#[derive(Routable, PartialEq, Eq, Clone)]
-pub enum Route {
     #[at("/about")]
     About,
     #[at("/blog")]
@@ -26,31 +20,71 @@ pub enum Route {
 
 fn switch(routes: Route) -> Html {
     match routes {
+        Route::Index => html! { <Index /> },
         Route::About => html! { <About />  },
         Route::NotFound => html! { <NotFound /> },
         Route::Blog => html! { <Blog /> },
     }
 }
 
-fn root_route(routes: RootRoute) -> Html {
-    match routes {
-        RootRoute::Index => html! {
-            <Index />
-        },
-        RootRoute::Route => html! {
-            <BrowserRouter>
-                <Switch<Route> render={switch} />
-            </BrowserRouter>
-        },
+#[derive(Properties, Clone, PartialEq, Eq)]
+pub struct GoToProps {
+    #[prop_or_default]
+    pub route: Route,
+    #[prop_or_default]
+    pub message: (String, String),
+}
+
+impl Default for GoToProps {
+    fn default() -> Self {
+        Self {
+            route: Route::Index,
+            message: (String::from("Go to"), String::from("?")),
+        }
     }
 }
 
-#[function_component(GoBack)]
-fn goback() -> Html {
+#[function_component(GoTo)]
+fn goto(props: &GoToProps) -> Html {
+    let route: Route = props.route.clone();
+    let message: (String, String) = props.message.clone();
     let navigator = use_navigator().unwrap();
-    let onclick = Callback::from(move |_| navigator.back());
-    html! {
-        <a href="" target="_self" {onclick} class="hover:text-teal-200">{ "Go back?" }</a>
+    let push_route = route.clone();
+    let onclick = Callback::from(move |_| {
+        navigator.push(&push_route);
+    });
+    match route {
+        Route::About => {
+            html! {
+            <p>{ message.0.as_str() }
+                <a href="" target="_self" {onclick} class="hover:text-teal-200">{ "Go to About?" }</a>
+                { message.1.as_str() }
+            </p>
+            }
+        }
+        Route::Blog => {
+            html! {
+                <p>{ message.0.as_str() }
+                    <a href="" target="_self" {onclick} class="hover:text-teal-200">{ "Blog?" }</a>
+                    { message.1.as_str() }
+                </p>
+            }
+        }
+        Route::Index => {
+            html! {
+                <p>{ message.0.as_str() }
+                    <a href="" target="_self" {onclick} class="hover:text-teal-200">{ "Home" }</a>
+                    { message.1.as_str() }
+                </p>
+            }
+        }
+        _ => {
+            html! {
+                <p>{ "Go to " }
+                    <a href="" target="_self" {onclick} class="hover:text-teal-200">{ "???" }</a>
+                </p>
+            }
+        }
     }
 }
 
@@ -58,7 +92,7 @@ fn goback() -> Html {
 fn app() -> Html {
     html! {
         <BrowserRouter>
-            <Switch<RootRoute> render={root_route} />
+            <Switch<Route> render={switch} />
         </BrowserRouter>
     }
 }
