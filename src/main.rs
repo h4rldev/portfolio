@@ -29,19 +29,10 @@ fn switch(routes: Route) -> Html {
 
 #[derive(Properties, Clone, PartialEq, Eq)]
 pub struct GoToProps {
-    #[prop_or_default]
+    #[prop_or(Route::Index)]
     pub route: Route,
-    #[prop_or_default]
+    #[prop_or(("Go to".to_string(), "?".to_string()))]
     pub message: (String, String),
-}
-
-impl Default for GoToProps {
-    fn default() -> Self {
-        Self {
-            route: Route::Index,
-            message: (String::from("Go to"), String::from("?")),
-        }
-    }
 }
 
 #[function_component(GoTo)]
