@@ -52,7 +52,7 @@ fn goto(props: &GoToProps) -> Html {
     let message: (String, String) = props.message.clone();
     let navigator = use_navigator().unwrap();
     let route = match props.route.as_str() {
-        "Index" => Route::Index,
+        "Index" | "Home" => Route::Index,
         "About" => Route::About,
         "Blog" => Route::Blog,
         _ => Route::NotFound,
@@ -63,7 +63,8 @@ fn goto(props: &GoToProps) -> Html {
     html! {
         <>
             { message.0.as_str() }
-            <a href="" target="_self" {onclick} class="hover:text-teal-200">{ &props.route.as_str() }</a>
+            <a href="" target="_self" {onclick} class="hover:text-teal-200">{ format!("{} ", &props.route.as_str()) }</a>
+            { message.1.as_str()}
         </>
     }
 }

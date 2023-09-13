@@ -13,8 +13,8 @@ pub fn main() -> Html {
     html! {
         <>
             <Title />
-            <GoTo route={String::from("About")} />
-            <GoTo route={String::from("Blog")} />
+            <GoTo route={String::from("About")} /> <br />
+            <GoTo route={String::from("Blog")} /> <br />
             <GoTo route={String::from("asdljuasdkjhaskdgj")} />
         </>
     }
