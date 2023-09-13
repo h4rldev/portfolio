@@ -15,7 +15,7 @@ pub fn main() -> Html {
             <Title />
             <GoTo route={String::from("About")} /> <br />
             <GoTo route={String::from("Blog")} /> <br />
-            <GoTo route={String::from("asdljuasdkjhaskdgj")} />
+            <GoTo route={String::from("???")} />
         </>
     }
 }
