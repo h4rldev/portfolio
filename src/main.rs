@@ -48,9 +48,9 @@ fn root_route(routes: RootRoute) -> Html {
 #[function_component(GoBack)]
 fn goback() -> Html {
     let navigator = use_navigator().unwrap();
-    let back = Callback::from(move |_| navigator.back());
+    let onclick = Callback::from(move |_| navigator.back());
     html! {
-        <a href="" target="_self" onclick={back} class="hover:text-teal-200">{ "Go back?" }</a>
+        <a href="" target="_self" {onclick} class="hover:text-teal-200">{ "Go back?" }</a>
     }
 }
 
