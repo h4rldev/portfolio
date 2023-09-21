@@ -63,7 +63,7 @@ fn goto(props: &GoToProps) -> Html {
     html! {
         <>
             { message.0.as_str() }
-            <a href="" target="_self" {onclick} class="hover:text-teal-200">{ &props.route.as_str() }</a>
+            <a target="_self" {onclick} class="hover:text-teal-200 cursor-pointer">{ &props.route.as_str() }</a>
             { message.1.as_str()}
         </>
     }
