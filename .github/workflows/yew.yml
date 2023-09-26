@@ -13,14 +13,14 @@ permissions:
   security-events: write
   statuses: write
 
-name: Build Yew.rs page and deploy to Github Pages
+name: Build yew.rs page and move to pages branch
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Git Config
