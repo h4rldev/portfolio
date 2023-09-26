@@ -42,6 +42,11 @@ jobs:
           ref: pages
           path: pages
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
       - name: Install Rust 🦀
         uses: actions-rs/toolchain@v1.0.6
         with:
@@ -54,6 +59,17 @@ jobs:
         uses: jetli/trunk-action@v0.4.0
         with:
           version: latest
+
+      - name: Install Catppuccin
+        run: |
+          npm install -D @catppuccin/tailwindcss
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
 
       - name: Build with Trunk 🏗️
         run: |

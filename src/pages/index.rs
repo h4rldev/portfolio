@@ -1,21 +1,19 @@
-use crate::GoTo;
+use crate::Nav;
 use yew::prelude::*;
-
-#[function_component(Title)]
-pub fn title() -> Html {
-    html! {
-        <h1 class="font-medium text-xl subpixel-antialiased items-center text-center">{ "H4rl's Site" }</h1>
-    }
-}
 
 #[function_component(Index)]
 pub fn main() -> Html {
     html! {
         <>
+            <Nav/>
             <Title />
-            <GoTo route={String::from("About")} message={(String::from(""), String::from(""))} /> <br />
-            <GoTo route={String::from("Blog")} message={(String::from(""), String::from(""))} /> <br />
-            <GoTo route={String::from("???")} message={(String::from(""), String::from(""))} />
         </>
+    }
+}
+
+#[function_component(Title)]
+pub fn title() -> Html {
+    html! {
+        <h1>{ "Home" }</h1>
     }
 }

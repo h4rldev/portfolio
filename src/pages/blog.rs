@@ -1,4 +1,4 @@
-use crate::GoTo;
+use crate::Nav;
 use yew::prelude::*;
 
 #[function_component(Title)]
@@ -12,9 +12,9 @@ pub fn title() -> Html {
 pub fn main() -> Html {
     html! {
         <>
+            <Nav />
             <Title />
             <p>{ "This is the blog page." }</p>
-            <GoTo />
         </>
     }
 }
