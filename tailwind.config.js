@@ -8,7 +8,19 @@ module.exports = {
     fontFamily: {
       mono: ["FiraCode Nerd Font Mono", "monospace"],
     },
-    extend: {},
+    extend: {
+      backgroundImage: {
+        evening: 'url("evening-sky.png")',
+      },
+      width: {
+        65: "65px",
+        75: "75px",
+      },
+      height: {
+        65: "65px",
+        75: "75px",
+      },
+    },
   },
   variants: {
     extend: {},
