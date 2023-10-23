@@ -1,8 +1,7 @@
 use catppuccin::Flavour::Mocha;
 use pages::{index::Index, not_found::NotFound};
 use std::fmt;
-use wasm_bindgen::JsCast;
-use web_sys::{window, HtmlHeadElement};
+use web_sys::window;
 use yew::prelude::*;
 use yew::Renderer;
 use yew_router::prelude::*;
