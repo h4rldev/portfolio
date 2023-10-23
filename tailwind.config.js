@@ -7,6 +7,8 @@ module.exports = {
   theme: {
     fontFamily: {
       mono: ["FiraCode Nerd Font Mono", "monospace"],
+      ubuntu: ["Ubuntu Nerd Font Propo", "sans-serif"],
+      tahoma: ["Tahoma", "sans-serif"],
     },
     extend: {
       backgroundImage: {
