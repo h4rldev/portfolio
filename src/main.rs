@@ -59,49 +59,6 @@ pub struct MetaContent {
 #[function_component(Meta)]
 pub fn meta(meta_content: &MetaContent) -> Html {
     let metadata = meta_content.clone();
-    /*if window()
-        .expect("Failed to get window")
-        .location()
-        .href()
-        .expect("Failed to get href")
-        != "https://h4rl-is-def.me/"
-    {
-        html! {
-            <head>
-                <meta property="og:title" content="Error 404" />
-                <meta property="og:type" content={metadata.meta_type} />
-                <meta property="og:url" content={metadata.meta_url} />
-                <meta property="og:image" content="https://http.cat/404" />
-                <meta
-                  property="og:description"
-                  content="Not Found"
-                />
-                <meta name="theme-color" content={metadata.theme_color} />
-                <meta name="twitter:card" content={metadata.twitter_card} />
-                <meta name="twitter:site" content={metadata.twitter_site} />
-                <meta name="twitter:creator" content={metadata.twitter_creator} />
-                <title>{ metadata.title }</title>
-            </head>
-        }
-    } else {
-        html! {
-            <head>
-                <meta property="og:title" content={metadata.meta_title} />
-                <meta property="og:type" content={metadata.meta_type} />
-                <meta property="og:url" content={metadata.meta_url} />
-                <meta property="og:image" content={metadata.meta_image} />
-                <meta
-                  property="og:description"
-                  content="H4rl's Site. Currently In Development. Sorry."
-                />
-                <meta name="theme-color" content={metadata.theme_color} />
-                <meta name="twitter:card" content={metadata.twitter_card} />
-                <meta name="twitter:site" content={metadata.twitter_site} />
-                <meta name="twitter:creator" content={metadata.twitter_creator} />
-                <title>{ metadata.title }</title>
-            </head>
-        }
-    }*/
     let document = window()
         .unwrap()
         .document()
@@ -198,6 +155,11 @@ pub fn meta(meta_content: &MetaContent) -> Html {
         .set_attribute("content", &metadata.twitter_creator)
         .expect("Failed to set attribute for twitter creator content");
 
+    let title = document
+        .create_element("title")
+        .expect("Failed to create title element");
+    title.set_inner_html(&metadata.title);
+
     let tags = [
         meta_title,
         meta_type,
@@ -208,6 +170,7 @@ pub fn meta(meta_content: &MetaContent) -> Html {
         meta_twitter_card,
         meta_twitter_site,
         meta_twitter_creator,
+        title,
     ];
 
     for tag in tags.iter() {
@@ -262,15 +225,12 @@ fn goto(props: &GoToProps) -> Html {
 #[function_component(App)]
 fn app() -> Html {
     html! {
-        <>
-        <Meta />
         <html class="relative min-h-screen text-puccin-text text-lg overflow-hidden">
         <div class="absolute inset-0 bg-evening bg-cover bg-center blur-lg scale-110 overflow-hidden"></div>
             <BrowserRouter>
                 <Switch<Route> render={switch} />
             </BrowserRouter>
         </html>
-        </>
     }
 }
 
