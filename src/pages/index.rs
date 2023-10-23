@@ -1,4 +1,3 @@
-use crate::Meta;
 use chrono::{DateTime, Utc};
 use gloo_timers;
 use gloo_timers::callback::Interval;
@@ -8,15 +7,12 @@ use yew::prelude::*;
 #[function_component(Index)]
 pub fn main() -> Html {
     html! {
-        <>
-            <Meta />
-            <div class="relative flex h-screen overflow-hidden">
-                <div class="font-mono m-auto bg-puccin-base p-16 rounded-3xl overflow-hidden">
-                    <Title />
-                    <Description />
-                </div>
+        <div class="relative flex h-screen overflow-hidden">
+            <div class="font-mono m-auto bg-puccin-base p-16 rounded-3xl overflow-hidden">
+                <Title />
+                <Description />
             </div>
-        </>
+        </div>
     }
 }
 

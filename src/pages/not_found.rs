@@ -1,11 +1,10 @@
-use crate::{GoTo, Meta};
+use crate::GoTo;
 use yew::prelude::*;
 
 #[function_component(NotFound)]
 pub fn main() -> Html {
     html! {
         <>
-            <Meta meta_title="Not found" meta_description="404" />
             <div class="relative h-screen flex">
                 <div class="m-auto text-center">
                     <img class="object-contain h-[325px] w-[375px] items-center" src="https://http.cat/404"/>
