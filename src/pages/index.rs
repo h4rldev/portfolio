@@ -1,4 +1,4 @@
-use crate::Meta;
+//use crate::Meta;
 use chrono::{DateTime, Utc};
 use gloo_timers;
 use gloo_timers::callback::Interval;
@@ -10,7 +10,6 @@ pub fn main() -> Html {
     html! {
         <div class="relative flex h-screen overflow-hidden">
             <div class="font-mono m-auto bg-puccin-base p-16 rounded-3xl overflow-hidden">
-                <Meta />
                 <Title />
                 <Description />
             </div>
@@ -85,6 +84,7 @@ pub fn description() -> Html {
 pub fn title() -> Html {
     html! {
         <>
+            <title> { "h4rl" } </title>
             <p class="text-2xl/loose"> { "Hey, I'm " } <span class="text-puccin-teal"> { "h4rl" } </span> </p>
             <p class="text-xs mb-7"> <Age/> { " years old" }</p>
         </>
