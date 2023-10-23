@@ -13,6 +13,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         evening: 'url("evening-sky.png")',
+        sweden: 'url("sweden.gif")',
       },
       width: {
         65: "65px",
@@ -21,6 +22,9 @@ module.exports = {
       height: {
         65: "65px",
         75: "75px",
+      },
+      listStyleType: {
+        square: "square",
       },
     },
   },

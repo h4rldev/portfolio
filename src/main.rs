@@ -120,12 +120,10 @@ fn goto(props: &GoToProps) -> Html {
     }
 }
 
-const ROOT_STYLE: &str = "relative min-h-screen text-white overflow-hidden";
-
 #[function_component(App)]
 fn app() -> Html {
     html! {
-        <html class={ROOT_STYLE}>
+        <html class="relative min-h-screen text-puccin-text text-lg overflow-hidden">
         <div class="absolute inset-0 bg-evening bg-cover bg-center blur-lg scale-110 overflow-hidden"></div>
             <BrowserRouter>
                 <Switch<Route> render={switch} />
