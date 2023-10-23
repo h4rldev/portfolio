@@ -28,7 +28,7 @@ impl fmt::Display for Route {
 fn switch(routes: Route) -> Html {
     match routes {
         Route::Index => html! { <Index /> },
-        Route::NotFound => html! { <NotFound /> },
+        _ => html! { <NotFound /> },
     }
 }
 
@@ -56,105 +56,42 @@ pub struct MetaContent {
     pub title: String,
 }
 
+fn create_meta_tag(
+    document: &web_sys::Document,
+    property: &str,
+    content: &str,
+) -> web_sys::Element {
+    let meta_tag = document
+        .create_element("meta")
+        .expect("Failed to create meta tag element");
+    meta_tag
+        .set_attribute("property", property)
+        .expect("Failed to set attribute for property");
+    meta_tag
+        .set_attribute("content", content)
+        .expect("Failed to set attribute for content");
+    meta_tag
+}
+
 #[function_component(Meta)]
 pub fn meta(meta_content: &MetaContent) -> Html {
-    let metadata = meta_content.clone();
+    let metadata = meta_content;
     let document = window()
-        .unwrap()
+        .expect("Failed to get window")
         .document()
         .expect("Failed to get document");
     let head = document.head().expect("Failed to get head");
 
-    let meta_title = document
-        .create_element("meta")
-        .expect("Failed to create meta title element");
-    meta_title
-        .set_attribute("property", "og:title")
-        .expect("Failed to set attribute for title property");
-    meta_title
-        .set_attribute("content", &metadata.meta_title)
-        .expect("Failed to set attribute for title content");
-
-    let meta_type = document
-        .create_element("meta")
-        .expect("Failed to create meta type element");
-    meta_type
-        .set_attribute("property", "og:type")
-        .expect("Failed to set attribute for type property");
-    meta_type
-        .set_attribute("content", &metadata.meta_type)
-        .expect("Failed to set attribute for type content");
-
-    let meta_url = document
-        .create_element("meta")
-        .expect("Failed to create meta url element");
-    meta_url
-        .set_attribute("property", "og:url")
-        .expect("Failed to set attribute for url property");
-    meta_url
-        .set_attribute("content", &metadata.meta_url)
-        .expect("Failed to set attribute for url content");
-
-    let meta_image = document
-        .create_element("meta")
-        .expect("Failed to create meta image element");
-    meta_image
-        .set_attribute("property", "og:image")
-        .expect("Failed to set attribute for image property");
-    meta_image
-        .set_attribute("content", &metadata.meta_image)
-        .expect("Failed to set attribute for image content");
-
-    let meta_description = document
-        .create_element("meta")
-        .expect("Failed to create meta description element");
-    meta_description
-        .set_attribute("property", "og:description")
-        .expect("Failed to set attribute for description property");
-    meta_description
-        .set_attribute("content", &metadata.meta_description)
-        .expect("Failed to set attribute for description content");
-
-    let meta_theme_color = document
-        .create_element("meta")
-        .expect("Failed to create meta theme color element");
-    meta_theme_color
-        .set_attribute("name", "theme-color")
-        .expect("Failed to set attribute for theme color name");
-    meta_theme_color
-        .set_attribute("content", &metadata.theme_color)
-        .expect("Failed to set attribute for theme color content");
-
-    let meta_twitter_card = document
-        .create_element("meta")
-        .expect("Failed to create meta twitter card element");
-    meta_twitter_card
-        .set_attribute("name", "twitter:card")
-        .expect("Failed to set attribute for twitter card name");
-    meta_twitter_card
-        .set_attribute("content", &metadata.twitter_card)
-        .expect("Failed to set attribute for twitter card content");
-
-    let meta_twitter_site = document
-        .create_element("meta")
-        .expect("Failed to create meta twitter site element");
-    meta_twitter_site
-        .set_attribute("name", "twitter:site")
-        .expect("Failed to set attribute for twitter site name");
-    meta_twitter_site
-        .set_attribute("content", &metadata.twitter_site)
-        .expect("Failed to set attribute for twitter site content");
-
-    let meta_twitter_creator = document
-        .create_element("meta")
-        .expect("Failed to create meta twitter creator element");
-    meta_twitter_creator
-        .set_attribute("name", "twitter:creator")
-        .expect("Failed to set attribute for twitter creator name");
-    meta_twitter_creator
-        .set_attribute("content", &metadata.twitter_creator)
-        .expect("Failed to set attribute for twitter creator content");
-
+    let meta_title = create_meta_tag(&document, "og:title", &metadata.meta_title);
+    let meta_type = create_meta_tag(&document, "og:type", &metadata.meta_type);
+    let meta_url = create_meta_tag(&document, "og:url", &metadata.meta_url);
+    let meta_image = create_meta_tag(&document, "og:image", &metadata.meta_image);
+    let meta_description = create_meta_tag(&document, "og:description", &metadata.meta_description);
+    let meta_theme_color = create_meta_tag(&document, "theme-color", &metadata.theme_color);
+    let meta_twitter_card = create_meta_tag(&document, "twitter:card", &metadata.twitter_card);
+    let meta_twitter_site = create_meta_tag(&document, "twitter:site", &metadata.twitter_site);
+    let meta_twitter_creator =
+        create_meta_tag(&document, "twitter:creator", &metadata.twitter_creator);
     let title = document
         .create_element("title")
         .expect("Failed to create title element");
