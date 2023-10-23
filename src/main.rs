@@ -1,10 +1,10 @@
 use catppuccin::Flavour::Mocha;
 use pages::{index::Index, not_found::NotFound};
 use std::fmt;
+use web_sys::window;
 use yew::prelude::*;
 use yew::Renderer;
 use yew_router::prelude::*;
-
 mod pages;
 
 #[derive(Routable, PartialEq, Eq, Clone)]
@@ -38,7 +38,7 @@ pub struct MetaContent {
     pub meta_title: String,
     #[prop_or("Website".to_string())]
     pub meta_type: String,
-    #[prop_or("https://h4rl-is-def.me".to_string())]
+    #[prop_or(window().unwrap().location().href().unwrap())]
     pub meta_url: String,
     #[prop_or("img/panko2.jpeg".to_string())]
     pub meta_image: String,
