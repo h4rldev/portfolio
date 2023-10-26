@@ -794,6 +794,8 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "gloo-timers 0.3.0",
+ "wasm-bindgen",
+ "web-sys",
  "yew",
  "yew-router",
 ]

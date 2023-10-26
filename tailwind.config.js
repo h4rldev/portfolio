@@ -7,10 +7,12 @@ module.exports = {
   theme: {
     fontFamily: {
       mono: ["FiraCode Nerd Font Mono", "monospace"],
-      ubuntu: ["Ubuntu Nerd Font Propo", "sans-serif"],
-      tahoma: ["Tahoma", "sans-serif"],
     },
     extend: {
+      fontFamily: {
+        ubuntu: ["Ubuntu Nerd Font Propo", "sans-serif"],
+        tahoma: ["Tahoma", "sans-serif"],
+      },
       backgroundImage: {
         evening: 'url("evening-sky.png")',
         sweden: 'url("sweden.gif")',
@@ -28,9 +30,7 @@ module.exports = {
       },
     },
   },
-  variants: {
-    extend: {},
-  },
+  variants: {},
   plugins: [
     require("@catppuccin/tailwindcss")({
       prefix: "puccin",

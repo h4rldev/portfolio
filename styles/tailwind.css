@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bash {
+  @apply bg-gradient-to-tl from-puccin-text to-puccin-crust text-transparent bg-clip-text hover:text-puccin-text hover:underline underline-offset-4;
+}
+
+.python {
+  @apply text-puccin-blue hover:text-puccin-text hover:underline underline-offset-4;
+}
+
+.rust {
+  @apply text-puccin-peach hover:text-puccin-text hover:underline underline-offset-4;
+}
+
+.sweden {
+  @apply bg-sweden bg-cover bg-bottom text-transparent bg-clip-text;
+}
+
+.project {
+    @apply text-puccin-red hover:underline underline-offset-4;
+}
+
+.button {
+    @apply flex items-center bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center hover:bg-puccin-text hover:text-puccin-crust text-sm
+}
