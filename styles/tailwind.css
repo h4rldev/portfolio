@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 .bash {
-  @apply bg-gradient-to-tl from-puccin-text to-puccin-crust text-transparent bg-clip-text hover:text-puccin-text hover:underline underline-offset-4;
+  @apply bg-gradient-to-tl from-puccin-text to-puccin-crust text-transparent bg-clip-text hover:text-puccin-text link;
 }
 
 .python {
-  @apply text-puccin-blue hover:text-puccin-text hover:underline underline-offset-4;
+  @apply text-puccin-blue hover:text-puccin-text link;
 }
 
 .rust {
-  @apply text-puccin-peach hover:text-puccin-text hover:underline underline-offset-4;
+  @apply text-puccin-peach hover:text-puccin-text link;
 }
 
 .sweden {
@@ -19,9 +19,37 @@
 }
 
 .project {
-    @apply text-puccin-red hover:underline underline-offset-4;
+  @apply text-puccin-red link;
+}
+
+.link {
+  @apply hover:underline underline-offset-4 cursor-pointer;
+}
+
+.buttonwithicon {
+  @apply flex items-center bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center hover:bg-puccin-text hover:text-puccin-crust text-sm gap-x-2;
+}
+
+.buttonwithicon > img {
+  @apply h-6 w-6;
 }
 
 .button {
-    @apply flex items-center bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center hover:bg-puccin-text hover:text-puccin-crust text-sm
+  @apply bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center hover:bg-puccin-text hover:text-puccin-crust text-sm;
+}
+
+.main {
+  @apply text-puccin-text text-lg;
+}
+
+.bg {
+  @apply absolute inset-0 bg-center bg-cover bg-evening;
+}
+
+.bg-blur {
+  @apply absolute inset-0 backdrop-blur-md bg-opacity-50;
+}
+
+.base {
+  @apply font-mono bg-puccin-base rounded-3xl p-8;
 }
