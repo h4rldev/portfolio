@@ -23,15 +23,15 @@
 }
 
 .link {
-  @apply hover:underline underline-offset-4 cursor-pointer;
+  @apply transition duration-500 ease-in-out hover:underline underline-offset-4 cursor-pointer;
 }
 
 .buttonwithicon {
-  @apply flex items-center bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center hover:bg-puccin-text hover:text-puccin-crust text-sm gap-x-2;
+  @apply flex items-center bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center transition duration-500 ease-in-out hover:bg-puccin-text hover:text-puccin-crust text-sm gap-x-2;
 }
 
 .buttonwithicon > img {
-  @apply h-6 w-6;
+  @apply file:transition duration-500 ease-in-out h-6 w-6;
 }
 
 .button {
@@ -39,17 +39,21 @@
 }
 
 .main {
-  @apply text-puccin-text text-lg;
+  @apply text-puccin-text text-lg h-screen;
 }
 
 .bg {
-  @apply absolute inset-0 bg-center bg-cover bg-evening;
+  @apply absolute inset-0 bg-center bg-cover bg-evening h-screen;
 }
 
 .bg-blur {
-  @apply absolute inset-0 backdrop-blur-md bg-opacity-50;
+  @apply absolute inset-0 backdrop-blur-md bg-opacity-50 h-screen;
 }
 
 .base {
-  @apply font-mono bg-puccin-base rounded-3xl p-8;
+  @apply relative font-mono bg-puccin-base rounded-2xl p-10;
+}
+
+.footer {
+  @apply absolute text-center justify-center items-center text-sm left-1/2 bottom-2 transform -translate-x-1/2 font-mono pt-10;
 }

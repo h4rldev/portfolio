@@ -8,7 +8,7 @@ pub fn title() -> Html {
             <title> { "h4rl" } </title>
             <p class="text-2xl/loose"> { "Hey, I'm " } <span class="text-puccin-teal"> { "Oscar Sjödin Jansson" } </span> </p>
             <p class="text-sm"> { "Also known as " } <span class="text-puccin-teal"> { "h4rl" } </span> { " or " } <span class="text-puccin-teal"> { "h4rl3h"} </span> { " on the interwebs." } </p>
-            <p class="text-sm mb-7"> { "Currently " } <Age/> { " years old" } </p>
+            <p class="text-sm"> { "Currently " } <Age/> { " years old" } </p>
         </>
 
     }
@@ -18,8 +18,8 @@ pub fn title() -> Html {
 pub fn socials() -> Html {
     html! {
         <>
-            <h1 class="text-center mb-7"> { "Socials" } </h1>
-            <div class="flex flex-wrap justify-center gap-5">
+            <h1 class="text-center"> { "Socials" } </h1>
+            <div class="flex flex-wrap justify-center gap-5 relative">
                 // github
                 <Button src="github.svg" alt="github logo" text="@h4rldev" href="github"/>
                 // twitter
@@ -78,6 +78,22 @@ pub fn description() -> Html {
     }
 }
 
+#[function_component(Footer)]
+pub fn footer() -> Html {
+    html! {
+        <div class="footer">
+            <p>
+                { "Made with " }
+                <span class="text-puccin-red"> { "❤" } </span>
+                { " by " }
+                <span class="text-puccin-teal"> { "h4rl" } </span>
+                { ". Uses the " }
+                <a class="link" href="https://github.com/h4rldev/portfolio/blob/main/LICENSE"> { "BSD 3-Clause License" } </a>
+            </p>
+        </div>
+    }
+}
+
 #[function_component(Index)]
 pub fn main() -> Html {
     html! {
@@ -85,6 +101,7 @@ pub fn main() -> Html {
             <div class="base">
                 <Title />
                 <Description />
+                <Footer />
             </div>
         </div>
     }
