@@ -55,5 +55,13 @@
 }
 
 .footer {
-  @apply absolute text-center justify-center items-center text-sm left-1/2 bottom-2 transform -translate-x-1/2 font-mono pt-10;
+  @apply absolute text-center justify-center items-center text-sm left-1/2 bottom-2 transform -translate-x-1/2 font-mono;
+}
+
+.no-js {
+  @apply relative h-screen flex items-center justify-center font-ubuntu text-puccin-text;
+}
+
+.no-js-box {
+  @apply flex-row bg-puccin-base p-10 rounded-3xl;
 }
