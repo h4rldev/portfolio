@@ -10,7 +10,6 @@ pub fn title() -> Html {
             <p class="text-sm"> { "Also known as " } <span class="text-puccin-teal"> { "h4rl" } </span> { " or " } <span class="text-puccin-teal"> { "h4rl3h"} </span> { " on the interwebs." } </p>
             <p class="text-sm"> { "Currently " } <Age/> { " years old" } </p>
         </>
-
     }
 }
 
@@ -19,18 +18,18 @@ pub fn socials() -> Html {
     html! {
         <>
             <h1 class="text-center"> { "Socials" } </h1>
-            <div class="flex flex-wrap justify-center gap-5 relative">
+            <section class="flex flex-wrap justify-center gap-5 relative">
                 // github
-                <Button src="github.svg" alt="github logo" text="@h4rldev" href="github"/>
+                <Button icon_class="i-[simple-icons--github]" alt="github logo" text="@h4rldev" href="github"/>
                 // twitter
-                <Button src="x.svg" alt="x logo" text="@h4rl3h" href="x"/>
+                <Button icon_class="i-[simple-icons--twitter]" alt="x logo" text="@h4rl3h" href="x"/>
                 // discord
-                <Button src="discord.svg" alt="discord logo" text="@h4rl" href="discord" />
+                <Button icon_class="i-[simple-icons--discord]" alt="discord logo" text="@h4rl" href="discord" />
                 // linkedin
-                <Button src="linkedin.png" alt="linkedin logo" text="Oscar Sjödin Jansson" href="linkedin" />
+                <Button icon_class="i-[simple-icons--linkedin]" alt="linkedin logo" text="Oscar Sjödin Jansson" href="linkedin" />
                 // codeberg
-                <Button src="codeberg.svg" alt="codeberg logo" text="@h4rl" href="codeberg" />
-            </div>
+                <Button icon_class="i-[simple-icons--codeberg]" alt="codeberg logo" text="@h4rl" href="codeberg" />
+            </section>
         </>
     }
 }
@@ -81,7 +80,7 @@ pub fn description() -> Html {
 #[function_component(Footer)]
 pub fn footer() -> Html {
     html! {
-        <div class="footer">
+        <section class="footer">
             <p>
                 { "Made with " }
                 <span class="text-puccin-red"> { "❤" } </span>
@@ -90,19 +89,29 @@ pub fn footer() -> Html {
                 { ". Uses the " }
                 <a class="link" href="https://github.com/h4rldev/portfolio/blob/main/LICENSE"> { "BSD 3-Clause License" } </a>
             </p>
-        </div>
+        </section>
     }
 }
 
 #[function_component(Index)]
 pub fn main() -> Html {
+    let clicked = use_state(|| false);
+    let onclick = {
+        let clicked = clicked.clone();
+        Callback::from(move |_| clicked.set(!*clicked))
+    };
     html! {
-        <div class="relative flex items-center justify-center h-screen">
-            <div class="base">
+        <main class="relative flex items-center justify-center h-screen">
+            <section class={classes!(if *clicked { "maximized" } else { "base" })}>
+                <button {onclick} class="right-2 top-2 absolute">
+                    <svg class="text-puccin-green" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10" cy="10" r="10" fill="currentColor" />
+                    </svg>
+                </button>
                 <Title />
                 <Description />
                 <Footer />
-            </div>
-        </div>
+            </section>
+        </main>
     }
 }

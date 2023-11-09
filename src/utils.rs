@@ -1,6 +1,6 @@
 use crate::pages::{index::Index, not_found::NotFound};
 use chrono::{DateTime, Utc};
-use gloo_timers::callback::Interval;
+use gloo_timers::callback::{Interval, Timeout};
 use std::fmt;
 use web_sys::window;
 use yew::prelude::*;
@@ -43,16 +43,14 @@ impl fmt::Display for Route {
 }
 
 pub fn switch(routes: Route) -> Html {
-    match routes {
+    match &routes {
         Route::Index => html! { <Index /> },
         Route::Discord
         | Route::Github
         | Route::Linkedin
         | Route::RickRoll
-        | Route::X
-        | Route::Codeberg => {
-            html! { <Redirect route={routes.to_string()} /> }
-        }
+        | Route::Codeberg
+        | Route::X => html! { <Redirect route={routes.to_string()} /> },
         _ => html! { <NotFound /> },
     }
 }
@@ -64,7 +62,7 @@ pub fn age() -> Html {
     let age_for_effect = age.clone();
     use_effect(move || {
         let age = age.clone();
-        let interval = Interval::new(0, move || {
+        let interval = Interval::new(1, move || {
             age.set(calculate_age());
         });
 
@@ -75,7 +73,7 @@ pub fn age() -> Html {
 
     let age_for_render = age_for_effect;
     html! {
-        <span class="text-puccin-teal"> { format!("{:.15}", *age_for_render) } </span>
+        <span class="text-puccin-teal age"> { format!("{:.15}", *age_for_render) } </span>
     }
 }
 
@@ -88,8 +86,6 @@ fn calculate_age() -> f64 {
 
 #[derive(Properties, Clone, PartialEq, Eq)]
 pub struct ButtonProps {
-    #[prop_or_default]
-    pub src: String,
     #[prop_or("".to_string())]
     pub alt: String,
     #[prop_or_default]
@@ -98,6 +94,8 @@ pub struct ButtonProps {
     pub href: String,
     #[prop_or("".to_string())]
     pub extra_class: String,
+    #[prop_or_default]
+    pub icon_class: String,
 }
 
 #[function_component(Button)]
@@ -126,9 +124,8 @@ pub fn button(props: &ButtonProps) -> Html {
             onmouseout={on_mouse_out}
             onclick={onclick}
         >
-            <img
-                class={classes!(if *hover { "invert" } else { "" })}
-                src={button_props.src}
+            <i
+                class={classes!(if *hover { "text-puccin-crust" } else { "" }, "buttonicon", {button_props.icon_class})}
                 alt={button_props.alt}
             />
             { button_props.text }
@@ -164,7 +161,16 @@ pub fn redirect(props: &RedirectProps) -> Html {
     };
     let window = window().expect("no global `window` exists");
     let location = window.location();
-    let _ = location.replace(url);
+    use_effect(move || {
+        let timeout = Timeout::new(1000, move || {
+            let _ = location.replace(url);
+        });
+
+        timeout.forget();
+
+        || {}
+    });
+
     html! {
         <div class="relative flex h-screen overflow-hidden">
             <div class="font-mono m-auto bg-puccin-base p-16 rounded-3xl overflow-hidden">

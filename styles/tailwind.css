@@ -27,15 +27,23 @@
 }
 
 .buttonwithicon {
-  @apply flex items-center bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center transition duration-500 ease-in-out hover:bg-puccin-text hover:text-puccin-crust text-sm gap-x-2;
+  @apply flex items-center bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center transition-all duration-500 ease-in-out hover:bg-puccin-text hover:text-puccin-crust text-sm gap-x-2;
 }
 
-.buttonwithicon > img {
-  @apply file:transition duration-500 ease-in-out h-6 w-6;
+.buttonicon {
+  @apply transition h-6 w-6;
+}
+
+.not-found-button-container {
+  @apply relative font-mono bg-puccin-base rounded-br-2xl rounded-bl-2xl p-10 flex flex-col justify-center items-center;
+}
+
+.not-found-image-container {
+  @apply relative font-mono bg-puccin-base rounded-tr-2xl rounded-tl-2xl p-10 flex flex-col justify-center items-center;
 }
 
 .button {
-  @apply bg-puccin-mantle py-4 border-2 w-60 overflow-x-auto rounded-3xl justify-center hover:bg-puccin-text hover:text-puccin-crust text-sm;
+  @apply bg-puccin-mantle py-4 border-2 w-full overflow-x-auto rounded-3xl justify-center transition duration-500 ease-in-out hover:bg-puccin-text hover:text-puccin-crust text-sm;
 }
 
 .main {
@@ -51,7 +59,11 @@
 }
 
 .base {
-  @apply relative font-mono bg-puccin-base rounded-2xl p-10;
+  @apply transition-all duration-500 relative font-mono bg-puccin-base rounded-2xl p-10 h-6/8 w-6/8;
+}
+
+.maximized {
+  @apply transition-all duration-500 relative font-mono bg-puccin-base rounded-none p-10 h-screen w-screen;
 }
 
 .footer {
@@ -59,9 +71,9 @@
 }
 
 .no-js {
-  @apply relative h-screen flex items-center justify-center font-ubuntu text-puccin-text;
+  @apply transition-all delay-500 relative h-screen flex items-center justify-center font-ubuntu text-puccin-text;
 }
 
 .no-js-box {
-  @apply flex-row bg-puccin-base p-10 rounded-3xl;
+  @apply transition-all delay-1000 animate-fadein flex-row bg-puccin-base p-10 rounded-3xl h-1/3 w-1/3;
 }
