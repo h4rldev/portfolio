@@ -60,9 +60,13 @@ jobs:
         with:
           version: latest
 
-      - name: Install Catppuccin
+      - name: Install Dependencies
         run: |
           npm install -D @catppuccin/tailwindcss
+          npm install -D @iconify/tailwind
+          npm install -D @iconify-json/simple-icons
+          npm install -D @iconify-json/lucide
+          
 
       - name: Cache dependencies
         uses: actions/cache@v3
