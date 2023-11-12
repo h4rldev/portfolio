@@ -72,7 +72,6 @@ pub fn description() -> Html {
                 <li> <a href="https://github.com/h4rldev/check_elevation" class="project"> { "check_elevation" } </a> </li>
                 <li> <a href="https://github.com/ani-rs/ani" class="project"> { "ani" } </a> </li>
             </ul>
-            <Socials />
         </>
     }
 }
@@ -81,33 +80,51 @@ pub fn description() -> Html {
 pub fn footer() -> Html {
     html! {
         <section class="footer">
+            <Socials />
             <p>
                 { "Made with " }
                 <span class="text-puccin-red"> { "❤" } </span>
                 { " by " }
                 <span class="text-puccin-teal"> { "h4rl" } </span>
-                { ". Uses the " }
-                <a class="link" href="https://github.com/h4rldev/portfolio/blob/main/LICENSE"> { "BSD 3-Clause License" } </a>
+                { "." }
+                <p>
+                    { "Uses the " }
+                    <a target="_blank" class="link text-puccin-green" href="https://github.com/h4rldev/portfolio/blob/main/LICENSE"> { "BSD 3-Clause License" } </a>
+                    { "." }
+                </p>
             </p>
         </section>
+    }
+}
+
+#[derive(Properties, Clone, PartialEq)]
+pub struct MaximizeProps {
+    pub clicked: UseStateHandle<bool>,
+}
+
+#[function_component(Maximize)]
+pub fn maximize(clicked: &MaximizeProps) -> Html {
+    let onclick = {
+        let clicked = clicked.clicked.clone();
+        Callback::from(move |_| clicked.set(!*clicked))
+    };
+    html! {
+        <button {onclick} class="right-2 top-2 absolute">
+            <svg class="text-puccin-green" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10" cy="10" r="10" fill="currentColor" />
+            </svg>
+        </button>
     }
 }
 
 #[function_component(Index)]
 pub fn main() -> Html {
     let clicked = use_state(|| false);
-    let onclick = {
-        let clicked = clicked.clone();
-        Callback::from(move |_| clicked.set(!*clicked))
-    };
+    let body_classes = classes!(if *clicked { "maximized" } else { "base" });
     html! {
         <main class="relative flex items-center justify-center h-screen">
-            <section class={classes!(if *clicked { "maximized" } else { "base" })}>
-                <button {onclick} class="right-2 top-2 absolute">
-                    <svg class="text-puccin-green" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="10" cy="10" r="10" fill="currentColor" />
-                    </svg>
-                </button>
+            <section class={body_classes}>
+                <Maximize clicked={clicked.clone()} />
                 <Title />
                 <Description />
                 <Footer />

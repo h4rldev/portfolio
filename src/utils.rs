@@ -162,7 +162,7 @@ pub fn redirect(props: &RedirectProps) -> Html {
     let window = window().expect("no global `window` exists");
     let location = window.location();
     use_effect(move || {
-        let timeout = Timeout::new(1000, move || {
+        let timeout = Timeout::new(500, move || {
             let _ = location.replace(url);
         });
 

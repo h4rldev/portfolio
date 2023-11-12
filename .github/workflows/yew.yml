@@ -17,6 +17,7 @@ name: Build yew.rs page and move to pages branch
 on:
   push:
     branches: [main]
+  # trunk-ignore(yamllint/empty-values)
   workflow_dispatch:
 
 jobs:
@@ -62,11 +63,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install -D @catppuccin/tailwindcss
-          npm install -D @iconify/tailwind
-          npm install -D @iconify-json/simple-icons
-          npm install -D @iconify-json/lucide
-          
+          npm install -D
 
       - name: Cache dependencies
         uses: actions/cache@v3

@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 .bash {
-  @apply bg-gradient-to-tl from-puccin-text to-puccin-crust text-transparent bg-clip-text hover:text-puccin-text link;
+  @apply bg-gradient-to-tl from-puccin-text to-puccin-crust text-transparent bg-clip-text link;
 }
 
 .python {
-  @apply text-puccin-blue hover:text-puccin-text link;
+  @apply text-puccin-blue link;
 }
 
 .rust {
-  @apply text-puccin-peach hover:text-puccin-text link;
+  @apply text-puccin-peach link;
 }
 
 .sweden {
@@ -23,7 +23,7 @@
 }
 
 .link {
-  @apply transition duration-500 ease-in-out hover:underline underline-offset-4 cursor-pointer;
+  @apply transition duration-500 ease-in-out hover:underline underline-offset-4 cursor-pointer hover:text-puccin-text;
 }
 
 .buttonwithicon {
@@ -31,7 +31,7 @@
 }
 
 .buttonicon {
-  @apply transition h-6 w-6;
+  @apply h-6 w-6 ease-in-out;
 }
 
 .not-found-button-container {
@@ -67,7 +67,7 @@
 }
 
 .footer {
-  @apply absolute text-center justify-center items-center text-sm left-1/2 bottom-2 transform -translate-x-1/2 font-mono;
+  @apply absolute flex flex-col gap-5 text-center justify-center items-center text-sm left-1/2 bottom-2 transform -translate-x-1/2 font-mono w-full;
 }
 
 .no-js {
