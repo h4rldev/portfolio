@@ -63,7 +63,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          ls -la
+          cd main
           npm install -D
 
       - name: Cache dependencies
