@@ -1,4 +1,4 @@
-use utils::{switch, Route};
+use utils::router::{switch, Route};
 use yew::prelude::*;
 use yew::Renderer;
 use yew_router::prelude::*;

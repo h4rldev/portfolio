@@ -15,18 +15,13 @@ module.exports = {
         tahoma: ["Tahoma", "sans-serif"],
       },
       backgroundImage: {
-        evening: 'url("img/bg/evening-sky.png")',
+        evening: 'url("img/bg/evening-sky.webp")',
         sweden: 'url("img/other_assets/sweden.gif")',
       },
       animation: {
-        expand: "expand 2s ease-in-out",
         fadein: "fadein 2s ease-in-out",
       },
       keyframes: {
-        expand: {
-          "0%": { transform: "scale(0)" },
-          "100%": { transform: "scale(1)", width: "100vw", height: "100vh" },
-        },
         fadein: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },

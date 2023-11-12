@@ -1,5 +1,9 @@
-use crate::utils::{Age, Button};
+use crate::utils::{
+    components::{Age, Button},
+    router::Route,
+};
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 #[function_component(Title)]
 pub fn title() -> Html {
@@ -109,11 +113,38 @@ pub fn maximize(clicked: &MaximizeProps) -> Html {
         Callback::from(move |_| clicked.set(!*clicked))
     };
     html! {
-        <button {onclick} class="right-2 top-2 absolute">
+        <button {onclick} aria-label="Minimize And Maximize" class="right-2 top-2 absolute">
             <svg class="text-puccin-green" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="10" cy="10" r="10" fill="currentColor" />
             </svg>
         </button>
+    }
+}
+
+#[function_component(Navigation)]
+pub fn navigation() -> Html {
+    let hover = use_state(|| false);
+    let onmouseover = {
+        let hover = hover.clone();
+        Callback::from(move |_| hover.set(true))
+    };
+    let onmouseout = {
+        let hover = hover.clone();
+        Callback::from(move |_| hover.set(false))
+    };
+    html! {
+        <>
+            <nav {onmouseover} {onmouseout} class={classes!( "navigation", if *hover { "move-down" } else { "move-up" })}>
+                <ul class="nav-list">
+                    <li> <Link<Route> to={Route::Index}> { "Home" } </Link<Route>> </li>
+                    <li> <Link<Route> to={Route::Projects}> { "Projects" } </Link<Route>> </li>
+                    <li> <Link<Route> to={Route::About}> { "About" } </Link<Route>> </li>
+                </ul>
+                <section class="nav-tab">
+                    { "=" }
+                </section>
+            </nav>
+        </>
     }
 }
 
@@ -122,7 +153,8 @@ pub fn main() -> Html {
     let clicked = use_state(|| false);
     let body_classes = classes!(if *clicked { "maximized" } else { "base" });
     html! {
-        <main class="relative flex items-center justify-center h-screen">
+        <main class="relative flex flex-col items-center justify-center h-screen">
+            <Navigation/>
             <section class={body_classes}>
                 <Maximize clicked={clicked.clone()} />
                 <Title />
