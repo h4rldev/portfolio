@@ -2,20 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-.bash {
+.langs-and-place {
+  @apply mb-7;
+}
+
+.langs-and-place .bash {
   @apply bg-gradient-to-tl from-puccin-text to-puccin-crust text-transparent bg-clip-text link;
 }
 
-.python {
+.langs-and-place .python {
   @apply text-puccin-blue link;
 }
 
-.rust {
+.langs-and-place .rust {
   @apply text-puccin-peach link;
 }
 
-.sweden {
+.langs-and-place .sweden {
   @apply bg-sweden bg-cover bg-bottom text-transparent bg-clip-text;
+}
+
+.navigation {
+  @apply absolute top-0 bg-puccin-base w-1/8 rounded-br-2xl rounded-bl-2xl p-2 flex justify-center;
+}
+.nav-list {
+  @apply flex gap-x-2;
+}
+
+.nav-list > li {
+  @apply link;
+}
+
+.nav-tab {
+  @apply font-mono w-2/8 rounded-br-2xl rounded-bl-2xl absolute -bottom-7 bg-puccin-base text-center;
 }
 
 .project {
@@ -76,21 +95,6 @@
 
 .no-js-box {
   @apply transition-all delay-1000 animate-fadein flex-row bg-puccin-base p-10 rounded-3xl h-1/3 w-1/3;
-}
-
-.navigation {
-  @apply absolute top-0 bg-puccin-base w-1/8 rounded-br-2xl rounded-bl-2xl p-2 flex justify-center;
-}
-.nav-list {
-  @apply flex gap-x-2;
-}
-
-.nav-list > li {
-  @apply link;
-}
-
-.nav-tab {
-  @apply font-mono w-2/8 rounded-br-2xl rounded-bl-2xl absolute -bottom-7 bg-puccin-base text-center;
 }
 
 .gone {

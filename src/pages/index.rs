@@ -42,7 +42,7 @@ pub fn socials() -> Html {
 pub fn description() -> Html {
     html! {
         <>
-            <p class="mb-7">
+            <p class="langs-and-place">
                 { "I'm a self-taught " }
                 <a class="rust" href="https://www.rust-lang.org/">
                     { "Rust" }
