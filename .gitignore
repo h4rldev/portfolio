@@ -1,0 +1,28 @@
+# Back-end
+backend/build/out
+backend/build/bin
+
+# Front-end
+
+frontend/node_modules
+
+# Front-end output
+frontend/.output
+frontend/.vercel
+frontend/.svelte-kit
+frontend/build
+
+# Vite
+frontend/vite.config.js.timestamp-*
+frontend/vite.config.ts.timestamp-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+**/.env
+**/.env.*
+!.env.example
+!.env.test
+
