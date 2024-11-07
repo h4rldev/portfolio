@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 char *read_file(char *path) {
-  FILE *file = fopen(path, "r");
+  FILE *file = fopen(path, "rb+");
   size_t file_len = 0;
 
   if (!file) {

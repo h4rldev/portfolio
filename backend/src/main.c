@@ -10,8 +10,10 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
                                 const char *url, const char *method,
                                 const char *version, const char *upload_data,
                                 size_t *upload_data_size, void **ptr) {
-  static int dummy;
   char *page;
+  char *mime = malloc(256);
+
+  static int dummy;
   struct MHD_Response *response;
   int ret;
 
@@ -28,13 +30,16 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
 
   *ptr = NULL; /* clear context pointer */
 
-  page = route((char *)url);
+  page = route((char *)url, mime, 256);
   response = MHD_create_response_from_buffer(strlen(page), (void *)page,
                                              MHD_RESPMEM_MUST_COPY);
-  MHD_add_response_header(response, "Content-Type", "text/html");
+  MHD_add_response_header(response, "Content-Type", mime);
   ret = MHD_queue_response(connection, MHD_HTTP_OK, response);
   MHD_destroy_response(response);
+
   free(page);
+  free(mime);
+
   return ret;
 }
 

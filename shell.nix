@@ -15,6 +15,7 @@ pkgs.mkShell {
     shfmt
     gdb
     pnpm
+    file
   ];
   shellHook = ''
     export PATH="./frontend/node_modules/.bin/:$PATH"
