@@ -1,26 +1,17 @@
-#include "unistd.h"
 #include <microhttpd.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define PAGE                                                                   \
-  "<html>"                                                                     \
-  "<head>"                                                                     \
-  "<title>libmicrohttpd demo</title>"                                          \
-  "</head>"                                                                    \
-  "<body>"                                                                     \
-  "libmicrohttpd demo"                                                         \
-  "</body>"                                                                    \
-  "</html>"
+#include "../include/http.h"
 
 static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
                                 const char *url, const char *method,
                                 const char *version, const char *upload_data,
                                 size_t *upload_data_size, void **ptr) {
   static int dummy;
-  const char *page = cls;
+  char *page;
   struct MHD_Response *response;
   int ret;
 
@@ -37,10 +28,13 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
 
   *ptr = NULL; /* clear context pointer */
 
+  page = route((char *)url);
   response = MHD_create_response_from_buffer(strlen(page), (void *)page,
-                                             MHD_RESPMEM_PERSISTENT);
+                                             MHD_RESPMEM_MUST_COPY);
+  MHD_add_response_header(response, "Content-Type", "text/html");
   ret = MHD_queue_response(connection, MHD_HTTP_OK, response);
   MHD_destroy_response(response);
+  free(page);
   return ret;
 }
 
@@ -66,11 +60,11 @@ int main(int argc, char **argv) {
   }
 
   daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, port, NULL, NULL,
-                            &callback, PAGE, MHD_OPTION_END);
+                            &callback, NULL, MHD_OPTION_END);
   if (daemon == NULL)
     return -1;
 
-  printf("Running on localhost port %d\n", port);
+  printf("libmicrohttpd: running on localhost port %d\n", port);
   puts("CTRL-C to exit");
 
   signal(SIGINT, signal_handler);
