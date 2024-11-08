@@ -2,6 +2,10 @@
 backend/build/out
 backend/build/bin
 
+.cache/
+build/
+compile_commands.json
+
 # Front-end
 
 frontend/node_modules

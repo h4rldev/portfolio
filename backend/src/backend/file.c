@@ -1,47 +1,24 @@
 #include "../../include/file.h"
+#include <magic.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
-char *read_file(char *path) {
-  FILE *file = fopen(path, "rb+");
-  size_t file_len = 0;
+char *get_mime(char *path) {
+  char *mime = (char *)malloc(1024);
 
-  if (!file) {
-    perror("Failed to open file");
-    printf("File path: %s\n", path);
-    return 0;
-  }
+  magic_t magic = magic_open(MAGIC_MIME_TYPE);
+  magic_load(magic, NULL);
 
-  fseek(file, 0L, SEEK_END);
-  file_len = ftell(file);
-  rewind(file);
+  char *mime_type = (char *)magic_file(magic, path);
+  if (strncmp(mime_type, "image/vnd.microsoft.icon", 24) == 0)
+    mime_type = "image/x-icon";
 
-  if (file_len <= 0) {
-    fprintf(stderr, "Failed to read file length, can't read file. exiting..\n");
-    fclose(file);
-    return 0;
-  }
+  strlcpy(mime, mime_type, 1024);
 
-  char *buffer = (char *)malloc(file_len);
-  if (!buffer) {
-    perror("malloc");
-    fclose(file);
-    return 0;
-  }
-
-  size_t bytes_read = 0;
-  bytes_read = fread(buffer, 1, file_len, file);
-  if (bytes_read != file_len) {
-    fprintf(stderr, "Did not read the whole file.. Something definitely went "
-                    "very wrong.\n");
-    free(buffer);
-    fclose(file);
-    return 0;
-  }
-
-  fclose(file);
-  return buffer;
+  magic_close(magic);
+  return mime;
 }
 
 char *get_cwd(void) {
