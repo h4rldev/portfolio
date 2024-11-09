@@ -1,7 +1,9 @@
 backend_path := "." / "backend"
 frontend_path := "." / "frontend"
+scripts_path := "." / "scripts"
 
 backend_build_script := backend_path / "build" / "build.sh"
+scripts_bootstrap := scripts_path / "frontend-bootstrap.sh"
 
 @default:
   just --list
@@ -9,3 +11,9 @@ backend_build_script := backend_path / "build" / "build.sh"
 @build-backend name="backend":
   {{backend_build_script}} -c
   {{backend_build_script}} -l {{name}}
+
+@build-frontend:
+  {{scripts_bootstrap}} build
+
+@dev-frontend:
+  {{scripts_bootstrap}} dev

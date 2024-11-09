@@ -16,6 +16,10 @@ frontend/.vercel
 frontend/.svelte-kit
 frontend/build
 
+
+# Temporary
+frontend/TMP
+
 # Vite
 frontend/vite.config.js.timestamp-*
 frontend/vite.config.ts.timestamp-*
