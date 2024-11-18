@@ -17,6 +17,8 @@ pkgs.mkShell {
     pnpm
     file
     cmake
+    nodePackages_latest.svelte-language-server
+    nodePackages_latest.typescript-language-server
   ];
   shellHook = ''
     export PATH="./frontend/node_modules/.bin/:$PATH"
