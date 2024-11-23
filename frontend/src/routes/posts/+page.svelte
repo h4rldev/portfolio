@@ -1,19 +1,18 @@
-<script module>
-	/**
-	 * @typedef {Object} Metadata
-	 * @property {string} [title] - The title of the blog post
-	 * @property {(Date|string)} [date] - The publication date of the blog post
-	 * @property {*} [customField] - Any additional custom frontmatter field
-	 */
-</script>
-
 <script>
+	import Nav from '$components/Nav.svelte';
 	let { data } = $props();
 </script>
 
-<h1>hi</h1>
-<ul>
+<header>
+	<Nav />
+</header>
+
+<h1 class="togglable">hi</h1>
+<ul class="togglable">
 	{#each data.posts as { path, title, date, author }}
 		<li><a href="../{path}">{title} @ {date} by {author}</a></li>
 	{/each}
 </ul>
+
+<style>
+</style>

@@ -19,6 +19,7 @@ pkgs.mkShell {
     cmake
     nodePackages_latest.svelte-language-server
     nodePackages_latest.typescript-language-server
+    zlib-ng
   ];
   shellHook = ''
     export PATH="./frontend/node_modules/.bin/:$PATH"

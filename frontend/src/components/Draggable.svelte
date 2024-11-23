@@ -17,15 +17,22 @@
 
 	/**
 	 * @typedef {import('svelte').Snippet} Snippet
-	 * @type {{ header: Snippet, handle: Snippet, forward: Snippet | undefined, still: Snippet | undefined, backward: Snippet | undefined }}
+	 * @type {{ header: Snippet, handle: Snippet, forward: Snippet | undefined, still: Snippet | undefined, backward: Snippet | undefined, axis: string | undefined }}
 	 */
-	let { header, handle, forward = undefined, still = undefined, backward = undefined } = $props();
+	let {
+		header,
+		handle,
+		forward = undefined,
+		still = undefined,
+		backward = undefined,
+		axis = 'x'
+	} = $props();
 </script>
 
 <div
-	class="draggable"
+	class="draggable togglable"
 	use:draggable={{
-		axis: 'x',
+		axis,
 		bounds: 'body',
 		onDrag: ({ offsetX, offsetY, currentNode }) => {
 			const element = currentNode;

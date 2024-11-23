@@ -36,7 +36,7 @@ static char *get_asset(char *route) {
   return path;
 }
 
-static char *get_page(Pages page) {
+static char *get_route(Pages page) {
   char *path = (char *)malloc(1024);
   char *cwd = get_cwd();
 
@@ -65,7 +65,7 @@ char *route(char *route) {
   char *returnable;
 
   if (page_type != Asset) {
-    returnable = get_page(page_type);
+    returnable = get_route(page_type);
     return returnable;
   }
 

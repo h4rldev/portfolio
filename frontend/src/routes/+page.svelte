@@ -9,9 +9,9 @@
 
 <header>
 	<Nav />
-	<Draggable>
+	<Draggable axis="x">
 		{#snippet header()}
-			<h1>Hi, I'm h4rl</h1>
+			<h1>Hi, I'm h4r</h1>
 		{/snippet}
 		{#snippet handle()}
 			<div class="handle"></div>
@@ -29,7 +29,7 @@
 </header>
 <main></main>
 <footer>
-	<p>made with &lt;3</p>
+	<p class="togglable">made with &#x2764;</p>
 </footer>
 
 <style>

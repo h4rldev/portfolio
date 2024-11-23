@@ -1,18 +1,52 @@
 #include <fcntl.h>
 #include <microhttpd.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
+#include "../include/compress.h"
 #include "../include/file.h"
 #include "../include/http.h"
+#include "../include/meta.h"
 
 static ssize_t file_reader(void *cls, uint64_t pos, char *buf, size_t max) {
   FILE *file = cls;
 
   (void)fseek(file, pos, SEEK_SET);
   return fread(buf, 1, max, file);
+}
+
+static ssize_t file_reader_compress(void *cls, uint64_t pos, char *buf,
+                                    size_t max) {
+  FILE *file = cls;
+  size_t new_size;
+
+  char *compressed_buf;
+
+  (void)fseek(file, pos, SEEK_SET);
+  size_t ret_code = fread(buf, 1, max, file);
+  if (ret_code != max) {
+    if (feof(file)) {
+      fprintf(stderr, "Error reading file: unexpected end of file\n");
+      return ret_code;
+    } else if (ferror(file)) {
+      perror("Error reading file");
+      return ret_code;
+    }
+  }
+
+  compressed_buf = compress_gzip(buf, ret_code, &new_size);
+  if (!compressed_buf) {
+    fprintf(stderr, "Failed to compress..\n");
+    return ret_code;
+  }
+
+  memcpy(buf, compressed_buf, new_size);
+  free(compressed_buf);
+
+  return ret_code;
 }
 
 static void file_free_callback(void *cls) {
@@ -64,10 +98,22 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
     return MHD_NO;
   }
 
-  response = MHD_create_response_from_callback(
-      stat_buf.st_size, 32 * 1024, &file_reader, file, &file_free_callback);
   mime = get_mime(path);
+
+  if (strncmp(mime, "text", 4) == 0) {
+    // ssize_t size = get_compressed_size(file, stat_buf.st_size);
+    // printf("size: %lu\n", size);
+    response = MHD_create_response_from_callback(stat_buf.st_size, 32 * 1024,
+                                                 &file_reader_compress, file,
+                                                 &file_free_callback);
+    MHD_add_response_header(response, "Content-Encoding", "gzip");
+  } else {
+    response = MHD_create_response_from_callback(
+        stat_buf.st_size, 32 * 1024, &file_reader, file, &file_free_callback);
+  }
+
   MHD_add_response_header(response, "Content-Type", mime);
+  MHD_add_response_header(response, "Server", __NAME__);
 
   if (response == NULL) {
     fclose(file);
@@ -84,6 +130,8 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
 
   return ret;
 }
+
+void signal_handler(int sig) { return; }
 
 int main(int argc, char **argv) {
   struct MHD_Daemon *daemon;
@@ -103,10 +151,10 @@ int main(int argc, char **argv) {
   puts("CTRL-C to exit");
 
   // Will implement logging through this maybe sooner or later somehow :3
-  while (1)
-    ;
+  signal(SIGINT, signal_handler);
+  pause();
 
-  printf("Exiting gracefully c:\n");
+  puts("\nExiting gracefully c:");
   MHD_stop_daemon(daemon);
   return 0;
 }
