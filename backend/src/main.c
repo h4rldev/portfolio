@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #include "../include/compress.h"
+#include "../include/config.h"
 #include "../include/file.h"
 #include "../include/http.h"
 #include "../include/meta.h"
@@ -135,12 +136,21 @@ void signal_handler(int sig) { return; }
 
 int main(int argc, char **argv) {
   struct MHD_Daemon *daemon;
+  Config config;
 
-  int port = atoi(argv[1]);
-  if (argc != 2 || port == 0) {
+  if (argc != 2) {
     printf("USAGE: %s [PORT] :3\n", argv[0]);
     return -1;
   }
+
+  int port = atoi(argv[1]);
+  if (port == 0) {
+    printf("USAGE: %s [PORT] :3\n", argv[0]);
+    return -1;
+  }
+
+  if (read_config(&config) != 0)
+    init_config(&config);
 
   daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, port, NULL, NULL,
                             &callback, NULL, MHD_OPTION_END);
@@ -156,5 +166,9 @@ int main(int argc, char **argv) {
 
   puts("\nExiting gracefully c:");
   MHD_stop_daemon(daemon);
+
+  write_config(&config);
+  free_config(&config);
+
   return 0;
 }

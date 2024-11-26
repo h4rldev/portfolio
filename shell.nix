@@ -20,6 +20,8 @@ pkgs.mkShell {
     nodePackages_latest.svelte-language-server
     nodePackages_latest.typescript-language-server
     zlib-ng
+    jansson
+    pkg-config
   ];
   shellHook = ''
     export PATH="./frontend/node_modules/.bin/:$PATH"

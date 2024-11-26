@@ -92,7 +92,7 @@ if ${COLOR}; then
 fi
 
 CFLAGS="-O3"
-LINKER_FLAGS="-lmicrohttpd -lmagic -lz-ng"
+LINKER_FLAGS="-lmicrohttpd -lmagic -lz-ng -ljansson"
 
 if [[ ${3} == "--debug" ]]; then
 	CFLAGS="${CFLAGS} -gddb"

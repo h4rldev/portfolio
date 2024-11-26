@@ -17,3 +17,6 @@ scripts_bootstrap := scripts_path / "frontend-bootstrap.sh"
 
 @dev-frontend:
   {{scripts_bootstrap}} dev
+
+@clear_cores:
+  {{backend_build_script}} -vg

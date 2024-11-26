@@ -1,9 +1,12 @@
-#include "../../include/file.h"
 #include <magic.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
+
+#include "../../include/file.h"
 
 char *get_mime(char *path) {
   char *mime = (char *)malloc(1024);
@@ -24,12 +27,28 @@ char *get_mime(char *path) {
 char *get_cwd(void) {
   char *cwd = malloc(1024);
   if (!cwd)
-    return 0;
+    return NULL;
 
   if (getcwd(cwd, 1024) == NULL) {
+    free(cwd);
     perror("getcwd");
-    return 0;
+    return NULL;
   }
 
   return cwd;
 }
+
+int make_dir(char *path) {
+  if (mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
+    perror("Failed to create directory");
+    return -1;
+  }
+  return 0;
+}
+
+bool path_exist(char *path) {
+  struct stat sb;
+  return (stat(path, &sb) == 0);
+}
+
+int read_file(char *path, char **buf, size_t *file_len) { return 0; }

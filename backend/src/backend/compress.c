@@ -19,7 +19,7 @@ char *compress_gzip(char *in, size_t in_len, size_t *res_len) {
 
   char *buf = malloc(in_len);
   char *ret_buf = malloc(1);
-  if (!buf)
+  if (!buf && !ret_buf)
     return NULL;
 
   zng_stream stream;

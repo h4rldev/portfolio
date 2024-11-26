@@ -1,9 +1,12 @@
 #ifndef FILE_H_IMPLEMENTATION
 #define FILE_H_IMPLEMENTATION
 
-#include <stddef.h>
+#include <stdbool.h>
 
 char *get_mime(char *path);
 char *get_cwd(void);
+
+int make_dir(char *path);
+bool path_exist(char *path);
 
 #endif // !FILE_H_IMPLEMENTATION
