@@ -21,7 +21,9 @@ pkgs.mkShell {
     nodePackages_latest.typescript-language-server
     zlib-ng
     jansson
+    # only for finding linker/c flags
     pkg-config
+    certbot
   ];
   shellHook = ''
     export PATH="./frontend/node_modules/.bin/:$PATH"

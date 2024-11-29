@@ -8,7 +8,7 @@ scripts_bootstrap := scripts_path / "frontend-bootstrap.sh"
 @default:
   just --list
 
-@build-backend name="backend":
+@build-backend name="flscio":
   {{backend_build_script}} -c
   {{backend_build_script}} -l {{name}}
 

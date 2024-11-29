@@ -14,27 +14,25 @@ int init_config(Config *config) {
   Config local_config;
 
   sslConfig local_ssl;
+  bool compress = true;
 
   char *email_buf = (char *)malloc(255);
+  char *domain_buf = (char *)malloc(128);
+  if (!email_buf || !domain_buf)
+    return -1;
+
   email_buf = NULL;
+  domain_buf = NULL;
 
-  local_ssl.email = email_buf;
   local_ssl.ssl = false;
+  local_ssl.email = email_buf;
+  local_ssl.domain = domain_buf;
 
-  networkConfig local_network;
-
-  char *ip_buf = (char *)malloc(16);
-  strlcpy(ip_buf, "127.0.0.1", 16);
-
-  local_network.ip = ip_buf;
-  local_network.port = 8080;
-
+  local_config.port = 8080;
+  local_config.compress = compress;
   local_config.ssl = local_ssl;
-  local_config.network = local_network;
 
   *config = local_config;
-
-  puts(config->network.ip);
 
   return 0;
 }
@@ -47,15 +45,6 @@ int write_config(Config *config) {
   if (!cwd || !path)
     return -1;
 
-  if (config == NULL)
-    return -1;
-
-  sslConfig local_ssl = config->ssl;
-  networkConfig local_network = config->network;
-
-  snprintf(path, 1024, "%s%s", cwd, default_path);
-  free(cwd);
-
   if (path_exist(path) == false) {
     if (make_dir(path) != 0) {
       free(path);
@@ -63,36 +52,50 @@ int write_config(Config *config) {
     }
   }
 
+  snprintf(path, 1024, "%s%s", cwd, default_path);
+  free(cwd);
+
   strlcat(path, "config.json", 1024);
+
+  if (config == NULL)
+    return -1;
+
+  bool compress = config->compress;
+  unsigned int port = config->port;
+  sslConfig local_ssl = config->ssl;
 
   json_t *root = json_object();
   json_t *ssl_object = json_object();
-  json_t *network_object = json_object();
 
-  char *email;
-  bool ssl = local_ssl.ssl;
+  json_object_set_new(root, "port", json_integer(port));
 
-  if (local_ssl.email == NULL)
-    email = "";
+  if (compress == true)
+    json_object_set_new(root, "compress", json_true());
   else
-    email = local_ssl.email;
+    json_object_set_new(root, "compress", json_false());
 
-  json_object_set_new(ssl_object, "email", json_string(email));
+  bool ssl = local_ssl.ssl;
+  char *email;
+  char *domain;
 
   if (ssl == true)
     json_object_set_new(ssl_object, "ssl", json_true());
   else
     json_object_set_new(ssl_object, "ssl", json_false());
 
+  if (local_ssl.email == NULL)
+    email = "";
+  else
+    email = local_ssl.email;
+
+  if (local_ssl.domain == NULL)
+    domain = "";
+  else
+    domain = local_ssl.domain;
+
+  json_object_set_new(ssl_object, "email", json_string(email));
+  json_object_set_new(ssl_object, "domain", json_string(domain));
   json_object_set_new(root, "ssl", ssl_object);
-
-  char *ip = local_network.ip;
-  unsigned int port = local_network.port;
-
-  json_object_set_new(network_object, "ip", json_string(ip));
-  json_object_set_new(network_object, "port", json_integer(port));
-
-  json_object_set_new(root, "network", network_object);
 
   FILE *file = fopen(path, "w");
   json_dumpf(root, file, JSON_INDENT(2));
@@ -124,6 +127,10 @@ int read_config(Config *config) {
   snprintf(path, 1024, "%s%sconfig.json", cwd, default_path);
   free(cwd);
 
+  if (!path_exist(path)) {
+    return -1;
+  }
+
   root = json_load_file(path, 0, &error);
   if (!root) {
     fprintf(stderr, "Error parsing json on line %d: %s\n", error.line,
@@ -134,11 +141,29 @@ int read_config(Config *config) {
 
   free(path);
 
+  json_t *port_integer = json_object_get(root, "port");
+
+  unsigned int port;
+  if (json_is_integer(port_integer))
+    port = json_integer_value(port_integer);
+
+  json_t *compress_bool = json_object_get(root, "compress");
+
+  bool compress;
+  if (json_is_boolean(compress_bool))
+    compress = json_boolean_value(compress_bool);
+
   json_t *ssl_object = json_object_get(root, "ssl");
   if (!json_is_object(ssl_object)) {
     json_decref(root);
     return -1;
   }
+
+  json_t *ssl_bool = json_object_get(ssl_object, "ssl");
+
+  bool ssl;
+  if (json_is_boolean(ssl_bool))
+    ssl = json_boolean_value(ssl_bool);
 
   json_t *email_string = json_object_get(ssl_object, "email");
 
@@ -151,50 +176,26 @@ int read_config(Config *config) {
   if (json_is_string(email_string))
     strlcpy(email, json_string_value(email_string), 255);
 
-  json_t *ssl_bool = json_object_get(ssl_object, "ssl");
+  json_t *domain_string = json_object_get(ssl_object, "domain");
 
-  bool ssl;
-  if (json_is_boolean(ssl_bool))
-    ssl = json_boolean_value(ssl_bool);
-
-  json_t *network_object = json_object_get(root, "network");
-  if (!json_is_object(network_object)) {
+  char *domain = (char *)malloc(128);
+  if (!domain) {
     free(email);
     json_decref(root);
     return -1;
   }
 
-  json_t *ip_string = json_object_get(network_object, "ip");
-  char *ip = (char *)malloc(16);
-  if (!ip) {
-    free(email);
-    json_decref(root);
-    return -1;
-  }
-
-  if (json_is_string(ip_string))
-    strlcpy(ip, json_string_value(ip_string), 16);
-
-  json_t *port_integer = json_object_get(network_object, "port");
-
-  unsigned int port;
-  if (json_is_integer(port_integer))
-    port = json_integer_value(port_integer);
-
-  Config local_config;
+  if (json_is_string(domain_string))
+    strlcpy(domain, json_string_value(domain_string), 128);
 
   sslConfig local_ssl;
-  local_ssl.email = email;
   local_ssl.ssl = ssl;
+  local_ssl.email = email;
+  local_ssl.domain = domain;
 
-  networkConfig local_network;
-  local_network.ip = ip;
-  local_network.port = port;
-
-  local_config.ssl = local_ssl;
-  local_config.network = local_network;
-
-  *config = local_config;
+  config->port = port;
+  config->compress = compress;
+  config->ssl = local_ssl;
 
   json_decref(root);
 
@@ -203,10 +204,9 @@ int read_config(Config *config) {
 
 int free_config(Config *config) {
   sslConfig local_ssl = config->ssl;
-  networkConfig local_network = config->network;
 
   free(local_ssl.email);
-  free(local_network.ip);
+  free(local_ssl.domain);
 
   return 0;
 }

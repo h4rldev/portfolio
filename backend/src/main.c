@@ -6,11 +6,13 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include "../include/cli.h"
 #include "../include/compress.h"
 #include "../include/config.h"
 #include "../include/file.h"
 #include "../include/http.h"
 #include "../include/meta.h"
+#include "../include/ssl.h"
 
 static ssize_t file_reader(void *cls, uint64_t pos, char *buf, size_t max) {
   FILE *file = cls;
@@ -23,6 +25,8 @@ static ssize_t file_reader_compress(void *cls, uint64_t pos, char *buf,
                                     size_t max) {
   FILE *file = cls;
   size_t new_size;
+  Config config;
+  read_config(&config);
 
   char *compressed_buf;
 
@@ -40,7 +44,7 @@ static ssize_t file_reader_compress(void *cls, uint64_t pos, char *buf,
 
   compressed_buf = compress_gzip(buf, ret_code, &new_size);
   if (!compressed_buf) {
-    fprintf(stderr, "Failed to compress..\n");
+    fprintf(stderr, "Failed to compress entirely..\n");
     return ret_code;
   }
 
@@ -67,6 +71,9 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
   static int dummy;
   struct MHD_Response *response;
   int ret;
+
+  Config config;
+  read_config(&config);
 
   // unexpected method
   if (strncmp(method, "GET", 3) != 0)
@@ -101,13 +108,16 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
 
   mime = get_mime(path);
 
-  if (strncmp(mime, "text", 4) == 0) {
-    // ssize_t size = get_compressed_size(file, stat_buf.st_size);
-    // printf("size: %lu\n", size);
-    response = MHD_create_response_from_callback(stat_buf.st_size, 32 * 1024,
-                                                 &file_reader_compress, file,
-                                                 &file_free_callback);
-    MHD_add_response_header(response, "Content-Encoding", "gzip");
+  if (config.compress == true) {
+    if (strncmp(mime, "text", 4) == 0) {
+      response = MHD_create_response_from_callback(stat_buf.st_size, 32 * 1024,
+                                                   &file_reader_compress, file,
+                                                   &file_free_callback);
+      MHD_add_response_header(response, "Content-Encoding", "gzip");
+    } else {
+      response = MHD_create_response_from_callback(
+          stat_buf.st_size, 32 * 1024, &file_reader, file, &file_free_callback);
+    }
   } else {
     response = MHD_create_response_from_callback(
         stat_buf.st_size, 32 * 1024, &file_reader, file, &file_free_callback);
@@ -138,19 +148,21 @@ int main(int argc, char **argv) {
   struct MHD_Daemon *daemon;
   Config config;
 
-  if (argc != 2) {
-    printf("USAGE: %s [PORT] :3\n", argv[0]);
-    return -1;
-  }
-
-  int port = atoi(argv[1]);
-  if (port == 0) {
-    printf("USAGE: %s [PORT] :3\n", argv[0]);
-    return -1;
-  }
-
-  if (read_config(&config) != 0)
+  if (read_config(&config) != 0) {
     init_config(&config);
+    write_config(&config);
+  }
+
+  generate_key_pair();
+  return -1;
+
+  if (parse_args(&argc, &argv, &config) != 0) {
+    fprintf(stderr, "%s: failed parsing args, something is very wrong..\n",
+            argv[0]);
+    return -1;
+  }
+  unsigned int port = config.port;
+  bool ssl = config.ssl.ssl;
 
   daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, port, NULL, NULL,
                             &callback, NULL, MHD_OPTION_END);
@@ -167,7 +179,6 @@ int main(int argc, char **argv) {
   puts("\nExiting gracefully c:");
   MHD_stop_daemon(daemon);
 
-  write_config(&config);
   free_config(&config);
 
   return 0;

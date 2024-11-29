@@ -4,23 +4,21 @@
 #include <stdbool.h>
 
 typedef struct {
-  char *email;
   bool ssl;
+  char *email;
+  char *domain;
 } sslConfig;
 
 typedef struct {
-  char *ip;
   unsigned int port;
-} networkConfig;
-
-typedef struct {
+  bool compress;
   sslConfig ssl;
-  networkConfig network;
 } Config;
 
 int init_config(Config *config);
-int write_config(Config *config);
-int read_config(Config *config);
 int free_config(Config *config);
 
-#endif // ! CONFIG_H_IMPLEMENTATION
+int read_config(Config *config);
+int write_config(Config *config);
+
+#endif // !CONFIG_H_IMPLEMENTATION

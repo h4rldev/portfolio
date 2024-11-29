@@ -42,30 +42,11 @@ shopt -s nullglob # remove words if not found
 # set -x # show cmds
 set -e # fail globally
 
-__NAME__="FLSC-portfolio: build.sh"
+__NAME__="flscio: build.sh"
 __AUTHOR__="h4rl"
-__DESCRIPTION__="Compiles and links the backend into an executable"
+__DESCRIPTION__="Compiles and links the flscio into an executable"
 __LICENSE__="BSD 3-Clause License"
 __VERSION__="0.1.0"
-
-# name projs by their directories
-# and specify type :3
-
-PROJS=("backend")
-TYPES=("bin")
-
-# ignore
-SRCS=()
-DIRS=()
-
-for proj_i in "${!PROJS[@]}"; do
-	SRCS[proj_i]="$(pwd)/backend/src"
-	if [[ ${TYPES[proj_i]} != "lib" ]]; then
-		DIRS[proj_i]="${SRCS[proj_i]}/${PROJS[proj_i]##*/}"
-	else
-		DIRS[proj_i]="none"
-	fi
-done
 
 BUILD="$(pwd)/backend/build"
 OUT="${BUILD}/out"
@@ -97,6 +78,25 @@ LINKER_FLAGS="-lmicrohttpd -lmagic -lz-ng -ljansson"
 if [[ ${3} == "--debug" ]]; then
 	CFLAGS="${CFLAGS} -gddb"
 fi
+
+# name projs by their directories
+# and specify type :3
+
+PROJS=("backend")
+TYPES=("bin")
+
+# ignore
+SRCS=()
+DIRS=()
+
+for proj_i in "${!PROJS[@]}"; do
+	SRCS[proj_i]="$(pwd)/${PROJS[proj_i]}/src"
+	if [[ ${TYPES[proj_i]} != "lib" ]]; then
+		DIRS[proj_i]="${SRCS[proj_i]}/${PROJS[proj_i]##*/}"
+	else
+		DIRS[proj_i]="none"
+	fi
+done
 
 handle_failure() {
 	local MESSAGE="${1}"
