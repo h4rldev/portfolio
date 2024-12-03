@@ -26,5 +26,5 @@ char *get_public_key();
  * returns status;
  */
 
-int *generate_key_pair();
+int generate_key_pair();
 #endif // !SSL_H_IMPLEMENTATION
