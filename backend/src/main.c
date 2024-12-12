@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <fcntl.h>
 #include <microhttpd.h>
 #include <signal.h>
@@ -11,6 +12,7 @@
 #include "../include/config.h"
 #include "../include/file.h"
 #include "../include/http.h"
+#include "../include/log.h"
 #include "../include/meta.h"
 #include "../include/ssl.h"
 
@@ -72,6 +74,22 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
   struct MHD_Response *response;
   int ret;
 
+  const union MHD_ConnectionInfo *ci;
+  struct sockaddr *client_addr;
+  char client_ip[INET_ADDRSTRLEN];
+  uint16_t client_port;
+
+  ci = MHD_get_connection_info(connection, MHD_CONNECTION_INFO_CLIENT_ADDRESS);
+  if (ci && ci->client_addr) {
+    client_addr = ci->client_addr;
+    struct sockaddr_in *addr = (struct sockaddr_in *)client_addr;
+    inet_ntop(AF_INET, &addr->sin_addr, client_ip, INET_ADDRSTRLEN);
+    client_port = ntohs(addr->sin_port);
+  } else {
+    strlcpy(client_ip, "Unknown", INET_ADDRSTRLEN);
+    client_port = 0;
+  }
+
   Config config;
   read_config(&config);
 
@@ -87,8 +105,11 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
   }
 
   // upload data in a GET!?
-  if (*upload_data_size != 0)
+  if (*upload_data_size != 0) {
+    flscio_log(Error, "%s:%lu tried to upload data to: %s", client_ip,
+               client_port, url);
     return MHD_NO;
+  }
 
   // clear context pointer
   *ptr = NULL;
@@ -133,6 +154,8 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
     return MHD_NO;
   }
 
+  flscio_log(Info, "%s:%lu %s", client_ip, client_port, url);
+
   ret = MHD_queue_response(connection, MHD_HTTP_OK, response);
   MHD_destroy_response(response);
 
@@ -153,14 +176,12 @@ int main(int argc, char **argv) {
     write_config(&config);
   }
 
-  generate_key_pair();
-  return -1;
-
   if (parse_args(&argc, &argv, &config) != 0) {
     fprintf(stderr, "%s: failed parsing args, something is very wrong..\n",
             argv[0]);
     return -1;
   }
+
   unsigned int port = config.port;
   bool ssl = config.ssl.ssl;
 
@@ -170,7 +191,7 @@ int main(int argc, char **argv) {
     return -1;
 
   printf("libmicrohttpd: running on localhost port %d c:\n", port);
-  puts("CTRL-C to exit");
+  puts("CTRL-C to exit\n");
 
   // Will implement logging through this maybe sooner or later somehow :3
   signal(SIGINT, signal_handler);
@@ -180,6 +201,5 @@ int main(int argc, char **argv) {
   MHD_stop_daemon(daemon);
 
   free_config(&config);
-
   return 0;
 }

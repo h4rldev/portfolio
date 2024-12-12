@@ -76,7 +76,7 @@ CFLAGS="-O3"
 LINKER_FLAGS="-lmicrohttpd -lmagic -lz-ng -ljansson"
 
 if [[ ${3} == "--debug" ]]; then
-	CFLAGS="${CFLAGS} -gddb"
+	CFLAGS="-g ${CFLAGS}"
 fi
 
 # name projs by their directories

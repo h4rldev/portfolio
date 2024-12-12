@@ -1,10 +1,10 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "../../include/cli.h"
 #include "../../include/config.h"
+#include "../../include/log.h"
 #include "../../include/meta.h"
 
 static void usage() {
@@ -14,11 +14,8 @@ static void usage() {
          "    -p, --port  [port number]      override port specified in "
          "config, is thrown away at program "
          "end\n"
-         "    -s, --ssl                      toggles HTTPS/SSL (ssl generation "
-         "needs an email set)\n"
-         "    -e, --email [email address]    override email specified in "
-         "config, is also thrown away at "
-         "program end\n"
+         "    -s, --ssl                      toggles HTTPS/SSL (needs a cert "
+         "and key in path)\n"
          "    -v, --verbose                  toggles verbose messaging "
          "(enables logs)\n\n"
 
@@ -46,14 +43,13 @@ int parse_args(int *argc, char ***argv, Config *populated_args) {
       // requires no arg due to being bool;
       {"ssl", no_argument, 0, 's'},
       // optional for security alerts about certificate
-      {"email", required_argument, 0, 'e'},
       {"verbose", no_argument, 0, 'v'},
       {0, 0, 0, 0}}; // end options_arr
 
   while (1) {
     int this_option_optind = optind ? optind : 1;
 
-    char arg = getopt_long(local_argc, local_argv, ":hp:se:v", long_options,
+    char arg = getopt_long(local_argc, local_argv, ":hp:sv", long_options,
                            &option_index);
 
     if (arg == -1)
@@ -66,7 +62,7 @@ int parse_args(int *argc, char ***argv, Config *populated_args) {
     case 'p':
       port_buf = atoi(optarg);
       if (port_buf <= 0 || port_buf > 65535) {
-        fprintf(stderr, "%s: unknown port \"%s\"\n", local_argv[0], optarg);
+        flscio_log(Error, "Unknown port \"%s\"", optarg);
         return -1;
       } else {
         populated_args->port = port_buf;
@@ -77,14 +73,9 @@ int parse_args(int *argc, char ***argv, Config *populated_args) {
       populated_args->ssl.ssl = !populated_args->ssl.ssl;
       break;
 
-    case 'e':
-      strlcpy(populated_args->ssl.email, optarg, 255);
-      break;
-
     case '?':
-      printf("%s: invalid flag passed \"%s\"\n", local_argv[0],
-             local_argv[optind - 1]);
-      printf("%s: running server on default configuration\n", local_argv[0]);
+      flscio_log(Error, "invalid flag passed \"%s\"\n", local_argv[optind - 1]);
+      flscio_log(Info, "running server on default configuration\n");
       return 0;
 
     default:
