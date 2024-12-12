@@ -39,7 +39,7 @@
 # Made with <3 by h4rl!
 
 shopt -s nullglob # remove words if not found
-# set -x # show cmds
+# set -x            # show cmds
 set -e # fail globally
 
 __NAME__="flscio: build.sh"
@@ -51,13 +51,7 @@ __VERSION__="0.1.0"
 BUILD="$(pwd)/backend/build"
 OUT="${BUILD}/out"
 BIN="${BUILD}/bin"
-# LIB="${BUILD}/lib"
 
-#TEST="$(pwd)/test"
-#TEST_OUT="${TEST}/out"
-#TEST_BIN="${TEST}/bin"
-
-#INCLUDE="$(pwd)/include"
 COLOR=true
 
 CC="gcc"
@@ -66,14 +60,13 @@ if ${COLOR}; then
 	ESCAPE=$(printf "\e")
 	RED="${ESCAPE}[0;31m"
 	GREEN="${ESCAPE}[0;32m"
-	YELLOW="${ESCAPE}[1;33m"
 	BLUE="${ESCAPE}[0;34m"
 	CYAN="${ESCAPE}[0;36m"
 	CLEAR="${ESCAPE}[0m"
 fi
 
 CFLAGS="-O3"
-LINKER_FLAGS="-lmicrohttpd -lmagic -lz-ng -ljansson"
+LINKER_FLAGS="-lmicrohttpd -lmagic -lz-ng -ljansson -lgcrypt"
 
 if [[ ${3} == "--debug" ]]; then
 	CFLAGS="-g ${CFLAGS}"
@@ -82,21 +75,10 @@ fi
 # name projs by their directories
 # and specify type :3
 
-PROJS=("backend")
-TYPES=("bin")
+PROJ="backend"
 
-# ignore
-SRCS=()
-DIRS=()
-
-for proj_i in "${!PROJS[@]}"; do
-	SRCS[proj_i]="$(pwd)/${PROJS[proj_i]}/src"
-	if [[ ${TYPES[proj_i]} != "lib" ]]; then
-		DIRS[proj_i]="${SRCS[proj_i]}/${PROJS[proj_i]##*/}"
-	else
-		DIRS[proj_i]="none"
-	fi
-done
+SRC="$(pwd)/${PROJ}/src"
+DIR="${SRC}/${PROJ}"
 
 handle_failure() {
 	local MESSAGE="${1}"
@@ -111,13 +93,6 @@ handle_failure() {
 }
 
 print_help() {
-	# ${RED}-st${CLEAR} | ${RED}--setup-testing${CLEAR}
-	# Sets up and installs unity in the correct path.
-	# (Automatically runs if not already installed during --test)
-
-	# ${RED}-t${CLEAR} | ${RED}--test${CLEAR}
-	# Runs unit tests in ${TEST}
-
 	cat <<EOF
 ${RED}${__NAME__}${CLEAR} v${GREEN}${__VERSION__}${CLEAR}
 Licensed under: ${CYAN}${__LICENSE__}${CLEAR}
@@ -129,6 +104,9 @@ Compiles ${CYAN}libcav${CLEAR} and ${CYAN}cav${CLEAR} into an executable${CLEAR}
 ${RED}-l${CLEAR} | ${RED}--link${CLEAR}
 Links all the files in ${CYAN}${OUT}/${CLEAR} to an executable with ${BLUE}{EXECUTABLE_NAME}${CLEAR}
 
+${RED}-cd${CLEAR} | ${RED}--compilation-database${CLEAR}
+Generates a compilation database for the project using bear
+
 ${RED}-d${CLEAR} | ${RED}--delete${CLEAR} | ${RED}--clean${CLEAR}
 Cleans all files in ${CYAN}${BIN}/${CLEAR} & ${CYAN}${OUT}/${CLEAR}
 
@@ -139,173 +117,56 @@ Made with ${RED}<3${CLEAR} by ${__AUTHOR__}
 EOF
 }
 
-# compile_all() {
-#  	local -a C_FILES
-#
-#		local -a TRIMMED_C_FILES
-#		local -a TRIMMED_C_FILENAMES
-#
-#		local RECOMPILE
-#		local TRIMMED_C_FILE
-#
-#		local DIR
-#		local DIR_I
-# 	local SRC
-#
-#		for DIR_I in "${!DIRS[@]}"; do
-#			DIR="${DIRS[$DIR_I]}"
-#			SRC="${SRCS[$DIR_I]}"
-#
-#			if [[ ${DIR} != "none" ]]; then
-#				mapfile -t C_FILES < <(find "${DIR}" -type f -name "*.c")
-#			else
-#				mapfile -t C_FILES < <(find "${SRC}" -type f -name "*.c")
-#			fi
-#
-#			for ((i = 0; i < ${#C_FILES[@]}; i++)); do
-#				TRIMMED_C_FILE="${C_FILES[${i}]%.*}"
-#				TRIMMED_C_FILENAME="${TRIMMED_C_FILE##*/}"
-#				TRIMMED_C_FILES+=("${TRIMMED_C_FILE}")
-#				TRIMMED_C_FILENAMES+=("${TRIMMED_C_FILENAME}")
-#				echo -e "${BLUE}>${CLEAR} Compiling: ${CYAN}${C_FILES[${i}]}${CLEAR}.."
-#				if [[ -f "${OUT}/${TRIMMED_C_FILENAME}.o" ]]; then
-#					echo -ne "${YELLOW}!${CLEAR} ${CYAN}${TRIMMED_C_FILENAME}.o${CLEAR} seems to already exist, you wanna recompile it? [${GREEN}Y${CLEAR}/${RED}n${CLEAR}]: "
-#					read -r RECOMPILE
-#					if [[ ! ${RECOMPILE} =~ [Nn] ]]; then
-#						"${CC}" ${CFLAGS} -c "${C_FILES[${i}]}" -o "${OUT}/${TRIMMED_C_FILENAME}.o"
-#					fi
-#				else
-#					"${CC}" ${CFLAGS} -c "${C_FILES[${i}]}" -o "${OUT}/${TRIMMED_C_FILENAME}.o"
-#				fi
-#			done
-#
-#			if [[ ${DIR} != "none" ]]; then
-#				echo -e "${BLUE}>${CLEAR} Compiling: main.c.."
-#				"${CC}" ${CFLAGS} -c "${SRC}/main.c" -o "${OUT}/main.o"
-#
-#				echo -e "${GREEN}✓${CLEAR} Compiled ${CYAN}${TRIMMED_C_FILENAMES[*]}${CLEAR} & ${CYAN}main${CLEAR} successfully"
-#			else
-#				echo -e "${GREEN}✓${CLEAR} Compiled ${CYAN}${TRIMMED_C_FILENAMES[*]}${CLEAR} successfully"
-#			fi
-#
-#			unset DIR
-#			unset C_FILES
-#			unset TRIMMED_C_FILE
-#			unset TRIMMED_C_FILES
-#			unset TRIMMED_C_FILES
-#			unset TRIMMED_C_FILENAMES
-#			unset SRC
-#		done
-# }
-
 # iterates and compiles each file on selected target, then compiles main.c, moving them to out
 
 compile() {
 	local -a C_FILES
 
-	local -a TRIMMED_C_FILES
 	local -a TRIMMED_C_FILENAMES
 
-	local RECOMPILE
 	local TRIMMED_C_FILE
 	local TRIMMED_C_FILENAME
-
-	local DIR
-	local SRC
-	#	local INDEX
-
-	#	local TARGET
-
-	#	TARGET=${1}
 
 	if [[ ! -d ${OUT} ]]; then
 		mkdir "${OUT}"
 	fi
 
-	#	case $TARGET in
-	#	"libcav")
-	#		INDEX=0
-	#		clean_dangling "${SRCS[$INDEX]}" "${OUT}"
-	#		;;
-	#	"cav")
-	#		INDEX=1
-	#		clean_dangling "${DIRS[$INDEX]}" "${OUT}"
-	#		;;
-	#	"both" | "all" | *)
-	#		compile_all
-	#		clean_dangling "${SRCS[0]}" "${DIRS[1]}" "${OUT}"
-	#		exit 0
-	#		;;
-	#	esac
-
-	DIR="${DIRS[0]}"
-	SRC="${SRCS[0]}"
-
-	#	if [[ ${TYPE} != "lib" ]]; then
 	mapfile -t C_FILES < <(find "${DIR}" -type f -name "*.c")
-	#	else
-	#		mapfile -t C_FILES < <(find "${SRC}" -type f -name "*.c")
-	#	fi
 
 	for ((i = 0; i < ${#C_FILES[@]}; i++)); do
 		TRIMMED_C_FILE="${C_FILES[${i}]%.*}"
 		TRIMMED_C_FILENAME="${TRIMMED_C_FILE##*/}"
-		TRIMMED_C_FILES+=("${TRIMMED_C_FILE}")
 		TRIMMED_C_FILENAMES+=("${TRIMMED_C_FILENAME}")
-		echo -e "${BLUE}>${CLEAR} Compiling: ${CYAN}${C_FILES[${i}]}${CLEAR}.."
-		if [[ -f "${OUT}/${TRIMMED_C_FILENAME}.o" ]]; then
-			echo -ne "${YELLOW}!${CLEAR} ${CYAN}${TRIMMED_C_FILENAME}.o${CLEAR} seems to already exist, you wanna recompile it? [${GREEN}Y${CLEAR}/${RED}n${CLEAR}]: "
-			read -r RECOMPILE
-			if [[ ! ${RECOMPILE} =~ [Nn] ]]; then
-				"${CC}" ${CFLAGS} -c "${C_FILES[${i}]}" -o "${OUT}/${TRIMMED_C_FILENAME}.o"
-			fi
-		else
-			"${CC}" ${CFLAGS} -c "${C_FILES[${i}]}" -o "${OUT}/${TRIMMED_C_FILENAME}.o"
-		fi
+		echo -e "${BLUE}>${CLEAR} Compiling: ${CYAN}${TRIMMED_C_FILENAMES[${i}]}.c${CLEAR}.."
+		${CC} "${CFLAGS}" -c "${C_FILES[${i}]}" -o "${OUT}/${TRIMMED_C_FILENAME}.o"
 	done
 
 	#	if [[ ${TYPE} != "lib" ]]; then
 	echo -e "${BLUE}>${CLEAR} Compiling: main.c.."
-	"${CC}" ${CFLAGS} -c "${SRC}/main.c" -o "${OUT}/main.o"
+	${CC} "${CFLAGS}" -c "${SRC}/main.c" -o "${OUT}/main.o"
 
 	echo -e "${GREEN}✓${CLEAR} Compiled ${CYAN}${TRIMMED_C_FILENAMES[*]}${CLEAR} & ${CYAN}main${CLEAR} successfully"
-	#	else
-	#		echo -e "${GREEN}✓${CLEAR} Compiled ${CYAN}${TRIMMED_C_FILENAMES[*]}${CLEAR} successfully"
-	#	fi
 
 	unset C_FILES
 	unset TRIMMED_C_FILE
 	unset TRIMMED_C_FILENAME
-	unset TRIMMED_C_FILES
-	unset TRILLED_C_FILENAMES
-	unset DIR
-	unset SRC
+	unset TRIMMED_C_FILENAMES
+}
+
+generate_compilation_database() {
+	bear -- "${0}" -c
 }
 
 # links all object files in out/ to an executable bin or a library in lib
 
 link() {
-	local REDO
 	local -a OBJECTS
 	local NAME
 	local -a TRIMMED_FILES
 
-	# local PACKAGING_TYPE
-
-	#	PACKAGING_TYPE=${1}
-
-	#	if [ -z "$PACKAGING_TYPE" ]; then
-	#		echo -e "${RED}!${CLEAR} Invalid usage! specify packaging type, options being \"bin\" or \"lib\""
-	#		exit 1
-	#	fi
-
 	if [[ ! -d ${BIN} ]]; then
 		mkdir "${BIN}"
 	fi
-
-	#	if [[ ! -d ${LIB} ]]; then
-	#		mkdir "${LIB}"
-	#	fi
 
 	mapfile -t OBJECTS < <(find "${OUT}" -type f -name "*.o")
 
@@ -315,164 +176,15 @@ link() {
 	if [[ -n ${2} ]]; then
 		NAME="${2}"
 	else
-		#		case $PACKAGING_TYPE in
-		#		"lib")
-		NAME="${PROJS[0]}"
-		#			;;
-		#		"bin")
-		#			NAME="${PROJS[1]}"
-		#			;;
-		#		*)
-		#			echo -e "${RED}!${CLEAR} This place is impossible to reach, you got some miracle bash shell brother."
-		#			exit 1
-		#			;;
-		#		esac
+		NAME="${PROJ}"
 	fi
 
-	#	case $PACKAGING_TYPE in
-	#	"lib")
-	#		echo -e "${BLUE}>${CLEAR} Archiving: ${CYAN}${TRIMMED_FILES[*]}${CLEAR}.."
-	#		if [[ -f "${LIB}/${NAME}.a" ]]; then
-	#			echo -ne "${YELLOW}!${CLEAR} ${CYAN}${NAME}.a${CLEAR} seems to already exist, you wanna rearchive it? [${GREEN}Y${CLEAR}/${RED}n${CLEAR}]: "
-	#			read -r REDO
-	#			if [[ ! ${REDO} =~ [Nn] ]]; then
-	#				ar rcs "${LIB}/${NAME}.a" ${TRIMMED_FILES[*]}
-	#				ranlib "${LIB}/${NAME}.a"
-	#				echo -e "${GREEN}✓${CLEAR} Archived ${CYAN}${TRIMMED_FILES}${CLEAR} to ${BLUE}${NAME}.a${CLEAR} successfully"
-	#			fi
-	#		else
-	#			ar rcs "${LIB}/${NAME}.a" ${TRIMMED_FILES[*]}
-	#			ranlib "${LIB}/${NAME}.a"
-	#			echo -e "${GREEN}✓${CLEAR} Archived ${CYAN}${TRIMMED_FILES}${CLEAR} to ${BLUE}${NAME}.a${CLEAR} successfully"
-	#		fi
-	#		;;
-	#	"bin")
 	echo -e "${BLUE}>${CLEAR} Linking: ${CYAN}${TRIMMED_FILES[*]}${CLEAR}.."
-	if [[ -f "${BIN}/${NAME}" ]]; then
-		echo -ne "${YELLOW}!${CLEAR} ${CYAN}${NAME}${CLEAR} seems to already exist, you wanna relink it? [${GREEN}Y${CLEAR}/${RED}n${CLEAR}]: "
-		read -r REDO
-		if [[ ! ${REDO} =~ [Nn] ]]; then
-			"${CC}" ${LINKER_FLAGS} -o "${BIN}/${NAME}" ${TRIMMED_FILES[*]}
-			echo -e "${GREEN}✓${CLEAR} Linked ${CYAN}${TRIMMED_FILES}${CLEAR} to ${BLUE}${NAME}${CLEAR} successfully"
-		fi
-	else
-		"${CC}" ${LINKER_FLAGS} -o "${BIN}/${NAME}" ${TRIMMED_FILES[*]}
-		echo -e "${GREEN}✓${CLEAR} Linked ${CYAN}${TRIMMED_FILES}${CLEAR} to ${BLUE}${NAME}${CLEAR} successfully"
-	fi
-	#		;;
-	#	*)
-	#		echo -e "${RED}!${CLEAR} This place is impossible to reach, you got some miracle bash shell brother."
-	#		exit 1
-	#		;;
-	#	esac
+	${CC} ${LINKER_FLAGS} -o "${BIN}/${NAME}" ${TRIMMED_FILES[*]}
+	echo -e "${GREEN}✓${CLEAR} Linked ${CYAN}${TRIMMED_FILES}${CLEAR} to ${BLUE}${NAME}${CLEAR} successfully"
 
 	popd >/dev/null || handle_failure "Failed to popd" # || echo "Failed to popd" && exit 1
 }
-
-#setup_unity() {
-#    mkdir "${TEST}/unity"
-#    mkdir temp_dir
-#
-#    pushd temp_dir >/dev/null || handle_failure "Failed to pushd"
-#    git clone https://github.com/ThrowTheSwitch/Unity
-#
-#    rm Unity/src/meson.build
-#    mv Unity/src/* "${TEST}/unity"
-#
-#    popd >/dev/null || handle_failure "Failed to popd"
-#
-#    rm -fr temp_dir
-#}
-
-#unit_test() {
-#    local -a TESTS
-#    local TEST_FILE
-#    local TRIMMED_TEST_FILE
-#    local TRIMMED_TEST_FILENAME
-#
-#    local -a TESTOBJS
-#    local TEST_OBJ_FILE
-#    local TRIMMED_TEST_OBJ_FILE
-#    local TRIMMED_TEST_OBJ_FILENAME
-#
-#    local -a TESTBINS
-#    local TEST_BINARY
-#    local TRIMMED_BINARY
-#    local TRIMMED_BINARY_NAME
-#
-#    if [[ ! -d ${TEST}/unity ]]; then
-#        setup_unity
-#    fi
-#
-#    if [[ ! -d ${TEST_OUT} ]]; then
-#        mkdir "${TEST_OUT}"
-#    fi
-#
-#    if [[ ! -d ${TEST_OUT}/unity ]]; then
-#        mkdir "${TEST_OUT}/unity"
-#    fi
-#
-#    if [[ ! -d ${TEST_OUT}/deps ]]; then
-#        mkdir "${TEST_OUT}/deps"
-#    fi
-#
-#    if [[ ! -d ${TEST_BIN} ]]; then
-#        mkdir "${TEST_BIN}"
-#    fi
-#
-#    mapfile -t TESTS < <(find "${TEST}" -maxdepth 1 -type f -name "*.c")
-#
-#    pushd "${TEST}" >/dev/null || handle_failure "Failed to pushd" #|| echo "Failed to pushd" && exit 1
-#
-#    echo -e "${BLUE}>${CLEAR} Building ${CYAN}unity.c${CLEAR}"
-#    "${CC}" ${CFLAGS} -c "${TEST}/unity/unity.c" -o "${TEST_OUT}/unity/unity.o"
-#    echo -e "${GREEN}✓${CLEAR} Successfully built ${CYAN}unity.c${CLEAR}"
-#
-#    for TEST_FILE in "${TESTS[@]}"; do
-#        if [[ -s "${TEST_FILE}" ]]; then
-#            TRIMMED_TEST_FILE="${TEST_FILE%.*}"
-#            TRIMMED_TEST_FILENAME="${TRIMMED_TEST_FILE##*/}"
-#
-#            echo -e "${BLUE}>${CLEAR} Building ${CYAN}${TRIMMED_TEST_FILENAME}.c${CLEAR} & ${CYAN}${TRIMMED_TEST_FILENAME:5}.c${CLEAR}"
-#            "${CC}" ${CFLAGS} -c "${TRIMMED_TEST_FILENAME}.c" -o "${TEST_OUT}/${TRIMMED_TEST_FILENAME}.o"
-#            "${CC}" ${CFLAGS} -c "${DIR}/${TRIMMED_TEST_FILENAME:5}.c" -o "${TEST_OUT}/deps/${TRIMMED_TEST_FILENAME:5}.o"
-#            echo -e "${GREEN}✓${CLEAR} Successfully built ${CYAN}${TRIMMED_TEST_FILENAME}.c${CLEAR} & ${CYAN}${TRIMMED_TEST_FILENAME:5}${CLEAR}"
-#        fi
-#    done
-#
-#    popd >/dev/null || handle_failure "Failed to popd" # || echo "Failed to popd" && exit 1
-#
-#    mapfile -t TESTOBJS < <(find "${TEST_OUT}" -maxdepth 1 -type f -name "*.o")
-#
-#    pushd "${TEST_OUT}" >/dev/null || handle_failure "Failed to pushd" #|| echo "Failed to pushd" && exit 1
-#
-#    for TEST_OBJ_FILE in "${TESTOBJS[@]}"; do
-#        TRIMMED_TEST_OBJ_FILE="${TEST_OBJ_FILE%.*}"
-#        TRIMMED_TEST_OBJ_FILENAME="${TRIMMED_TEST_OBJ_FILE##*/}"
-#
-#        echo -e "${BLUE}>${CLEAR} Linking ${CYAN}${TRIMMED_TEST_FILENAME}.o${CLEAR} & ${CYAN}unity.o${CLEAR} to ${TRIMMED_TEST_OBJ_FILENAME}"
-#        "${CC}" -fuse-ld=mold ${CFLAGS} ${LINKER_FLAGS} -o "${TEST_BIN}/${TRIMMED_TEST_OBJ_FILENAME}" "${TRIMMED_TEST_OBJ_FILENAME}.o" "./deps/${TRIMMED_TEST_OBJ_FILENAME:5}.o" "${TEST_OUT}/unity/unity.o"
-#        echo -e "${GREEN}✓${CLEAR} Successfully linked ${CYAN}${TRIMMED_TEST_FILENAME}.o${CLEAR} & ${CYAN}unity.o${CLEAR} to ${TRIMMED_TEST_OBJ_FILENAME}"
-#    done
-#
-#    popd >/dev/null || handle_failure "Failed to popd" # || echo "Failed to popd" && exit 1
-#
-#    mapfile -t TESTBINS < <(find "${TEST_OUT}" -maxdepth 1 -type f)
-#
-#    pushd "${TEST_BIN}" >/dev/null || handle_failure "Failed to pushd" #|| echo "Failed to pushd" && exit 1
-#
-#    for TEST_BINARY in "${TESTBINS[@]}"; do
-#        TRIMMED_BINARY="${TEST_BINARY%.*}"
-#        TRIMMED_BINARY_NAME="${TRIMMED_BINARY##*/}"
-#
-#        echo -e "${BLUE}>${CLEAR} Running test: ${CYAN}${TRIMMED_BINARY_NAME}${CLEAR}"
-#        "./${TRIMMED_BINARY_NAME}"
-#    done
-#
-#    popd >/dev/null || handle_failure "Failed to popd" # || echo "Failed to popd" && exit 1
-#
-#    rm -fr "${TEST_OUT}" "${TEST_BIN}"
-#}
 
 # removes dangling object files that shouldn't be there, used to be required, not that much as of lately though.
 
@@ -572,22 +284,19 @@ clear_vgcores() {
 
 case $1 in
 "-c" | "--compile")
-	compile # "${2}"
+	compile
 	;;
 "-l" | "--link")
-	link "${2}" # "${3}"
+	link "${2}"
 	;;
-#"-st" | "--setup-testing")
-#    setup_unity
-#    ;;
-#"-t" | "--test")
-#    unit_test
-#    ;;
 "-d" | "--delete" | "--clean")
 	clean "${OUT}" "${BIN}" "n"
 	;;
 "-vg" | "--delete-cores" | "--delete-vgcores" | "--clean-vgcores" | "--clean-cores")
 	clear_vgcores
+	;;
+"-cd" | "--compilation-database")
+	generate_compilation_database
 	;;
 "--help" | "-h" | "-?" | *)
 	print_help "${@}"

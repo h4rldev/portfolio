@@ -1,7 +1,10 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <gcrypt.h>
+#include <gnutls/gnutls.h>
 #include <microhttpd.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -185,8 +188,23 @@ int main(int argc, char **argv) {
   unsigned int port = config.port;
   bool ssl = config.ssl.ssl;
 
-  daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, port, NULL, NULL,
-                            &callback, NULL, MHD_OPTION_END);
+  if (ssl == true) {
+    gcry_control(GCRYCTL_ENABLE_QUICK_RANDOM, 0);
+    char *key = get_key();
+    char *cert = get_cert();
+    if (!key || !cert)
+      return -1;
+
+    daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION | MHD_USE_SSL, port,
+                              NULL, NULL, &callback, NULL,
+                              MHD_OPTION_CONNECTION_TIMEOUT, 256,
+                              MHD_OPTION_HTTPS_MEM_KEY, key,
+                              MHD_OPTION_HTTPS_MEM_CERT, cert, MHD_OPTION_END);
+  } else {
+    daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, port, NULL, NULL,
+                              &callback, NULL, MHD_OPTION_CONNECTION_TIMEOUT,
+                              256, MHD_OPTION_END);
+  }
   if (daemon == NULL)
     return -1;
 

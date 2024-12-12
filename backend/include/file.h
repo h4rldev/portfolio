@@ -8,5 +8,6 @@ char *get_cwd(void);
 
 int make_dir(char *path);
 bool path_exist(char *path);
+char *read_file(char *path);
 
 #endif // !FILE_H_IMPLEMENTATION

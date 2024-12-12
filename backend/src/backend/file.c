@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "../../include/file.h"
+#include "../../include/log.h"
 
 char *get_mime(char *path) {
   char *mime = (char *)malloc(1024);
@@ -40,7 +41,7 @@ char *get_cwd(void) {
 
 int make_dir(char *path) {
   if (mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
-    perror("Failed to create directory");
+    flscio_log(Error, "Failed to create directory");
     return -1;
   }
   return 0;
@@ -51,4 +52,25 @@ bool path_exist(char *path) {
   return (stat(path, &sb) == 0);
 }
 
-int read_file(char *path, char **buf, size_t *file_len) { return 0; }
+char *read_file(char *path) {
+  size_t file_size = 0;
+  FILE *fp = fopen(path, "r");
+
+  if (!fp)
+    return NULL;
+
+  (void)fseek(fp, 0L, SEEK_END);
+  file_size = ftell(fp);
+  (void)fseek(fp, 0L, SEEK_SET);
+
+  char *buf = (char *)malloc(file_size + 1);
+
+  size_t amount_read = fread(buf, 1, file_size + 1, fp);
+  if (file_size != amount_read) {
+    flscio_log(Error, "Amount read is more or less than file_size, quitting");
+    free(buf);
+    return NULL;
+  }
+
+  return buf;
+}

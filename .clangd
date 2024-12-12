@@ -1,8 +1,0 @@
-CompileFlags:
-  Add: [
-    "-I./backend/include/",
-    "-lmagic",
-    "-lz-ng",
-    "-lmicrohttpd",
-    "-ljansson"
-  ]

@@ -187,18 +187,16 @@ int read_config(Config *config) {
   if (json_is_boolean(compress_bool))
     compress = json_boolean_value(compress_bool);
 
-  json_t *ssl_bool = json_object_get(root, "ssl");
-
   json_t *ssl_object = json_object_get(root, "ssl");
   if (!json_is_object(ssl_object)) {
     json_decref(root);
     return -1;
   }
 
-  json_t *ssl_boolean = json_object_get(ssl_object, "ssl");
+  json_t *ssl_bool = json_object_get(ssl_object, "ssl");
 
   bool ssl;
-  if (json_is_boolean(ssl_boolean))
+  if (json_is_boolean(ssl_bool))
     ssl = json_boolean_value(ssl_bool);
 
   json_t *cert_path_string = json_object_get(ssl_object, "cert_path");

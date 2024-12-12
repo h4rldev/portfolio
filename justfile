@@ -15,6 +15,9 @@ scripts_bootstrap := scripts_path / "frontend-bootstrap.sh"
 @build-frontend:
   {{scripts_bootstrap}} build
 
+@generate_database:
+  {{backend_build_script}} -cd
+
 @dev-frontend:
   {{scripts_bootstrap}} dev
 
