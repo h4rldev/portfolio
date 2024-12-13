@@ -11,7 +11,7 @@
 	<div class="error-message-cell">
 		<p class="error-corner">Error Message:</p>
 		<code class="error-content">
-			{$page.error.message}
+			{$page.error?.message}
 		</code>
 	</div>
 </main>
@@ -26,17 +26,11 @@
 </footer>
 
 <style>
-	p {
-	}
 	.error-message-cell {
-		@apply bg-red-400 p6 inline-flex my4 relative;
+		@apply relative my-4 inline-flex bg-red-400 p-4;
 	}
 
 	.error-corner {
-		@apply absolute left-1 top-0 p0 m0 text-[12px];
-	}
-
-	.error-content {
-		@apply text-md;
+		@apply absolute left-1 top-0 m-0 p-0 text-[12px];
 	}
 </style>

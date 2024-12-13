@@ -2,7 +2,7 @@ import { languageTag } from '$lib/paraglide/runtime';
 
 export const prerender = true;
 export const trailingSlash = 'always';
-const posts = import.meta.glob('./posts/*.svx');
+const posts = import.meta.glob('../posts/*.svx');
 
 /**
  * @typedef {Object} Metadata

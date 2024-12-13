@@ -1,7 +1,0 @@
----
-title: boop
-date: 9/11 - 2001
-author: bin laden
----
-
-# hello

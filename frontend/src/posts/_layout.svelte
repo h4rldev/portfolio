@@ -1,5 +1,6 @@
 <script>
 	import Nav from '$components/Nav.svelte';
+
 	export let title, author, date;
 </script>
 

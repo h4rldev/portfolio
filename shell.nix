@@ -54,6 +54,8 @@ pkgs.mkShell {
   shellHook = ''
     export PATH="./frontend/node_modules/.bin/:$PATH"
     mkdir ./TMP || true
+    mkdir ./frontend/TMP || true
+    mkdir ./backend/TMP || true
     export TMPDIR="./TMP"
   '';
 }

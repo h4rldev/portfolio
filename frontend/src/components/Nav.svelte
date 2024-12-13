@@ -1,18 +1,14 @@
 <script>
-	import DarkMode from '$components/DarkMode.svelte';
 </script>
 
 <div>
 	<nav>
 		<ul>
-			<li class="togglable">
+			<li>
 				<a href="/">home</a>
 			</li>
-			<li class="togglable">
+			<li>
 				<a href="/posts">posts</a>
-			</li>
-			<li class="togglable">
-				<DarkMode />
 			</li>
 		</ul>
 	</nav>
