@@ -12,6 +12,10 @@ Features
 - Configuration through JSON
 - Config overriding CLI
 - Logging to file
-- togglable GZIP compression
+- Togglable GZIP compression
+
+Plans
+
+- Replace [libmicrohttpd](https://github.com/h4rldev/FLSC-portfolio) with [H2O](https://github.com/h2o/h2o)
 
 Made with love
