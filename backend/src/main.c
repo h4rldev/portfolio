@@ -9,7 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 
+#include "../include/api.h"
 #include "../include/cli.h"
 #include "../include/compress.h"
 #include "../include/config.h"
@@ -19,24 +21,30 @@
 #include "../include/meta.h"
 #include "../include/ssl.h"
 
+struct tm start_date;
+
+void init_start_date() {
+  time_t now = time(NULL);
+  localtime_r(&now, &start_date);
+}
+
 static ssize_t file_reader(void *cls, uint64_t pos, char *buf, size_t max) {
   FILE *file = cls;
 
   (void)fseek(file, pos, SEEK_SET);
-  return fread(buf, 1, max, file);
+  size_t length_read = fread(buf, 1, max, file);
+  return length_read;
 }
 
 static ssize_t file_reader_compress(void *cls, uint64_t pos, char *buf,
                                     size_t max) {
   FILE *file = cls;
   size_t new_size;
-  Config config;
-  read_config(&config);
 
   char *compressed_buf;
 
   (void)fseek(file, pos, SEEK_SET);
-  size_t ret_code = fread(buf, 1, max, file);
+  size_t ret_code = fread(buf, 1, max - 1, file);
   if (ret_code != max) {
     if (feof(file)) {
       fprintf(stderr, "Error reading file: unexpected end of file\n");
@@ -47,14 +55,15 @@ static ssize_t file_reader_compress(void *cls, uint64_t pos, char *buf,
     }
   }
 
-  compressed_buf = compress_gzip(buf, ret_code, &new_size);
-  if (!compressed_buf) {
-    fprintf(stderr, "Failed to compress entirely..\n");
-    return ret_code;
+  if (ret_code > 100) {
+    compressed_buf = compress_gzip(buf, ret_code, &new_size);
+    if (!compressed_buf) {
+      fprintf(stderr, "Failed to compress entirely..\n");
+      return ret_code;
+    }
+    memcpy(buf, compressed_buf, new_size);
+    free(compressed_buf);
   }
-
-  memcpy(buf, compressed_buf, new_size);
-  free(compressed_buf);
 
   return ret_code;
 }
@@ -70,6 +79,7 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
                                 size_t *upload_data_size, void **ptr) {
   char *path;
   char *mime;
+  char *api_resp;
   FILE *file;
 
   struct stat stat_buf;
@@ -117,43 +127,65 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
   // clear context pointer
   *ptr = NULL;
 
+  bool api_route = false;
+
   // Get path for file by routing c:
   path = route((char *)url);
-
-  if ((stat(path, &stat_buf) == 0) && (S_ISREG(stat_buf.st_mode)))
-    file = fopen(path, "rb+");
-  else
-    file = NULL;
-
-  if (file == NULL) {
-    free(path);
-    return MHD_NO;
+  if (!path) {
+    // api route likely
+    api_route = true;
   }
 
-  mime = get_mime(path);
+  if (!api_route) {
+    if ((stat(path, &stat_buf) == 0) && (S_ISREG(stat_buf.st_mode)))
+      file = fopen(path, "rb");
+    else
+      file = NULL;
 
-  if (config.compress == true) {
-    if (strncmp(mime, "text", 4) == 0) {
-      response = MHD_create_response_from_callback(stat_buf.st_size, 32 * 1024,
-                                                   &file_reader_compress, file,
-                                                   &file_free_callback);
-      MHD_add_response_header(response, "Content-Encoding", "gzip");
+    if (file == NULL) {
+      free(path);
+      return MHD_NO;
+    }
+
+    mime = get_mime(path);
+
+    if (config.compress == true) {
+      if (strncmp(mime, "text", 4) == 0) {
+        bool is_compressable = test_compress_file(file);
+
+        response = MHD_create_response_from_callback(
+            stat_buf.st_size, 32 * 1024, &file_reader_compress, file,
+            &file_free_callback);
+
+        if (is_compressable == true)
+          MHD_add_response_header(response, "Content-Encoding", "gzip");
+
+      } else {
+        response = MHD_create_response_from_callback(stat_buf.st_size,
+                                                     32 * 1024, &file_reader,
+                                                     file, &file_free_callback);
+      }
     } else {
       response = MHD_create_response_from_callback(
           stat_buf.st_size, 32 * 1024, &file_reader, file, &file_free_callback);
     }
+
+    MHD_add_response_header(response, "Content-Type", mime);
   } else {
-    response = MHD_create_response_from_callback(
-        stat_buf.st_size, 32 * 1024, &file_reader, file, &file_free_callback);
+    size_t api_len = 0;
+    api_resp = get_api_resp((char *)url, start_date, &api_len);
+    response = MHD_create_response_from_buffer_copy(api_len, api_resp);
+    MHD_add_response_header(response, "Content-Type", "application/json");
   }
 
-  MHD_add_response_header(response, "Content-Type", mime);
   MHD_add_response_header(response, "Server", __NAME__);
 
   if (response == NULL) {
-    fclose(file);
-    free(mime);
-    free(path);
+    if (!api_route) {
+      fclose(file);
+      free(mime);
+      free(path);
+    }
     return MHD_NO;
   }
 
@@ -162,9 +194,12 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
   ret = MHD_queue_response(connection, MHD_HTTP_OK, response);
   MHD_destroy_response(response);
 
-  free(path);
-  free(mime);
+  if (!api_route) {
+    free(mime);
+    free(path);
+  }
 
+  free_config(&config);
   return ret;
 }
 
@@ -173,6 +208,8 @@ void signal_handler(int sig) { return; }
 int main(int argc, char **argv) {
   struct MHD_Daemon *daemon;
   Config config;
+  char *key;
+  char *cert;
 
   if (read_config(&config) != 0) {
     init_config(&config);
@@ -190,23 +227,27 @@ int main(int argc, char **argv) {
 
   if (ssl == true) {
     gcry_control(GCRYCTL_ENABLE_QUICK_RANDOM, 0);
-    char *key = get_key();
-    char *cert = get_cert();
+
+    key = get_key();
+    cert = get_cert();
+
     if (!key || !cert)
       return -1;
 
-    daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION | MHD_USE_SSL, port,
-                              NULL, NULL, &callback, NULL,
-                              MHD_OPTION_CONNECTION_TIMEOUT, 256,
-                              MHD_OPTION_HTTPS_MEM_KEY, key,
-                              MHD_OPTION_HTTPS_MEM_CERT, cert, MHD_OPTION_END);
+    daemon = MHD_start_daemon(
+        MHD_USE_AUTO_INTERNAL_THREAD | MHD_USE_TLS | MHD_ALLOW_UPGRADE, port,
+        NULL, NULL, &callback, NULL, MHD_OPTION_CONNECTION_TIMEOUT, 256,
+        MHD_OPTION_HTTPS_MEM_KEY, key, MHD_OPTION_HTTPS_MEM_CERT, cert,
+        MHD_OPTION_END);
   } else {
-    daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, port, NULL, NULL,
+    daemon = MHD_start_daemon(MHD_USE_AUTO_INTERNAL_THREAD, port, NULL, NULL,
                               &callback, NULL, MHD_OPTION_CONNECTION_TIMEOUT,
                               256, MHD_OPTION_END);
   }
   if (daemon == NULL)
     return -1;
+
+  init_start_date();
 
   printf("libmicrohttpd: running on localhost port %d c:\n", port);
   puts("CTRL-C to exit\n");
@@ -217,6 +258,11 @@ int main(int argc, char **argv) {
 
   puts("\nExiting gracefully c:");
   MHD_stop_daemon(daemon);
+
+  if (ssl == true) {
+    free(key);
+    free(cert);
+  }
 
   free_config(&config);
   return 0;

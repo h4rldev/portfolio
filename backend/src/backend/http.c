@@ -1,13 +1,14 @@
-#include "../../include/http.h"
-#include "../../include/file.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
+#include "../../include/api.h"
+#include "../../include/file.h"
+#include "../../include/http.h"
+#include "../../include/log.h"
+
 static Pages get_page_enum(char *route) {
-  struct stat stat_buf;
 
   char path[1024] = {0};
   char *cwd = get_cwd();
@@ -16,12 +17,13 @@ static Pages get_page_enum(char *route) {
   free(cwd);
 
   if (strlen(route) == 1 || (strncmp(route, "/index.html", 11) == 0))
-    return Index;
+    return Page;
 
-  if (strlen(route) > 1) {
-    if (stat(path, &stat_buf) == 0)
-      return Asset;
-  }
+  if (path_exist(path))
+    return Asset;
+
+  if (strncmp(route, "/api", 4) == 0)
+    return Api;
 
   return NotFound;
 }
@@ -44,31 +46,44 @@ static char *get_route(Pages page) {
   free(cwd);
 
   switch (page) {
-  case Index:
+  case Page:
     strlcat(path, "/index.html", 1024);
     break;
   case NotFound:
-    strlcat(path, "/not-found.html", 1024);
+    strlcat(path, "/notfound.html", 1024);
     break;
-  case Asset:
-    fprintf(stderr, "Invalid use of get_page c:\n");
-    return 0;
+  default:
+    flscio_log(Error, "Invalid use of get_page");
+    return NULL;
   }
 
   if (path == NULL)
-    return 0;
+    return NULL;
   return path;
+}
+
+char *get_api_resp(char *route, struct tm start_date, size_t *resp_len) {
+  if (strncmp(route, "/api/uptime", 11) == 0) {
+    return get_uptime(start_date, resp_len);
+  } else if (strncmp(route, "/api/server-info", 16) == 0) {
+    return get_server_info(start_date, resp_len);
+  }
+
+  return NULL;
 }
 
 char *route(char *route) {
   Pages page_type = get_page_enum(route);
   char *returnable;
 
-  if (page_type != Asset) {
+  if (page_type != Asset && page_type != Api) {
     returnable = get_route(page_type);
-    return returnable;
+  } else if (page_type != Api) {
+    returnable = get_asset(route);
+  } else {
+    // Api route
+    returnable = NULL;
   }
 
-  returnable = get_asset(route);
   return returnable;
 }

@@ -5,6 +5,9 @@ pkgs.mkShell {
   packages = with pkgs; [
     # backend
 
+    # clangd
+    clang-tools
+
     # libraries
     file
     libmicrohttpd
@@ -14,20 +17,6 @@ pkgs.mkShell {
     # ssl
     libgcrypt
     gnutls
-
-    # clangd and clang-format
-    clang-tools
-
-    # C beautifier
-    uncrustify
-
-    # bash language server and formatters
-    bash-language-server
-    beautysh
-    shfmt
-
-    # nix formatter
-    alejandra
 
     # debugging
     valgrind
@@ -44,12 +33,6 @@ pkgs.mkShell {
 
     # frontend
     pnpm
-    nodePackages_latest.svelte-language-server
-    nodePackages_latest.typescript-language-server
-
-    # markdown formatting
-    mdformat
-    cbfmt
   ];
   shellHook = ''
     export PATH="./frontend/node_modules/.bin/:$PATH"

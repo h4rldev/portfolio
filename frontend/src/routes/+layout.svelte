@@ -7,10 +7,10 @@
 	import '../app.css';
 	let { children } = $props();
 
-	let particlesConfig = {
+	let linkedparticles: any = {
 		particles: {
 			number: {
-				value: 80,
+				value: 120,
 				density: {
 					enable: true,
 					value_area: 800
@@ -38,20 +38,27 @@
 			},
 			move: {
 				enable: true,
-				speed: 0.1,
-				direction: 'right',
+				speed: 0.5,
+				direction: 'none',
 				random: false,
 				straight: false,
 				outMode: 'out',
 				attract: {
 					enable: false,
-					speed: 1
+					speed: 2
 				},
 				bounded: true,
 				diagonal: false,
 				saturation: 180,
 				freeze: true,
 				shift: 0
+			},
+			links: {
+				enable: true,
+				distance: 150,
+				color: '#ffffff',
+				opacity: 0.4,
+				width: 2
 			}
 		}
 	};
@@ -75,8 +82,9 @@
 </script>
 
 <div class="color-background"></div>
-<div class="star-particles">
-	<Particles id="tsparticles" options={particlesConfig} on:particlesLoaded={onParticlesLoaded} />
+<div class="grain-background"></div>
+<div class="linked-particles">
+	<Particles id="tsparticles" options={linkedparticles} on:particlesLoaded={onParticlesLoaded} />
 </div>
 <div class="rest">
 	<ParaglideJS {i18n}>
@@ -85,7 +93,7 @@
 </div>
 
 <style>
-	* {
+	:global(body) {
 		@apply text-white;
 	}
 
@@ -93,11 +101,20 @@
 		@apply z-[0];
 	}
 
-	.star-particles {
+	.linked-particles {
 		@apply z-[-2];
 	}
 
+	:global(a) {
+		@apply text-blue-500 underline decoration-transparent underline-offset-4;
+		@apply transition-colors duration-300 ease-in-out hover:text-blue-300 hover:decoration-blue-500 active:text-blue-200;
+	}
+
+	.grain-background {
+		@apply absolute left-0 top-0 z-[-1] h-[100%] w-[100%] bg-[url(/noise.png)] opacity-[0.03];
+	}
+
 	.color-background {
-		@apply absolute left-0 top-0 z-[-1] h-[100%] w-[100%] bg-black;
+		@apply absolute left-0 top-0 z-[-3] h-[100%] w-[100%] bg-black;
 	}
 </style>

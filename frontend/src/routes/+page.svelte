@@ -1,6 +1,6 @@
 <script>
 	import Nav from '$components/Nav.svelte';
-	import Glass from '$components/Glass.svelte';
+	import Footer from '$components/Footer.svelte';
 </script>
 
 <svelte:head>
@@ -10,13 +10,21 @@
 <header>
 	<Nav />
 </header>
-<main>
-	<Glass>
-		{#snippet content()}
-			<h1>Hi</h1>
-		{/snippet}
-	</Glass>
-</main>
-<footer></footer>
+<main></main>
+<footer>
+	<Footer />
+</footer>
 
-<style></style>
+<style>
+	header {
+		@apply mb-12 mt-8;
+	}
+
+	main {
+		@apply mb-0 mt-4 flex flex-row justify-center;
+	}
+
+	footer {
+		@apply flex flex-row justify-center;
+	}
+</style>

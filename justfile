@@ -15,6 +15,23 @@ scripts_bootstrap := scripts_path / "frontend-bootstrap.sh"
 @build-frontend:
   {{scripts_bootstrap}} build
 
+@build-backend-move name="flscio":
+  rm -fr dist/{{name}} || true
+  mkdir -p dist/site >/dev/null 2>&1 || true
+  just build-backend {{name}} 
+  mv backend/build/bin/{{name}} dist/
+
+@build-frontend-move:
+  rm -fr dist/site/* || true
+  mkdir -p dist/site >/dev/null 2>&1 || true
+  just build-frontend
+  mv frontend/build/* dist/site/
+
+
+@build-both name="flscio":
+  just build-backend-move {{name}}
+  just build-frontend-move
+
 @generate_database:
   {{backend_build_script}} -cd
 

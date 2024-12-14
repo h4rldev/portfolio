@@ -5,7 +5,12 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			fontFamily: {
+				'nova': ['"Nova Mono"', 'monospace'],
+				'akshar': ['"Akshar"', 'sans-serif']
+			}
+		}
 	},
 
 	plugins: [typography]

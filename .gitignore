@@ -17,6 +17,8 @@ frontend/.svelte-kit
 frontend/build
 
 
+dist/
+
 # Temporary
 **/*/TMP
 TMP

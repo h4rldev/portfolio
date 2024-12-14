@@ -18,7 +18,7 @@ char *compress_gzip(const char *in, size_t in_len, size_t *res_len) {
   // Initialize compression stream
   int stat;
 
-  char *buf = malloc(in_len);
+  char *buf = malloc(in_len + 1);
   char *ret_buf = malloc(1);
   if (!buf && !ret_buf)
     return NULL;
@@ -41,8 +41,9 @@ char *compress_gzip(const char *in, size_t in_len, size_t *res_len) {
   stream.next_out = (unsigned char *)buf;
 
   stat = zng_deflate(&stream, Z_FINISH);
-  if (stat != Z_STREAM_END)
+  if (stat != Z_STREAM_END) {
     return handle_zng_compression_error(&stream, "deflating", stat);
+  }
 
   *res_len = stream.total_out;
 
@@ -64,4 +65,21 @@ char *compress_gzip(const char *in, size_t in_len, size_t *res_len) {
   free(buf);
 
   return ret_buf;
+}
+
+bool test_compress_file(FILE *file) {
+  size_t file_size = 0;
+  size_t compressed_size = 0;
+
+  if (!file)
+    return NULL;
+
+  (void)fseek(file, 0L, SEEK_END);
+  file_size = ftell(file);
+  (void)fseek(file, 0L, SEEK_SET);
+
+  if (file_size < 100)
+    return false;
+
+  return true;
 }

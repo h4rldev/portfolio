@@ -1,4 +1,5 @@
 #include <magic.h>
+#include <regex.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,15 +13,27 @@
 char *get_mime(char *path) {
   char *mime = (char *)malloc(1024);
 
+  regex_t regex_js;
+  regex_t regex_css;
+
+  regcomp(&regex_js, "^.*\\.(js)$", REG_EXTENDED);
+  regcomp(&regex_css, "^.*\\.(css)$", REG_EXTENDED);
+
   magic_t magic = magic_open(MAGIC_MIME_TYPE);
   magic_load(magic, NULL);
 
   char *mime_type = (char *)magic_file(magic, path);
   if (strncmp(mime_type, "image/vnd.microsoft.icon", 24) == 0)
     mime_type = "image/x-icon";
+  else if (regexec(&regex_js, path, 0, NULL, 0) == 0)
+    mime_type = "text/javascript";
+  else if (regexec(&regex_css, path, 0, NULL, 0) == 0)
+    mime_type = "text/css";
 
   strlcpy(mime, mime_type, 1024);
 
+  regfree(&regex_css);
+  regfree(&regex_js);
   magic_close(magic);
   return mime;
 }

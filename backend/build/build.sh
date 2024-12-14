@@ -66,7 +66,7 @@ if ${COLOR}; then
 fi
 
 CFLAGS="-O3"
-LINKER_FLAGS="-lmicrohttpd -lmagic -lz-ng -ljansson -lgcrypt"
+LINKER_FLAGS="-lmicrohttpd -lmagic -lz-ng -ljansson -lgcrypt -lgnutls"
 
 if [[ ${3} == "--debug" ]]; then
 	CFLAGS="-g ${CFLAGS}"
@@ -173,8 +173,8 @@ link() {
 	TRIMMED_FILES="${OBJECTS[*]##*/}"
 	pushd "${OUT}" >/dev/null || handle_failure "Failed to pushd" #|| echo "Failed to pushd" && exit 1
 
-	if [[ -n ${2} ]]; then
-		NAME="${2}"
+	if [[ -n ${1} ]]; then
+		NAME="${1}"
 	else
 		NAME="${PROJ}"
 	fi

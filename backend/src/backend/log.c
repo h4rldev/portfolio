@@ -38,7 +38,7 @@ int flscio_log(LogLevel level, char *fmt, ...) {
 
   char file_path[1024] = {0};
 
-  snprintf(file_path, 1024, "%s/flcsio_log-%s.log", logs_path, file_time_buf);
+  snprintf(file_path, 1024, "%s/flscio_log-%s.log", logs_path, file_time_buf);
 
   LogLevel current_level = config.log.level;
 
