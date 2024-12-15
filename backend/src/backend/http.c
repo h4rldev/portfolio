@@ -8,7 +8,7 @@
 #include "../../include/http.h"
 #include "../../include/log.h"
 
-static Pages get_page_enum(char *route) {
+static Pages get_page_enum(const char *route) {
 
   char path[1024] = {0};
   char *cwd = get_cwd();
@@ -16,11 +16,8 @@ static Pages get_page_enum(char *route) {
   snprintf(path, 1024, "%s/site%s", cwd, route);
   free(cwd);
 
-  if (strlen(route) == 1 || (strncmp(route, "/index.html", 11) == 0))
-    return Page;
-
   if (path_exist(path))
-    return Asset;
+    return File;
 
   if (strncmp(route, "/api", 4) == 0)
     return Api;
@@ -28,41 +25,36 @@ static Pages get_page_enum(char *route) {
   return NotFound;
 }
 
-static char *get_asset(char *route) {
+static char *get_asset(const char *route) {
   char *path = (char *)malloc(1024);
   char *cwd = get_cwd();
 
   snprintf(path, 1024, "%s/site%s", cwd, route);
   free(cwd);
 
-  return path;
-}
-
-static char *get_route(Pages page) {
-  char *path = (char *)malloc(1024);
-  char *cwd = get_cwd();
-
-  snprintf(path, 1024, "%s/site", cwd);
-  free(cwd);
-
-  switch (page) {
-  case Page:
-    strlcat(path, "/index.html", 1024);
-    break;
-  case NotFound:
-    strlcat(path, "/notfound.html", 1024);
-    break;
-  default:
-    flscio_log(Error, "Invalid use of get_page");
+  if (!path_exist(path)) {
+    flscio_log(Error, "Can't find path: %s", path);
     return NULL;
   }
 
-  if (path == NULL)
-    return NULL;
+  if (!is_file(path)) {
+    strlcat(path, "/index.html", 1024);
+  }
+
   return path;
 }
 
-char *get_api_resp(char *route, struct tm start_date, size_t *resp_len) {
+static char *get_not_found() {
+  char *path = (char *)malloc(1024);
+  char *cwd = get_cwd();
+
+  snprintf(path, 1024, "%s/site/notfound.html", cwd);
+  free(cwd);
+
+  return path;
+}
+
+char *get_api_resp(const char *route, struct tm start_date, size_t *resp_len) {
   if (strncmp(route, "/api/uptime", 11) == 0) {
     return get_uptime(start_date, resp_len);
   } else if (strncmp(route, "/api/server-info", 16) == 0) {
@@ -72,14 +64,14 @@ char *get_api_resp(char *route, struct tm start_date, size_t *resp_len) {
   return NULL;
 }
 
-char *route(char *route) {
+char *route(const char *route) {
   Pages page_type = get_page_enum(route);
   char *returnable;
 
-  if (page_type != Asset && page_type != Api) {
-    returnable = get_route(page_type);
-  } else if (page_type != Api) {
+  if (page_type == File) {
     returnable = get_asset(route);
+  } else if (page_type == NotFound) {
+    returnable = get_not_found();
   } else {
     // Api route
     returnable = NULL;

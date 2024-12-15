@@ -10,7 +10,7 @@
 #include "../../include/file.h"
 #include "../../include/log.h"
 
-char *get_mime(char *path) {
+char *get_mime(const char *path) {
   char *mime = (char *)malloc(1024);
 
   regex_t regex_js;
@@ -52,7 +52,7 @@ char *get_cwd(void) {
   return cwd;
 }
 
-int make_dir(char *path) {
+int make_dir(const char *path) {
   if (mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
     flscio_log(Error, "Failed to create directory");
     return -1;
@@ -60,12 +60,22 @@ int make_dir(char *path) {
   return 0;
 }
 
-bool path_exist(char *path) {
+bool path_exist(const char *path) {
   struct stat sb;
   return (stat(path, &sb) == 0);
 }
 
-char *read_file(char *path) {
+bool is_dir(const char *path) {
+  struct stat st;
+  return (stat(path, &st) == 0 && S_ISDIR(st.st_mode));
+}
+
+bool is_file(const char *path) {
+  struct stat st;
+  return (stat(path, &st) == 0 && S_ISREG(st.st_mode));
+}
+
+char *read_file(const char *path) {
   size_t file_size = 0;
   FILE *fp = fopen(path, "r");
 

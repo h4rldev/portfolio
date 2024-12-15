@@ -11,7 +11,6 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#include "../include/api.h"
 #include "../include/cli.h"
 #include "../include/compress.h"
 #include "../include/config.h"
@@ -39,33 +38,76 @@ static ssize_t file_reader(void *cls, uint64_t pos, char *buf, size_t max) {
 static ssize_t file_reader_compress(void *cls, uint64_t pos, char *buf,
                                     size_t max) {
   FILE *file = cls;
-  size_t new_size;
+  size_t new_size = 0;
+  size_t chunk_size = 0;
+  static char *all_data = NULL;
+  static FILE *prev_file = NULL;
+  static size_t total_size = 0;
+  static bool file_done = false;
 
-  char *compressed_buf;
+  if (!file_done) {
+    char *file_buf = (char *)malloc(max);
+    // Read chunk from file
+    fseek(file, pos, SEEK_SET);
+    chunk_size = fread(file_buf, 1, max, file);
 
-  (void)fseek(file, pos, SEEK_SET);
-  size_t ret_code = fread(buf, 1, max - 1, file);
-  if (ret_code != max) {
-    if (feof(file)) {
-      fprintf(stderr, "Error reading file: unexpected end of file\n");
-      return ret_code;
-    } else if (ferror(file)) {
-      perror("Error reading file");
-      return ret_code;
+    printf("max: %lu\n", max);
+    // printf("file_buf: %s\n", file_buf);
+
+    if (chunk_size != max) {
+      return max;
     }
+
+    // Concatenate chunk to all_data
+    if (total_size == 0) {
+      all_data = malloc(chunk_size);
+    } else {
+      all_data = realloc(all_data, total_size + chunk_size);
+    }
+
+    memcpy(all_data + total_size, file_buf, chunk_size);
+    total_size += chunk_size;
+
+    // Check if we've read the entire file
+    (void)fseek(file, 0L, SEEK_END);
+    size_t file_len = ftell(file);
+    printf("file_len: %lu\n", file_len);
+    if (total_size == file_len) {
+      file_done = true;
+      prev_file = file;
+    }
+    free(file_buf);
   }
 
-  if (ret_code > 100) {
-    compressed_buf = compress_gzip(buf, ret_code, &new_size);
+  // Compress all accumulated data
+  if (file_done) {
+    if (total_size <= 128) {
+      memcpy(buf, all_data, total_size);
+      total_size = 0;
+      file_done = false;
+      free(all_data);
+      return max;
+    }
+
+    char *new_buf = malloc(total_size);
+    memcpy(new_buf, all_data, total_size);
+    char *compressed_buf = compress_gzip(new_buf, total_size, &new_size);
     if (!compressed_buf) {
       fprintf(stderr, "Failed to compress entirely..\n");
-      return ret_code;
+      return -1;
     }
+
     memcpy(buf, compressed_buf, new_size);
+
+    total_size = 0;
+    file_done = false;
+    free(all_data);
     free(compressed_buf);
+    free(new_buf);
   }
 
-  return ret_code;
+  // Return size of current chunk
+  return max;
 }
 
 static void file_free_callback(void *cls) {
@@ -103,8 +145,7 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
     client_port = 0;
   }
 
-  Config config;
-  read_config(&config);
+  Config *config = (Config *)cls;
 
   // unexpected method
   if (strncmp(method, "GET", 3) != 0)
@@ -127,10 +168,12 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
   // clear context pointer
   *ptr = NULL;
 
+  flscio_log(Info, "%s:%lu %s", client_ip, client_port, url);
+
   bool api_route = false;
 
   // Get path for file by routing c:
-  path = route((char *)url);
+  path = route(url);
   if (!path) {
     // api route likely
     api_route = true;
@@ -149,7 +192,7 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
 
     mime = get_mime(path);
 
-    if (config.compress == true) {
+    if (config->compress == true) {
       if (strncmp(mime, "text", 4) == 0) {
         bool is_compressable = test_compress_file(file);
 
@@ -173,11 +216,13 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
     MHD_add_response_header(response, "Content-Type", mime);
   } else {
     size_t api_len = 0;
-    api_resp = get_api_resp((char *)url, start_date, &api_len);
+    api_resp = get_api_resp(url, start_date, &api_len);
     response = MHD_create_response_from_buffer_copy(api_len, api_resp);
+    free(api_resp);
     MHD_add_response_header(response, "Content-Type", "application/json");
   }
 
+  MHD_add_response_header(response, "Cache-Control", "max-age=604800");
   MHD_add_response_header(response, "Server", __NAME__);
 
   if (response == NULL) {
@@ -189,8 +234,6 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
     return MHD_NO;
   }
 
-  flscio_log(Info, "%s:%lu %s", client_ip, client_port, url);
-
   ret = MHD_queue_response(connection, MHD_HTTP_OK, response);
   MHD_destroy_response(response);
 
@@ -199,7 +242,6 @@ static enum MHD_Result callback(void *cls, struct MHD_Connection *connection,
     free(path);
   }
 
-  free_config(&config);
   return ret;
 }
 
@@ -236,12 +278,12 @@ int main(int argc, char **argv) {
 
     daemon = MHD_start_daemon(
         MHD_USE_AUTO_INTERNAL_THREAD | MHD_USE_TLS | MHD_ALLOW_UPGRADE, port,
-        NULL, NULL, &callback, NULL, MHD_OPTION_CONNECTION_TIMEOUT, 256,
+        NULL, NULL, &callback, &config, MHD_OPTION_CONNECTION_TIMEOUT, 256,
         MHD_OPTION_HTTPS_MEM_KEY, key, MHD_OPTION_HTTPS_MEM_CERT, cert,
         MHD_OPTION_END);
   } else {
     daemon = MHD_start_daemon(MHD_USE_AUTO_INTERNAL_THREAD, port, NULL, NULL,
-                              &callback, NULL, MHD_OPTION_CONNECTION_TIMEOUT,
+                              &callback, &config, MHD_OPTION_CONNECTION_TIMEOUT,
                               256, MHD_OPTION_END);
   }
   if (daemon == NULL)

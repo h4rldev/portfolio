@@ -18,7 +18,7 @@ char *compress_gzip(const char *in, size_t in_len, size_t *res_len) {
   // Initialize compression stream
   int stat;
 
-  char *buf = malloc(in_len + 1);
+  char *buf = malloc(in_len);
   char *ret_buf = malloc(1);
   if (!buf && !ret_buf)
     return NULL;
@@ -78,7 +78,7 @@ bool test_compress_file(FILE *file) {
   file_size = ftell(file);
   (void)fseek(file, 0L, SEEK_SET);
 
-  if (file_size < 100)
+  if (file_size <= 128)
     return false;
 
   return true;

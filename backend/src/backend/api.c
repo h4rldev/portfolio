@@ -82,8 +82,6 @@ char *get_uptime(struct tm start_date, size_t *resplen) {
   char *buf = malloc(size);
   (void)json_dumpb(root, buf, size, JSON_INDENT(2));
 
-  buf[size] = '\0';
-
   free(uptime_buf);
   json_decref(root);
   return buf;

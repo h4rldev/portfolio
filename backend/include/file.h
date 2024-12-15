@@ -3,11 +3,12 @@
 
 #include <stdbool.h>
 
-char *get_mime(char *path);
+char *get_mime(const char *path);
 char *get_cwd(void);
 
-int make_dir(char *path);
-bool path_exist(char *path);
-char *read_file(char *path);
+int make_dir(const char *path);
+bool path_exist(const char *path);
+bool is_file(const char *path);
+char *read_file(const char *path);
 
 #endif // !FILE_H_IMPLEMENTATION
