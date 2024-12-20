@@ -75,6 +75,24 @@ bool is_file(const char *path) {
   return (stat(path, &st) == 0 && S_ISREG(st.st_mode));
 }
 
+char *read_file_from_fd(FILE *file) {
+  size_t file_size = 0;
+  (void)fseek(file, 0L, SEEK_END);
+  file_size = ftell(file);
+  (void)fseek(file, 0L, SEEK_SET);
+
+  char *buf = (char *)malloc(file_size + 1);
+
+  size_t amount_read = fread(buf, 1, file_size + 1, file);
+  if (file_size != amount_read) {
+    flscio_log(Error, "Amount read is more or less than file_size, quitting");
+    free(buf);
+    return NULL;
+  }
+
+  return buf;
+}
+
 char *read_file(const char *path) {
   size_t file_size = 0;
   FILE *fp = fopen(path, "r");
