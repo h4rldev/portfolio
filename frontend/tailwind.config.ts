@@ -8,7 +8,11 @@ export default {
 		extend: {
 			fontFamily: {
 				'nova': ['"Nova Mono"', 'monospace'],
-				'akshar': ['"Akshar"', 'sans-serif']
+				'akshar': ['"Akshar"', 'sans-serif'],
+				'afacad': ['"Afacad"', 'sans-serif']
+			},
+			listStyleType: {
+				square: 'square'
 			}
 		}
 	},

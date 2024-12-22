@@ -110,6 +110,11 @@
 		@apply transition-colors duration-300 ease-in-out hover:text-blue-300 hover:decoration-blue-500 active:text-blue-200;
 	}
 
+	:global(.fake-link) {
+		@apply text-blue-500 underline decoration-transparent underline-offset-4;
+		@apply transition-colors duration-300 ease-in-out hover:text-blue-300 hover:decoration-blue-500 active:text-blue-200;
+	}
+
 	.grain-background {
 		@apply absolute left-0 top-0 z-[-1] h-[100%] w-[100%] bg-[url(/noise.png)] opacity-[0.03];
 	}

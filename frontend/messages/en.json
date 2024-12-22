@@ -1,4 +1,22 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from en!"
+	"home": "home",
+	"portfolio": "portfolio",
+	"posts": "posts",
+	"hi": "Hi!",
+	"im": "I'm",
+	"basedin": "A programmer/software hacker based in",
+	"located": "Karlstad, Sweden",
+	"years_old": "years old,",
+	"birthday": "and I was born on",
+	"specialize": "I specialize in",
+	"environments": "Systems, Backend, and DevOps",
+	"ilikeusing": "primarily programming in",
+	"andmore": "and more.",
+	"ilikeframeworks": "I use frameworks like",
+	"frameworks": "Svelte and Astro, but able of working with any framework or without any framework.",
+	"interests": "I also dabble in system administration, networking, and security.",
+	"lastfm": "Last listened track:",
+	"friends": "Friends",
+	"communities": "Communities"
 }

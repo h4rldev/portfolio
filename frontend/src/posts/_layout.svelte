@@ -1,7 +1,8 @@
 <script>
 	import Nav from '$components/Nav.svelte';
+	import Footer from '$components/Footer.svelte';
 
-	export let title, author, date;
+	let { title, author, date, children } = $props();
 </script>
 
 <svelte:head>
@@ -10,21 +11,17 @@
 
 <header>
 	<Nav />
-
-	<h1 class="title togglable">{title}</h1>
-	<p class="meta togglable">
+	<h1 class="title">{title}</h1>
+	<p class="meta">
 		<span class="author">{author}</span> @ <span class="date">{date}</span>
 	</p>
 </header>
-<main class="togglable">
-	<slot>Page empty???</slot>
+<main>
+	{@render children?.()}
 </main>
-<footer class="togglable">
-	<p>made w &lt;3 by h4rl</p>
-	<a href="/posts">Return back to posts?</a>
+<footer>
+	<Footer />
 </footer>
 
 <style>
-	header {
-	}
 </style>

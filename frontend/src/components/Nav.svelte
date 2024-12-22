@@ -1,22 +1,52 @@
-<script>
+<script lang="ts">
+	import Glass from '$components/Glass.svelte';
+
+	import type { AvailableLanguageTag } from '$lib/paraglide/runtime';
+	import { languageTag } from '$lib/paraglide/runtime';
+	import { i18n } from '$lib/i18n';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+
+	import * as m from '$lib/paraglide/messages.js';
+
+	let currentLanguageTag: AvailableLanguageTag = languageTag();
+
+	function switchToLanguage(newLanguage: AvailableLanguageTag) {
+		const canonicalPath = i18n.route($page.url.pathname);
+		const localisedPath = i18n.resolveRoute(canonicalPath, newLanguage);
+		goto(localisedPath);
+	}
 </script>
 
 <nav>
-	<ul>
-		<li><div>h4rl</div></li>
-		<li>
-			<a href="/">home</a>
-		</li>
-		<li>
-			<a href="/posts">posts</a>
-		</li>
-		<li>
-			<a href="/portfolio">portfolio</a>
-		</li>
-	</ul>
+	<Glass>
+		<ul>
+			<li><div>h4rl</div></li>
+			<li>
+				<a href="/">{m.home()}</a>
+			</li>
+			<li>
+				<a href="/posts">{m.posts()}</a>
+			</li>
+			<li>
+				<a href="/portfolio">{m.portfolio()}</a>
+			</li>
+			<li class="far-right">
+				{#if currentLanguageTag === 'sv'}
+					<button class="fake-link" onclick={() => switchToLanguage('en')}>🇬🇧</button>
+				{:else}
+					<button class="fake-link" onclick={() => switchToLanguage('sv')}>🇸🇪</button>
+				{/if}
+			</li>
+		</ul>
+	</Glass>
 </nav>
 
 <style>
+	.far-right {
+		@apply absolute right-5 top-2;
+	}
+
 	nav {
 		@apply flex flex-row justify-center;
 	}
@@ -30,7 +60,6 @@
 	}
 
 	ul {
-		@apply font-nova;
-		@apply inline-flex w-[80%] min-w-[360px] flex-row gap-3 rounded-xl bg-white bg-opacity-10 px-4 py-2 outline outline-2 outline-gray-500 backdrop-blur-sm;
+		@apply flex flex-row gap-3 font-nova;
 	}
 </style>
