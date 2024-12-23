@@ -16,7 +16,9 @@
 	"ilikeframeworks": "I use frameworks like",
 	"frameworks": "Svelte and Astro, but able of working with any framework or without any framework.",
 	"interests": "I also dabble in system administration, networking, and security.",
-	"lastfm": "Last listened track:",
+	"socials": "Socials",
+	"email": "Reveal email",
 	"friends": "Friends",
-	"communities": "Communities"
+	"communities": "Communities",
+	"lastfm": "Last listened song:"
 }

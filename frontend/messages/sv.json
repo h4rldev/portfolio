@@ -16,7 +16,9 @@
 	"ilikeframeworks": "Jag använder frameworks som",
 	"frameworks": "Svelte och Astro, men jag kan dessutom arbeta med vilken framework som helst eller utan frameworks.",
 	"interests": "Jag är också intresserad av systemadministration, nätverk, och säkerhet.",
-	"lastfm": "Senaste lyssnade låt:",
+	"socials": "Mina sociala medier",
+	"email": "Visa e-post",
 	"friends": "Vänner",
-	"communities": "Gemenskaper"
+	"communities": "Gemenskaper",
+	"lastfm": "Senast lyssnad låt:"
 }

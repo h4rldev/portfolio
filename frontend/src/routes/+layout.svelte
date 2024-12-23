@@ -81,28 +81,18 @@
 	});
 </script>
 
-<div class="color-background"></div>
-<div class="grain-background"></div>
 <div class="linked-particles">
 	<Particles id="tsparticles" options={linkedparticles} on:particlesLoaded={onParticlesLoaded} />
 </div>
 <div class="rest">
 	<ParaglideJS {i18n}>
-		{@render children()}
+		{@render children?.()}
 	</ParaglideJS>
 </div>
 
 <style>
-	:global(body) {
-		@apply text-white;
-	}
-
-	.rest {
-		@apply z-[0];
-	}
-
-	.linked-particles {
-		@apply z-[-2];
+	:global(html) {
+		@apply bg-[url(/noise2.png)] text-white;
 	}
 
 	:global(a) {
@@ -115,11 +105,17 @@
 		@apply transition-colors duration-300 ease-in-out hover:text-blue-300 hover:decoration-blue-500 active:text-blue-200;
 	}
 
-	.grain-background {
-		@apply absolute left-0 top-0 z-[-1] h-[100%] w-[100%] bg-[url(/noise.png)] opacity-[0.03];
+	:global(.eight-eight-ecks-thirty-one) {
+		@apply min-h-[31px] min-w-[88px] border border-transparent;
+		@apply transition-colors duration-300 ease-in-out hover:border-white;
+		image-rendering: pixelated !important;
 	}
 
-	.color-background {
-		@apply absolute left-0 top-0 z-[-3] h-[100%] w-[100%] bg-black;
+	.rest {
+		@apply z-[0];
+	}
+
+	.linked-particles {
+		@apply z-[-1];
 	}
 </style>

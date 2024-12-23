@@ -1,6 +1,8 @@
 <script>
 	import { page } from '$app/stores';
 	import Nav from '$components/Nav.svelte';
+	import Footer from '$components/Footer.svelte';
+	import Glass from '$components/Glass.svelte';
 </script>
 
 <header>
@@ -8,39 +10,40 @@
 </header>
 
 <main>
-	<section class="main">
-		<h1>Error!</h1>
-		<p>Couldn't find route!</p>
-		<div class="error-message-cell">
-			<p class="error-corner">Error Message:</p>
-			<code class="error-content">
-				{$page.status}
-				{$page.error?.message}
-			</code>
-		</div>
-	</section>
+	<Glass>
+		<section class="main">
+			<h1>Error!</h1>
+			<p>Couldn't find route!</p>
+			<div class="error-message-cell">
+				<p class="error-corner">Error Message:</p>
+				<code class="error-content">
+					{$page.status}
+					{$page.error?.message}
+				</code>
+			</div>
+			<p>
+				Return back to
+				<a href="/">home</a>?
+			</p>
+		</section>
+	</Glass>
 </main>
 
 <footer>
-	<section class="footer">
-		<p>
-			Return back to
-			<a href="/">home</a>?
-		</p>
-	</section>
+	<Footer />
 </footer>
 
 <style>
 	header {
-		@apply mb-12 mt-8;
+		@apply mb-8 mt-8;
 	}
 
 	main {
-		@apply mb-0 mt-4 flex flex-row justify-center;
+		@apply flex flex-row justify-center text-lg;
 	}
 
 	footer {
-		@apply flex flex-row justify-center;
+		@apply my-8 flex flex-row justify-center;
 	}
 
 	h1 {
@@ -49,12 +52,10 @@
 
 	.main {
 		@apply px-4 pt-4 font-akshar;
-		@apply inline w-[80%] min-w-[360px] rounded-t-xl border-l-2 border-r-2 border-t-2 border-gray-500 bg-white bg-opacity-10 backdrop-blur-sm;
 	}
 
 	.footer {
 		@apply px-4 pb-4 font-akshar;
-		@apply inline w-[80%] min-w-[360px] rounded-b-xl border-b-2 border-l-2 border-r-2 border-gray-500 bg-white bg-opacity-10 backdrop-blur-sm;
 	}
 
 	.error-message-cell {

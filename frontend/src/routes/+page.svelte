@@ -3,13 +3,12 @@
 	import Footer from '$components/Footer.svelte';
 	import Glass from '$components/Glass.svelte';
 	import LastFM from '$components/LastFM.svelte';
+	import ExpandableList from '$components/ExpandableList.svelte';
 
 	import Icon from '@iconify/svelte';
 
 	import * as m from '$lib/paraglide/messages.js';
 	import { languageTag } from '$lib/paraglide/runtime';
-
-	import { slide } from 'svelte/transition';
 
 	const birthday_date = new Date('2005-09-02');
 	const age = ((Date.now() - birthday_date.getTime()) / 1000 / 60 / 60 / 24 / 365).toFixed(0);
@@ -19,7 +18,33 @@
 		day: 'numeric'
 	});
 
-	let isOpen = false;
+	let isEmailOpen = $state(false);
+
+	const frens = [
+		{
+			href: 'https://lenooby09.github.io/',
+			image: '/88x31/frens/lenooby09.png',
+			alt: 'lenooby09'
+		},
+		{
+			href: 'https://onz.ee/',
+			image: '/88x31/frens/onzecki.png',
+			alt: 'onzecki'
+		},
+		{
+			href: 'https://meow-d.github.io/',
+			image: '/88x31/frens/meow_d.webp',
+			alt: 'meow-d'
+		}
+	];
+
+	const communities = [
+		{
+			href: 'https://github.com/h4rldev',
+			image: '/88x31/frens/lenooby09.png',
+			alt: 'github'
+		}
+	];
 </script>
 
 <svelte:head>
@@ -53,6 +78,7 @@
 						{m.birthday()}
 						<span class="birthday-date">{birthday}</span>.
 					</p>
+					<p>I like to listen to breakcore, mashcore, dancecore, jungle, metal, jrock, and more.</p>
 
 					<div class="specialize">
 						<p>{m.specialize()} {m.environments()}, {m.ilikeusing()}</p>
@@ -65,38 +91,81 @@
 					<p>{m.interests()}</p>
 				</div>
 			</div>
-		</section>
-		<hr />
-		<section class="friends-communities-and-lastfm">
-			<div class="friends-communities">
-				<div>
-					{#if isOpen}
-						<button on:click={() => (isOpen = !isOpen)}>
-							<span class="font-bold>">&wedge;</span> {m.friends()}</button
-						>
-					{:else}
-						<button on:click={() => (isOpen = !isOpen)}>
-							<span class="font-bold">&vee;</span> {m.friends()}</button
-						>
-					{/if}
-
-					{#if isOpen}
-						<ul transition:slide>
-							<li>
-								<a href="https://lenooby09.github.io/" target="_blank">
-									<img class="eight-eight-ecks-thirty-one" src="/lenooby09.png" alt="lenooby09" />
-								</a>
-							</li>
-						</ul>
-					{/if}
-				</div>
-				<div><h1>{m.communities()}</h1></div>
-			</div>
-			<div>
+			<div class="lastfm-container">
 				<p>{m.lastfm()}</p>
 				<LastFM />
 			</div>
 		</section>
+		<section class="socials">
+			<h1>{m.socials()}</h1>
+			<ul class="socials-list">
+				<li>
+					<a href="https://github.com/h4rldev" target="_blank">
+						<Icon icon="simple-icons:github" class="inline-block h-[2rem] w-[2rem]" />
+					</a>
+				</li>
+				<li>
+					<a href="https://bsky.app/profile/h4rl.dev" target="_blank">
+						<Icon icon="simple-icons:bluesky" class="inline-block h-[2rem] w-[2rem]" />
+					</a>
+				</li>
+				<li>
+					<a href="https://www.last.fm/user/h4rl3h" target="_blank">
+						<Icon icon="simple-icons:lastdotfm" class="inline-block h-[2rem] w-[2rem]" />
+					</a>
+				</li>
+				<li>
+					<a href="https://discord.com/users/275689969601871882" target="_blank">
+						<Icon icon="simple-icons:discord" class="inline-block h-[2rem] w-[2rem]" />
+					</a>
+				</li>
+			</ul>
+			{#if isEmailOpen}
+				<div class="email-container">
+					<a href="mailto:contact@h4rl.dev" target="_blank">contact@h4rl.dev</a>
+				</div>
+			{:else}
+				<button class="fake-link" onclick={() => (isEmailOpen = !isEmailOpen)}>
+					{m.email()}
+				</button>
+			{/if}
+		</section>
+		<section class="friends-communities-and-lastfm">
+			<div class="friends-communities">
+				<div>
+					<ExpandableList list_items={frens}>
+						{#snippet button_text()}
+							{m.friends()}
+						{/snippet}
+						{#snippet button_icon_open()}
+							<Icon icon="iwwa:arrow-up" class="inline-block h-[1rem] w-[1rem]" />
+						{/snippet}
+						{#snippet button_icon_close()}
+							<Icon icon="iwwa:arrow-down" class="inline-block h-[100%] w-[100%]" />
+						{/snippet}
+					</ExpandableList>
+				</div>
+				<div>
+					<ExpandableList list_items={communities}>
+						{#snippet button_text()}
+							{m.communities()}
+						{/snippet}
+						{#snippet button_icon_open()}
+							<Icon icon="iwwa:arrow-up" class="inline-block h-[1rem] w-[1rem]" />
+						{/snippet}
+						{#snippet button_icon_close()}
+							<Icon icon="iwwa:arrow-down" class="inline-block h-[100%] w-[100%]" />
+						{/snippet}
+					</ExpandableList>
+				</div>
+			</div>
+			<div class="my-banner">
+				<p>My 88x31</p>
+				<img src="/88x31/me.png" class="eight-eight-ecks-thirty-one" alt="me" />
+				<p>Feel free to copy it if you want.</p>
+			</div>
+		</section>
+		<section></section>
 	</Glass>
 </main>
 <footer>
@@ -104,8 +173,16 @@
 </footer>
 
 <style>
-	hr {
-		@apply mx-auto my-8 w-[10%] rounded-full border-2 border-gray-200;
+	.socials {
+		@apply my-8 flex flex-col items-center justify-center text-lg;
+	}
+
+	.socials-list {
+		@apply flex flex-row flex-wrap items-center justify-center gap-2;
+	}
+
+	.my-banner {
+		@apply mt-8 flex flex-col items-center justify-center text-center;
 	}
 
 	.age {
@@ -140,6 +217,10 @@
 		@apply flex flex-row items-center justify-center text-5xl font-bold;
 	}
 
+	.lastfm-container {
+		@apply mt-8;
+	}
+
 	.greeting {
 		@apply flex flex-col justify-center;
 	}
@@ -149,15 +230,15 @@
 	}
 
 	header {
-		@apply mb-8 mt-8;
+		@apply my-8 w-full;
 	}
 
 	.friends-communities-and-lastfm {
-		@apply flex flex-col items-center;
+		@apply my-8 flex flex-col items-center;
 	}
 
 	.friends-communities {
-		@apply flex flex-row items-center justify-center gap-32;
+		@apply flex flex-row flex-wrap items-center gap-10;
 	}
 
 	.eight-eight-ecks-thirty-one {
@@ -166,15 +247,15 @@
 		image-rendering: pixelated !important;
 	}
 
-	section.intro {
+	.intro {
 		@apply flex w-full flex-col content-center items-center justify-center;
 	}
 
 	main {
-		@apply mb-8 mt-4 flex flex-row justify-center font-afacad;
+		@apply mb-8 mt-4 flex w-full flex-row justify-center font-afacad;
 	}
 
 	footer {
-		@apply flex flex-row justify-center;
+		@apply mb-8 flex w-full flex-row justify-center;
 	}
 </style>
