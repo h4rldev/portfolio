@@ -20,8 +20,8 @@ frontend/build
 dist/
 
 # Temporary
-**/*/TMP
-TMP
+**/*/tmp
+tmp
 
 # Vite
 frontend/vite.config.js.timestamp-*

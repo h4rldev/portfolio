@@ -4,14 +4,20 @@ pkgs.mkShell {
   name = "FLSC Portfolio c:";
   packages = with pkgs; [
     # backend
+    cmake
+    zlib
+    libuv
+    openssl
+    gcc
+    wslay
+    brotli
+    libcap
 
     # clangd
     clang-tools
 
     # libraries
     file
-    libmicrohttpd
-    zlib-ng
     jansson
 
     # ssl
@@ -36,9 +42,7 @@ pkgs.mkShell {
   ];
   shellHook = ''
     export PATH="./frontend/node_modules/.bin/:$PATH"
-    mkdir ./TMP || true
-    mkdir ./frontend/TMP || true
-    mkdir ./backend/TMP || true
-    export TMPDIR="./TMP"
+    mkdir -p ./tmp
+    export TMPDIR=$(realpath ./tmp)
   '';
 }
