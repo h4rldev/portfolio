@@ -14,3 +14,12 @@ The FLSC is an webapp stack consisting of:
 ## What made you even think of this?
 
 Idk, it's funny
+
+### Why is backend submodule not clickable?
+
+Because it's not hosted on github, you'll find it here: <https://git.enstore.cloud/enstore.cloud/toast>
+
+### What is this licensed under?
+
+The frontend is licensed under the BSD-3-Clause license, and the backend is licensed under the AGPL-3.0 license.
+See the LICENSE files [here](LICENSE) and [here](https://git.enstore.cloud/enstore.cloud/toast/src/branch/main/LICENSE) for more information.
