@@ -38,8 +38,8 @@
 			},
 			move: {
 				enable: true,
-				speed: 0.5,
-				direction: 'none',
+				speed: 3,
+				direction: 'bottom',
 				random: false,
 				straight: false,
 				outMode: 'out',
@@ -47,18 +47,11 @@
 					enable: false,
 					speed: 2
 				},
-				bounded: true,
+				bounded: false,
 				diagonal: false,
 				saturation: 180,
 				freeze: true,
 				shift: 0
-			},
-			links: {
-				enable: true,
-				distance: 150,
-				color: '#ffffff',
-				opacity: 0.4,
-				width: 2
 			}
 		}
 	};
@@ -112,7 +105,7 @@
 	}
 
 	.rest {
-		@apply z-[0];
+		@apply z-[1];
 	}
 
 	.linked-particles {

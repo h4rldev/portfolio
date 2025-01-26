@@ -45,7 +45,7 @@
 
 <style>
 	div {
-		@apply flex w-[80%] min-w-[360px] flex-col items-center justify-center gap-1;
+		@apply z-10 flex w-[80%] min-w-[360px] flex-col items-center justify-center gap-1;
 	}
 	ul {
 		@apply inline-flex flex-row flex-wrap gap-1;

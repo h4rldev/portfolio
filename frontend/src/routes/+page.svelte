@@ -3,7 +3,8 @@
 	import Footer from '$components/Footer.svelte';
 	import Glass from '$components/Glass.svelte';
 	import LastFM from '$components/LastFM.svelte';
-	import ExpandableList from '$components/ExpandableList.svelte';
+	import Container from '$components/Container.svelte';
+	import PausableButtonMarquee from '$components/PausableButtonMarquee.svelte';
 
 	import Icon from '@iconify/svelte';
 
@@ -51,142 +52,118 @@
 	<title>Hello</title>
 </svelte:head>
 
-<header>
-	<Nav />
-</header>
-<main>
-	<Glass>
-		<section class="intro">
-			<div class="text-holder">
-				<div class="greeting-cell">
-					<h1 class="big-hi">{m.hi()}</h1>
-					<div class="greeting">
+<Container>
+	<header>
+		<Nav />
+	</header>
+	<main>
+		<section class="me-card">
+			<Glass>
+				<div class="me-holder">
+					<enhanced:img src="/static/me.webp" alt="me" class="size-40 rounded-full object-cover" />
+					<div class="greeting-cell-holder">
+						<div class="greeting-cell">
+							<h1 class="big-hi">{m.hi()}</h1>
+							<div class="greeting">
+								<p>
+									{m.im()} <span class="greeting-name">h4rl</span>
+								</p>
+								<p>
+									{m.basedin()}
+									<a href="https://en.wikipedia.org/wiki/Karlstad" target="_blank">{m.located()}</a
+									>.
+								</p>
+							</div>
+						</div>
 						<p>
-							{m.im()} <span class="greeting-name">h4rl</span>
+							{m.im()}
+							<span class="age-number">{age}</span>
+							{m.years_old()}
+							{m.birthday()}
+							<span class="birthday-date">{birthday}</span>.
 						</p>
-						<p>
-							{m.basedin()}
-							<a href="https://en.wikipedia.org/wiki/Karlstad" target="_blank">{m.located()}</a>.
-						</p>
+						<p>{m.music()}</p>
+						<div class="socials">
+							{#if isEmailOpen}
+								<div>
+									<a href="mailto:contact@h4rl.dev" target="_blank">contact@h4rl.dev</a>
+								</div>
+							{:else}
+								<button class="fake-link text-left" onclick={() => (isEmailOpen = !isEmailOpen)}>
+									{m.email()}
+								</button>
+							{/if}
+							<ul class="socials-list">
+								<li>
+									<a href="https://github.com/h4rldev" target="_blank">
+										<Icon icon="simple-icons:github" class="inline-block h-[2rem] w-[2rem]" />
+									</a>
+								</li>
+								<li>
+									<a href="https://bsky.app/profile/h4rl.dev" target="_blank">
+										<Icon icon="simple-icons:bluesky" class="inline-block h-[2rem] w-[2rem]" />
+									</a>
+								</li>
+								<li>
+									<a href="https://www.last.fm/user/h4rl3h" target="_blank">
+										<Icon icon="simple-icons:lastdotfm" class="inline-block h-[2rem] w-[2rem]" />
+									</a>
+								</li>
+								<li>
+									<a href="https://discord.com/users/275689969601871882" target="_blank">
+										<Icon icon="simple-icons:discord" class="inline-block h-[2rem] w-[2rem]" />
+									</a>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
-				<div>
-					<p class="age">
-						{m.im()}
-						<span class="age-number">{age}</span>
-						{m.years_old()}
-						{m.birthday()}
-						<span class="birthday-date">{birthday}</span>.
-					</p>
-					<p>I like to listen to breakcore, mashcore, dancecore, jungle, metal, jrock, and more.</p>
-
-					<div class="specialize">
-						<p>{m.specialize()} {m.environments()}, {m.ilikeusing()}</p>
-						<p>C, Rust, Bash, Javascript, TypeScript, ... {m.andmore()}</p>
-					</div>
-					<div class="frameworks">
-						<p>{m.ilikeframeworks()}:</p>
-						<p>{m.frameworks()}</p>
-					</div>
-					<p>{m.interests()}</p>
-				</div>
-			</div>
-			<div class="lastfm-container">
-				<p>{m.lastfm()}</p>
-				<LastFM />
-			</div>
+			</Glass>
 		</section>
-		<section class="socials">
-			<h1>{m.socials()}</h1>
-			<ul class="socials-list">
-				<li>
-					<a href="https://github.com/h4rldev" target="_blank">
-						<Icon icon="simple-icons:github" class="inline-block h-[2rem] w-[2rem]" />
-					</a>
-				</li>
-				<li>
-					<a href="https://bsky.app/profile/h4rl.dev" target="_blank">
-						<Icon icon="simple-icons:bluesky" class="inline-block h-[2rem] w-[2rem]" />
-					</a>
-				</li>
-				<li>
-					<a href="https://www.last.fm/user/h4rl3h" target="_blank">
-						<Icon icon="simple-icons:lastdotfm" class="inline-block h-[2rem] w-[2rem]" />
-					</a>
-				</li>
-				<li>
-					<a href="https://discord.com/users/275689969601871882" target="_blank">
-						<Icon icon="simple-icons:discord" class="inline-block h-[2rem] w-[2rem]" />
-					</a>
-				</li>
-			</ul>
-			{#if isEmailOpen}
-				<div class="email-container">
-					<a href="mailto:contact@h4rl.dev" target="_blank">contact@h4rl.dev</a>
-				</div>
-			{:else}
-				<button class="fake-link" onclick={() => (isEmailOpen = !isEmailOpen)}>
-					{m.email()}
-				</button>
-			{/if}
+		<section class="whoami">
+			<Glass></Glass>
 		</section>
-		<section class="friends-communities-and-lastfm">
-			<div class="friends-communities">
-				<div>
-					<ExpandableList list_items={frens}>
-						{#snippet button_text()}
-							{m.friends()}
-						{/snippet}
-						{#snippet button_icon_open()}
-							<Icon icon="iwwa:arrow-up" class="inline-block h-[1rem] w-[1rem]" />
-						{/snippet}
-						{#snippet button_icon_close()}
-							<Icon icon="iwwa:arrow-down" class="inline-block h-[100%] w-[100%]" />
-						{/snippet}
-					</ExpandableList>
-				</div>
-				<div>
-					<ExpandableList list_items={communities}>
-						{#snippet button_text()}
-							{m.communities()}
-						{/snippet}
-						{#snippet button_icon_open()}
-							<Icon icon="iwwa:arrow-up" class="inline-block h-[1rem] w-[1rem]" />
-						{/snippet}
-						{#snippet button_icon_close()}
-							<Icon icon="iwwa:arrow-down" class="inline-block h-[100%] w-[100%]" />
-						{/snippet}
-					</ExpandableList>
-				</div>
-			</div>
-			<div class="my-banner">
-				<p>My 88x31</p>
-				<img src="/88x31/me.png" class="eight-eight-ecks-thirty-one" alt="me" />
-				<p>Feel free to copy it if you want.</p>
-			</div>
+		<section class="buttons">
+			<Glass>
+				<PausableButtonMarquee list_items={frens} />
+			</Glass>
 		</section>
-		<section></section>
-	</Glass>
-</main>
+		<section class="lastfm">
+			<Glass></Glass>
+		</section>
+	</main>
+</Container>
 <footer>
 	<Footer />
 </footer>
 
 <style>
+	.me-holder {
+		@apply my-auto inline-flex min-w-[350px] flex-row gap-4;
+	}
+
 	.socials {
-		@apply my-8 flex flex-col items-center justify-center text-lg;
+		@apply flex flex-col text-left text-lg;
+	}
+
+	.buttons {
+		@apply relative;
+	}
+
+	.lastfm {
+		@apply col-span-2;
 	}
 
 	.socials-list {
-		@apply flex flex-row flex-wrap items-center justify-center gap-2;
+		@apply flex flex-row gap-2;
 	}
 
-	.my-banner {
-		@apply mt-8 flex flex-col items-center justify-center text-center;
+	.me-card {
+		@apply col-span-3 inline-flex h-[100%] flex-col;
 	}
 
-	.age {
-		@apply mb-8 text-center;
+	.whoami {
+		@apply col-span-4 row-span-2 inline-flex h-[100%] flex-col;
 	}
 
 	.specialize {
@@ -206,7 +183,11 @@
 	}
 
 	.greeting-cell {
-		@apply mt-8 flex flex-row items-center justify-center gap-2;
+		@apply flex flex-row gap-2;
+	}
+
+	.greeting-cell-holder {
+		@apply my-auto flex flex-col;
 	}
 
 	.greeting-name {
@@ -229,10 +210,6 @@
 		@apply m-0 p-0 leading-5;
 	}
 
-	header {
-		@apply my-8 w-full;
-	}
-
 	.friends-communities-and-lastfm {
 		@apply my-8 flex flex-col items-center;
 	}
@@ -251,8 +228,12 @@
 		@apply flex w-full flex-col content-center items-center justify-center;
 	}
 
+	header {
+		@apply mt-8 w-full;
+	}
+
 	main {
-		@apply mb-8 mt-4 flex w-full flex-row justify-center font-afacad;
+		@apply mb-8 mt-2 grid grid-cols-7 grid-rows-2 justify-stretch gap-8 font-afacad;
 	}
 
 	footer {

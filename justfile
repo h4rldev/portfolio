@@ -30,7 +30,7 @@ scripts_bootstrap := scripts_path / "bootstrap.sh"
   just build-frontend-move
 
 @dev-frontend:
-  {{scripts_bootstrap}} dev
+  {{scripts_bootstrap}} dev-frontend
 
 @clear_cores:
   {{scripts_bootstrap}} clear-cores
