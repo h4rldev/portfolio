@@ -20,6 +20,7 @@ const config = {
 		alias: {
 			$components: './src/components/',
 			$posts: './src/posts/',
+			$data: './src/data/'
 		},
 		prerender: {
 			handleHttpError: 'warn'

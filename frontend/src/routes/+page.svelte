@@ -21,31 +21,8 @@
 
 	let isEmailOpen = $state(false);
 
-	const frens = [
-		{
-			href: 'https://lenooby09.github.io/',
-			image: '/88x31/frens/lenooby09.png',
-			alt: 'lenooby09'
-		},
-		{
-			href: 'https://onz.ee/',
-			image: '/88x31/frens/onzecki.png',
-			alt: 'onzecki'
-		},
-		{
-			href: 'https://meow-d.github.io/',
-			image: '/88x31/frens/meow_d.webp',
-			alt: 'meow-d'
-		}
-	];
-
-	const communities = [
-		{
-			href: 'https://github.com/h4rldev',
-			image: '/88x31/frens/lenooby09.png',
-			alt: 'github'
-		}
-	];
+	import frens from '$data/frens.json';
+	import random from '$data/random.json';
 </script>
 
 <svelte:head>
@@ -125,7 +102,11 @@
 		</section>
 		<section class="buttons">
 			<Glass>
+				<h1>{m.friends()}</h1>
 				<PausableButtonMarquee list_items={frens} />
+
+				<h1>{m.random()}</h1>
+				<PausableButtonMarquee list_items={random} link={false} time="30s" />
 			</Glass>
 		</section>
 		<section class="lastfm">
@@ -147,11 +128,10 @@
 	}
 
 	.buttons {
-		@apply relative;
 	}
 
 	.lastfm {
-		@apply col-span-2;
+		@apply col-span-3;
 	}
 
 	.socials-list {
@@ -159,11 +139,11 @@
 	}
 
 	.me-card {
-		@apply col-span-3 inline-flex h-[100%] flex-col;
+		@apply col-span-4 inline-flex h-[100%] flex-col;
 	}
 
 	.whoami {
-		@apply col-span-4 row-span-2 inline-flex h-[100%] flex-col;
+		@apply col-span-5 row-span-2 inline-flex h-[100%] flex-col;
 	}
 
 	.specialize {
@@ -198,10 +178,6 @@
 		@apply flex flex-row items-center justify-center text-5xl font-bold;
 	}
 
-	.lastfm-container {
-		@apply mt-8;
-	}
-
 	.greeting {
 		@apply flex flex-col justify-center;
 	}
@@ -210,30 +186,12 @@
 		@apply m-0 p-0 leading-5;
 	}
 
-	.friends-communities-and-lastfm {
-		@apply my-8 flex flex-col items-center;
-	}
-
-	.friends-communities {
-		@apply flex flex-row flex-wrap items-center gap-10;
-	}
-
-	.eight-eight-ecks-thirty-one {
-		@apply h-[31px] w-[88px] border border-transparent;
-		@apply transition-colors duration-300 ease-in-out hover:border-white;
-		image-rendering: pixelated !important;
-	}
-
-	.intro {
-		@apply flex w-full flex-col content-center items-center justify-center;
-	}
-
 	header {
 		@apply mt-8 w-full;
 	}
 
 	main {
-		@apply mb-8 mt-2 grid grid-cols-7 grid-rows-2 justify-stretch gap-8 font-afacad;
+		@apply mb-8 mt-2 grid grid-cols-9 grid-rows-2 justify-stretch gap-8 font-afacad;
 	}
 
 	footer {

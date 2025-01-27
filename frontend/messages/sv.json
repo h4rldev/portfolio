@@ -6,7 +6,7 @@
 	"commissions": "kommissioner",
 	"hi": "Hej!",
 	"im": "Jag är",
-	"basedin": "En programmerare/mjukvaruhackare som är baserad i",
+	"basedin": "En programmerare/mjukvaruhackare baserad i",
 	"located": "Karlstad, Sverige",
 	"years_old": "år gammal",
 	"birthday": "och jag föddes den",
@@ -21,6 +21,7 @@
 	"socials": "Mina sociala medier",
 	"email": "Visa e-post",
 	"friends": "Vänner",
+	"random": "Slumpmässiga",
 	"communities": "Gemenskaper",
 	"lastfm": "Senast lyssnad låt:"
 }
