@@ -25,9 +25,9 @@
 		<li>&copy; h4rl {new Date().getFullYear()}.</li>
 		<li>
 			This website is <a href="https://github.com/h4rldev/FLSC-portfolio">open source</a> and
-			licensed under
+			licensed under the
 			<a href="https://github.com/h4rldev/FLSC-portfolio/blob/main/LICENSE" target="_blank"
-				>the BSD 3-Clause License</a
+				>BSD 3-Clause License</a
 			>.
 		</li>
 		<li>

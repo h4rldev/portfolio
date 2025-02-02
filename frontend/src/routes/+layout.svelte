@@ -4,8 +4,11 @@
 	import Particles, { particlesInit } from '@tsparticles/svelte';
 	import { loadSlim } from '@tsparticles/slim';
 
+	import { slide, fly } from 'svelte/transition';
+	import { backIn, backInOut, cubicIn, cubicOut } from 'svelte/easing';
+
 	import '../app.css';
-	let { children } = $props();
+	let { children, data } = $props();
 
 	let linkedparticles: any = {
 		particles: {
@@ -77,11 +80,14 @@
 <div class="linked-particles">
 	<Particles id="tsparticles" options={linkedparticles} on:particlesLoaded={onParticlesLoaded} />
 </div>
-<div class="rest">
-	<ParaglideJS {i18n}>
-		{@render children?.()}
-	</ParaglideJS>
-</div>
+
+{#key data.url}
+	<div class="rest" in:fly={{ y: 10, duration: 500 }}>
+		<ParaglideJS {i18n}>
+			{@render children?.()}
+		</ParaglideJS>
+	</div>
+{/key}
 
 <style>
 	:global(html) {

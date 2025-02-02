@@ -2,15 +2,6 @@
 	<section class="intro">
 		<div class="text-holder">
 			<div>
-				<p class="age">
-					{m.im()}
-					<span class="age-number">{age}</span>
-					{m.years_old()}
-					{m.birthday()}
-					<span class="birthday-date">{birthday}</span>.
-				</p>
-				<p>I like to listen to breakcore, mashcore, dancecore, jungle, metal, jrock, and more.</p>
-
 				<div class="specialize">
 					<p>{m.specialize()} {m.environments()}, {m.ilikeusing()}</p>
 					<p>C, Rust, Bash, Javascript, TypeScript, ... {m.andmore()}</p>

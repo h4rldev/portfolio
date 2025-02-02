@@ -2,14 +2,17 @@
 	import Nav from '$components/Nav.svelte';
 	import Footer from '$components/Footer.svelte';
 	import Glass from '$components/Glass.svelte';
-	import LastFM from '$components/LastFM.svelte';
 	import Container from '$components/Container.svelte';
 	import PausableButtonMarquee from '$components/PausableButtonMarquee.svelte';
+	import LastFm from '$components/LastFM.svelte';
 
 	import Icon from '@iconify/svelte';
 
 	import * as m from '$lib/paraglide/messages.js';
 	import { languageTag } from '$lib/paraglide/runtime';
+
+	import frens from '$data/frens.json';
+	import random from '$data/random.json';
 
 	const birthday_date = new Date('2005-09-02');
 	const age = ((Date.now() - birthday_date.getTime()) / 1000 / 60 / 60 / 24 / 365).toFixed(0);
@@ -20,9 +23,6 @@
 	});
 
 	let isEmailOpen = $state(false);
-
-	import frens from '$data/frens.json';
-	import random from '$data/random.json';
 </script>
 
 <svelte:head>
@@ -39,27 +39,29 @@
 				<div class="me-holder">
 					<enhanced:img src="/static/me.webp" alt="me" class="size-40 rounded-full object-cover" />
 					<div class="greeting-cell-holder">
-						<div class="greeting-cell">
-							<h1 class="big-hi">{m.hi()}</h1>
-							<div class="greeting">
-								<p>
-									{m.im()} <span class="greeting-name">h4rl</span>
-								</p>
-								<p>
-									{m.basedin()}
-									<a href="https://en.wikipedia.org/wiki/Karlstad" target="_blank">{m.located()}</a
-									>.
-								</p>
+						<div>
+							<div class="greeting-cell">
+								<h1 class="big-hi">{m.hi()}</h1>
+								<div class="greeting">
+									<p>
+										{m.im()} <span class="greeting-name">h4rl</span>
+									</p>
+									<p>
+										{m.basedin()}
+										<a href="https://en.wikipedia.org/wiki/Karlstad" target="_blank"
+											>{m.located()}</a
+										>.
+									</p>
+								</div>
 							</div>
+							<p>
+								{m.im()}
+								<span class="age-number">{age}</span>
+								{m.years_old()}
+								{m.birthday()}
+								<span class="birthday-date">{birthday}</span>.
+							</p>
 						</div>
-						<p>
-							{m.im()}
-							<span class="age-number">{age}</span>
-							{m.years_old()}
-							{m.birthday()}
-							<span class="birthday-date">{birthday}</span>.
-						</p>
-						<p>{m.music()}</p>
 						<div class="socials">
 							{#if isEmailOpen}
 								<div>
@@ -91,6 +93,11 @@
 										<Icon icon="simple-icons:discord" class="inline-block h-[2rem] w-[2rem]" />
 									</a>
 								</li>
+								<li>
+									<a href="https://steamcommunity.com/id/h4rl3h" target="_blank">
+										<Icon icon="simple-icons:steam" class="inline-block h-[2rem] w-[2rem]" />
+									</a>
+								</li>
 							</ul>
 						</div>
 					</div>
@@ -98,7 +105,74 @@
 			</Glass>
 		</section>
 		<section class="whoami">
-			<Glass></Glass>
+			<Glass>
+				<h1 class="text-xl font-bold">Who am I?</h1>
+				<p>
+					I'm a recent graduate at NTI Gymnasiet in <a
+						href="https://en.wikipedia.org/wiki/Karlstad"
+						target="_blank">Karlstad, Sweden</a
+					>
+				</p>
+				<p>
+					And in my free time I like to play games, work on projects, watch anime, and listen to
+					music.
+				</p>
+				<p class="mt-4">
+					My favorite genres being <a
+						href="https://rateyourmusic.com/genre/breakcore/"
+						target="_blank">breakcore</a
+					>
+					(specifically
+					<a href="https://rateyourmusic.com/genre/mashcore/" target="_blank">mashcore</a>, and
+					<a href="https://www.last.fm/tag/dancecore" target="_blank">dancecore</a>),
+					<a href="https://rateyourmusic.com/genre/jungle/" target="_blank">jungle</a>,
+					<a href="https://rateyourmusic.com/genre/hardcore-edm/" target="_blank">hardcore</a>
+					(specifically
+					<a href="https://rateyourmusic.com/genre/happy-hardcore/" target="_blank"
+						>happy hardcore</a
+					>,
+					<a href="https://rateyourmusic.com/genre/digital-hardcore/" target="_blank"
+						>digital hardcore</a
+					>, and
+					<a href="https://rateyourmusic.com/genre/uptempo-hardcore/" target="_blank"
+						>uptempo hardcore</a
+					>),
+					<a href="https://en.wikipedia.org/wiki/Extreme_metal" target="_blank">extreme metal</a>,
+					<a href="https://en.wikipedia.org/wiki/J-rock" target="_blank">jrock</a>,
+					<a href="https://en.wikipedia.org/wiki/J-pop" target="_blank">jpop</a>.
+				</p>
+				<p class="mt-4">
+					My specialties in programming are concurrent computing, networking, and web development,
+					primarily using <a href="https://www.rust-lang.org/" target="_blank"
+						><Icon icon="devicon:rust" class="align-center inline w-[1em] align-[-3px]" /> Rust</a
+					>
+					and
+					<Icon icon="devicon:c" class="align-center inline w-[1em] align-[-3px]" /> C for the backend,
+					and
+					<a href="https://svelte.dev/" target="_blank">Svelte</a>
+					and
+					<a href="https://typescriptlang.org/" target="_blank">TypeScript</a> for the frontend. frontend.
+				</p>
+				<p class="mt-4">
+					I am also interested in application development, such as in <a
+						href="https://gtk.org/"
+						target="_blank">GTK</a
+					>, <a href="https://qt.io/" target="_blank">Qt</a>, and other cross-platform frameworks.
+				</p>
+				<p class="mt-4">
+					For the last few years, I've been using Linux and currently use <a
+						href="https://nixos.org/"
+						target="_blank">NixOS</a
+					>
+					as my operating system, and for programming, I use
+					<a href="https://neovim.io/" target="_blank">Neovim</a>, and
+					<a href="https://zellij.dev/" target="_blank">Zellij</a>.
+				</p>
+				<p class="mt-4">
+					Any of my views on the internet are my own and do not represent the opinions of any
+					employer or organization.
+				</p>
+			</Glass>
 		</section>
 		<section class="buttons">
 			<Glass>
@@ -106,11 +180,13 @@
 				<PausableButtonMarquee list_items={frens} />
 
 				<h1>{m.random()}</h1>
-				<PausableButtonMarquee list_items={random} link={false} time="30s" />
+				<PausableButtonMarquee list_items={random} link={false} />
 			</Glass>
 		</section>
 		<section class="lastfm">
-			<Glass></Glass>
+			<Glass>
+				<LastFm />
+			</Glass>
 		</section>
 	</main>
 </Container>
@@ -127,15 +203,16 @@
 		@apply flex flex-col text-left text-lg;
 	}
 
-	.buttons {
-	}
-
 	.lastfm {
-		@apply col-span-3;
+		@apply col-span-2;
 	}
 
 	.socials-list {
 		@apply flex flex-row gap-2;
+	}
+
+	.buttons {
+		@apply col-span-2;
 	}
 
 	.me-card {
@@ -143,7 +220,7 @@
 	}
 
 	.whoami {
-		@apply col-span-5 row-span-2 inline-flex h-[100%] flex-col;
+		@apply col-span-5 row-span-2 inline-flex h-[100%] flex-col text-lg;
 	}
 
 	.specialize {
@@ -167,7 +244,7 @@
 	}
 
 	.greeting-cell-holder {
-		@apply my-auto flex flex-col;
+		@apply my-auto flex flex-col gap-2;
 	}
 
 	.greeting-name {

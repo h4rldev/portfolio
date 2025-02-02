@@ -61,6 +61,6 @@
 	}
 
 	ul {
-		@apply relative z-10 flex w-full flex-row gap-3 font-nova xs:text-sm;
+		@apply relative z-10 flex w-full flex-row gap-3 font-afacad text-lg sm:text-base;
 	}
 </style>

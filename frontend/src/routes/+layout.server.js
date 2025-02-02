@@ -14,7 +14,7 @@ const posts = import.meta.glob('../posts/*.svx');
 /**
  * @type { import("./$types").LayoutServerLoad}
  */
-export async function load({ depends }) {
+export async function load({ depends, url }) {
 	// This tells SvelteKit to re-run this load function when the language changes
 	depends('paraglide:lang');
 
@@ -29,6 +29,7 @@ export async function load({ depends }) {
 
 	return {
 		serverLang: `The language on the server is ${languageTag()}`,
-		posts: await Promise.all(postPromises)
+		posts: await Promise.all(postPromises),
+		url: url.pathname
 	};
 }

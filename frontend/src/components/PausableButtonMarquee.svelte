@@ -1,9 +1,12 @@
 <script lang="ts">
-	let { list_items, link = true, time = '10s' } = $props();
+	let { list_items, link = true } = $props();
+
+	const items = list_items.length;
+	const time = items * 3;
 </script>
 
 <div class="marquee-container">
-	<ul class="marquee" style="animation-duration: {time};">
+	<ul class="marquee" style="animation-duration: {time}s;">
 		{#each list_items as item}
 			<li>
 				{#if link}
@@ -22,7 +25,7 @@
 			</li>
 		{/each}
 	</ul>
-	<ul class="marquee" aria-hidden="true" style="animation-duration: {time};">
+	<ul class="marquee" aria-hidden="true" style="animation-duration: {time}s;">
 		{#each list_items as item}
 			<li>
 				{#if link}

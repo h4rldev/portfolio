@@ -34,22 +34,26 @@
 {#await fetchData()}
 	<p>Loading...</p>
 {:then}
+	<div class="text">
+		Last listened on <a href="https://last.fm" target="_blank"
+			><Icon icon="logos:lastfm" class="w-[2rem]" /></a
+		>
+	</div>
 	<div class="lastfm-container">
-		<div class="icon-and-image">
-			<Icon icon="logos:lastfm" class="w-[2rem]" />
+		<div class="image">
 			<a href={data.url} target="_blank">
 				<img src={data.image[1]['#text']} class="image-thumbnail" alt={data.name} />
 			</a>
 		</div>
 		<ul>
-			<li class="mt-3"><a href={data.url} target="_blank">{data.name}</a></li>
-			<li class="text-xs">
+			<li><a href={data.url} target="_blank">{data.name}</a></li>
+			<li>
 				<a href="https://www.last.fm/music/{data.artist['#text']}" target="_blank"
 					>{data.artist['#text']}</a
 				>
 			</li>
-			<li class="text-xs">{data.album['#text']}</li>
-			<li class="text-xs">
+			<li>{data.album['#text']}</li>
+			<li>
 				Time of listening: {time}
 			</li>
 		</ul>
@@ -59,12 +63,16 @@
 {/await}
 
 <style>
-	.icon-and-image {
+	.text {
+		@apply flex flex-row items-center gap-1 text-sm;
+	}
+
+	.image {
 		@apply flex flex-col items-center justify-center p-0;
 	}
 
 	.image-thumbnail {
-		@apply rounded-lg border-2 border-transparent hover:border-blue-400;
+		@apply size-24 rounded-lg border-2 border-transparent hover:border-blue-400;
 		@apply transition-colors duration-300 ease-in-out;
 	}
 
@@ -73,6 +81,6 @@
 	}
 
 	ul {
-		@apply flex flex-col justify-center text-sm;
+		@apply flex flex-col justify-center;
 	}
 </style>
