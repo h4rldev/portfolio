@@ -15,6 +15,7 @@ export default {
 				square: 'square'
 			},
 			screens: {
+				'xxs': '330px',
 				'xs': '360px',
 				'sm': '640px',
 				'md': '768px',

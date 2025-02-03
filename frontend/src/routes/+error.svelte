@@ -1,33 +1,80 @@
 <script>
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
+
 	import Nav from '$components/Nav.svelte';
 	import Footer from '$components/Footer.svelte';
 	import Glass from '$components/Glass.svelte';
+	import Container from '$components/Container.svelte';
+
+	import * as m from '$lib/paraglide/messages.js';
+
+	const api_url = 'https://api.thecatapi.com/v1/images/search';
+
+	let cat = $state();
+
+	async function getCat() {
+		if (!browser) {
+			cat = m.not_available();
+			return;
+		}
+
+		const response = await fetch(api_url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		const retrieved_data = await response.json();
+		cat = retrieved_data[0].url;
+	}
 </script>
 
-<header>
-	<Nav />
-</header>
+<Container>
+	<header>
+		<Nav />
+	</header>
 
-<main>
-	<Glass>
-		<section class="main">
-			<h1>Error!</h1>
-			<p>Couldn't find route!</p>
-			<div class="error-message-cell">
-				<p class="error-corner">Error Message:</p>
-				<code class="error-content">
-					{$page.status}
-					{$page.error?.message}
-				</code>
-			</div>
-			<p>
-				Return back to
-				<a href="/">home</a>?
-			</p>
+	<main>
+		<section class="error">
+			<Glass>
+				<h1>Error!</h1>
+				<p>Couldn't find route!</p>
+				<div class="error-message-cell">
+					<p class="error-corner">Error Message:</p>
+					<code class="error-content">
+						{$page.status}
+						{$page.error?.message}
+					</code>
+				</div>
+				<p>
+					Return back to
+					<a href="/">home</a>?
+				</p>
+			</Glass>
 		</section>
-	</Glass>
-</main>
+		<section class="cats">
+			<Glass>
+				<div class="cats-holder">
+					<p>Accept this cat as an apology for the error!</p>
+					{#await getCat()}
+						<p>Loading...</p>
+					{:then}
+						<img src={cat} alt="cat" class="object-cover" />
+					{:catch error}
+						<p style="text-red-500">{error.message}</p>
+					{/await}
+				</div>
+			</Glass>
+		</section>
+		<section class="explode">
+			<Glass>
+				<p>Explode!</p>
+			</Glass>
+		</section>
+	</main>
+</Container>
 
 <footer>
 	<Footer />
@@ -35,27 +82,36 @@
 
 <style>
 	header {
-		@apply mb-8 mt-8;
+		@apply mt-8 w-full;
 	}
 
 	main {
-		@apply flex flex-row justify-center text-lg;
+		@apply mb-8 mt-2 grid w-full justify-center font-afacad text-lg;
+		@apply grid-cols-3 gap-4;
 	}
 
 	footer {
-		@apply my-8 flex flex-row justify-center;
+		@apply mb-8 flex w-full flex-row justify-center;
 	}
 
 	h1 {
 		@apply text-xl;
 	}
 
-	.main {
-		@apply px-4 pt-4 font-akshar;
+	.error {
+		@apply col-span-1;
 	}
 
-	.footer {
-		@apply px-4 pb-4 font-akshar;
+	.cats {
+		@apply col-span-1;
+	}
+
+	.cats-holder {
+		@apply flex flex-col items-center justify-center;
+	}
+
+	.explode {
+		@apply col-span-1;
 	}
 
 	.error-message-cell {

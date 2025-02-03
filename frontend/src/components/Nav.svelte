@@ -4,15 +4,16 @@
 	import type { AvailableLanguageTag } from '$lib/paraglide/runtime';
 	import { languageTag } from '$lib/paraglide/runtime';
 	import { i18n } from '$lib/i18n';
-	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+
+	let { data } = $props();
 
 	import * as m from '$lib/paraglide/messages.js';
 
 	let currentLanguageTag: AvailableLanguageTag = languageTag();
 
 	function switchToLanguage(newLanguage: AvailableLanguageTag) {
-		const canonicalPath = i18n.route($page.url.pathname);
+		const canonicalPath = i18n.route(data.url);
 		const localisedPath = i18n.resolveRoute(canonicalPath, newLanguage);
 		goto(localisedPath);
 	}
@@ -45,7 +46,7 @@
 
 <style>
 	.far-right {
-		@apply absolute right-4 top-0 xs:bottom-0 xs:right-0 xs:top-[-24px] sm:bottom-0 sm:right-0 sm:top-0;
+		@apply absolute xxs:bottom-0 xxs:right-0 xxs:top-[-24px] sm:bottom-0 sm:right-0 sm:top-0 md:right-6 md:top-0;
 	}
 
 	nav {
@@ -61,6 +62,6 @@
 	}
 
 	ul {
-		@apply relative z-10 flex w-full flex-row gap-3 font-afacad text-lg sm:text-base;
+		@apply relative z-10 flex w-full flex-row gap-3 font-afacad text-lg xxs:text-base;
 	}
 </style>

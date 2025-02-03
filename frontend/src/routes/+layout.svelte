@@ -3,9 +3,7 @@
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	import Particles, { particlesInit } from '@tsparticles/svelte';
 	import { loadSlim } from '@tsparticles/slim';
-
-	import { slide, fly } from 'svelte/transition';
-	import { backIn, backInOut, cubicIn, cubicOut } from 'svelte/easing';
+	import { fly } from 'svelte/transition';
 
 	import '../app.css';
 	let { children, data } = $props();
@@ -104,17 +102,11 @@
 		@apply transition-colors duration-300 ease-in-out hover:text-blue-300 hover:decoration-blue-500 active:text-blue-200;
 	}
 
-	:global(.eight-eight-ecks-thirty-one) {
-		@apply min-h-[31px] min-w-[88px] border border-transparent;
-		@apply transition-colors duration-300 ease-in-out hover:border-white;
-		image-rendering: pixelated !important;
-	}
-
 	.rest {
 		@apply z-[1];
 	}
 
 	.linked-particles {
-		@apply z-[-1];
+		@apply z-[-1] w-full;
 	}
 </style>

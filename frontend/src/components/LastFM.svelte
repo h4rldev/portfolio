@@ -1,8 +1,10 @@
 <script>
 	import { env } from '$env/dynamic/public';
 	import { browser } from '$app/environment';
-	import Icon from '@iconify/svelte';
 	import { languageTag } from '$lib/paraglide/runtime';
+
+	import Icon from '@iconify/svelte';
+	import * as m from '$lib/paraglide/messages.js';
 
 	const api_key = '247b1a4b7dd5d6c42bb732941db23aef';
 	const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=h4rl3h&api_key=${api_key}&format=json`;
@@ -32,17 +34,18 @@
 </script>
 
 {#await fetchData()}
-	<p>Loading...</p>
+	<p>{m.loading()}</p>
 {:then}
 	<div class="text">
-		Last listened on <a href="https://last.fm" target="_blank"
-			><Icon icon="logos:lastfm" class="w-[2rem]" /></a
+		{m.last_listened()}
+		<a href="https://last.fm" target="_blank"
+			><Icon icon="simple-icons:lastdotfm" class="w-[1em]" /></a
 		>
 	</div>
 	<div class="lastfm-container">
 		<div class="image">
 			<a href={data.url} target="_blank">
-				<img src={data.image[1]['#text']} class="image-thumbnail" alt={data.name} />
+				<img src={data.image[3]['#text']} class="image-thumbnail" alt={data.name} />
 			</a>
 		</div>
 		<ul>
@@ -77,10 +80,14 @@
 	}
 
 	.lastfm-container {
-		@apply flex flex-row gap-2 text-sm;
+		@apply flex flex-row gap-2 text-sm xl:text-xs 2xl:text-sm;
 	}
 
 	ul {
 		@apply flex flex-col justify-center;
+	}
+
+	li {
+		@apply inline xl:w-[90px] 2xl:w-fit;
 	}
 </style>
