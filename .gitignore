@@ -37,3 +37,6 @@ Thumbs.db
 !.env.example
 !.env.test
 
+# direnv
+.direnv/
+

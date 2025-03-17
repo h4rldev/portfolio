@@ -7,6 +7,7 @@
 	import LastFm from '$components/LastFM.svelte';
 
 	import Icon from '@iconify/svelte';
+	import LocalIcon from '$components/LocalIcon.svelte';
 
 	import * as m from '$lib/paraglide/messages.js';
 	import { languageTag } from '$lib/paraglide/runtime';
@@ -175,9 +176,15 @@
 				<p class="mt-2">
 					{m.for_the_last()} <a href="https://nixos.org/" target="_blank">NixOS</a>
 					{m.as_my_operating()}
-					<a href="https://neovim.io/" target="_blank">Neovim</a>
+					<a href="https://neovim.io/" target="_blank">
+						<Icon icon="devicon:neovim" class="align-center inline w-[1em] align-[-3px]" />
+						Neovim</a
+					>
 					{m.and()}
-					<a href="https://zellij.dev/" target="_blank">Zellij</a>.
+					<a href="https://zellij.dev/" target="_blank">
+						<LocalIcon name="local:zellij" />
+						Zellij</a
+					>.
 				</p>
 				<p class="mt-2">
 					{m.all_my_views()}
@@ -209,12 +216,12 @@
 		@apply inline-flex h-full flex-col;
 		@apply xxs:col-span-6;
 		@apply md:col-span-6;
-		@apply lg:col-span-6;
-		@apply xl:col-span-4;
+		@apply lg:col-span-6 lg:row-span-2;
+		@apply xl:col-span-4 xl:row-span-1;
 	}
 
 	.me-holder {
-		@apply my-auto inline-flex w-full items-center justify-center gap-4 xxs:flex-col md:flex-row;
+		@apply my-auto inline-flex w-full items-center gap-4 xxs:flex-col md:flex-row;
 	}
 
 	.big-hi {
