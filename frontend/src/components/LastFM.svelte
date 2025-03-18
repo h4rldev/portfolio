@@ -7,47 +7,58 @@
 	import Icon from '@iconify/svelte';
 	import * as m from '$lib/paraglide/messages.js';
 
-	const api_key = '247b1a4b7dd5d6c42bb732941db23aef';
-	const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=h4rl3h&api_key=${api_key}&format=json`;
+	let data = $state('');
+	let dataPromise = $state(0);
+	let time = $state(null);
+	let intervalId = $state(Promise.resolve(null));
 
-	let data = $state();
-	let dataPromise = $state();
-	let time = $state();
-	let intervalId = $state();
+	intervalId = setInterval(async () => {
+		dataPromise = fetchData();
+	}, 1000 * 30);
 
-	async function fetchData() {
-		if (browser) {
+	const fetchData = async () => {
+		if (!browser) return;
+
+		const api_key = '247b1a4b7dd5d6c42bb732941db23aef';
+		const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=h4rl3h&api_key=${api_key}&format=json`;
+
+		try {
 			const response = await fetch(url);
 			const retrieved_data = await response.json();
-			data = retrieved_data.recenttracks.track[0];
+			const track = retrieved_data.recenttracks.track[0];
 
-			if (data.error == 29) {
-				local_time = m.not_available();
-				data = 'Ratelimited';
+			if (!track) {
+				time = m.not_available();
+				data = 'No data';
+				return;
 			}
 
-			if (
-				data['@attr'] == undefined ||
-				data['@attr'].nowplaying == undefined ||
-				data['@attr'].nowplaying == 'false'
-			) {
-				let time_gmt = new Date(data.date['#text']);
+			if (track.error === 29) {
+				time = m.not_available();
+				data = 'Ratelimited';
+				return;
+			}
+
+			if (track['@attr']?.nowplaying === 'true') {
+				data = track;
+			} else {
+				let time_gmt = new Date(track.date['#text']);
 				let time_offset = -time_gmt.getTimezoneOffset();
-				let local_time = new Date(time_gmt.getTime() + time_offset * 60 * 1000).toLocaleTimeString(
+				let time_local = new Date(time_gmt.getTime() + time_offset * 60 * 1000).toLocaleTimeString(
 					languageTag(),
 					{
 						hour: 'numeric',
 						minute: 'numeric'
 					}
 				);
-				time = local_time;
+				data = track;
+				time = time_local;
 			}
-
-			intervalId = setInterval(async () => {
-				dataPromise = fetchData();
-			}, 1000 * 30);
+		} catch (error) {
+			console.error('Error fetching data:', error);
+			throw error;
 		}
-	}
+	};
 
 	onDestroy(() => {
 		clearInterval(intervalId);
@@ -60,7 +71,7 @@
 	{#if data == 'Ratelimited'}
 		<p>{m.error()}: {m.LastFM_ratelimited()}</p>
 	{:else}
-		{#if data['@attr'] != undefined && data['@attr'].nowplaying == 'true'}
+		{#if data['@attr']?.nowplaying === 'true'}
 			<div class="text">
 				{m.now_playing()}
 				<a href="https://last.fm" target="_blank"
@@ -94,11 +105,7 @@
 						target="_blank">{data.album['#text']}</a
 					>
 				</li>
-				{#if data['@attr'] != undefined && data['@attr'].nowplaying == 'true'}
-					<li>
-						{m.currently_listening()}
-					</li>
-				{:else}
+				{#if !data['@attr']?.nowplaying}
 					<li>
 						{m.time_of_listening()}: {time}
 					</li>
@@ -107,7 +114,7 @@
 		</div>
 	{/if}
 {:catch error}
-	<p style="text-red-500">{error.message}</p>
+	<p class="text-red-500">{error.message}</p>
 {/await}
 
 <style>
@@ -116,7 +123,7 @@
 	}
 
 	.image {
-		@apply flex max-h-24 min-h-24 min-w-24 max-w-24 flex-col items-center justify-center p-0;
+		@apply flex max-h-28 min-h-28 min-w-28 max-w-28 flex-col items-center justify-center p-0;
 	}
 
 	.image-thumbnail {
@@ -125,7 +132,7 @@
 	}
 
 	.lastfm-container {
-		@apply flex flex-row gap-4 text-sm xl:text-xs 2xl:text-sm;
+		@apply flex flex-row items-center gap-4 text-sm xl:text-xs 2xl:text-sm;
 	}
 
 	ul {

@@ -46,7 +46,7 @@
 
 <style>
 	.far-right {
-		@apply absolute xxs:bottom-0 xxs:right-0 xxs:top-[-24px] sm:bottom-0 sm:right-0 sm:top-0 md:right-6 md:top-0;
+		@apply absolute xxs:bottom-0 xxs:right-0 xxs:top-[-24px] xs:right-[4px] sm:bottom-0 sm:right-0 sm:top-0 md:right-6 md:top-0;
 	}
 
 	nav {
