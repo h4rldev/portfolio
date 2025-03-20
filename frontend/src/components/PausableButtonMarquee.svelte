@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { list_items, link = true } = $props();
+	let { list_items } = $props();
 
 	const items = list_items.length;
 	const time = items * 3;
@@ -9,7 +9,7 @@
 	<ul class="marquee" style="animation-duration: {time}s;">
 		{#each list_items as item}
 			<li>
-				{#if link}
+				{#if item.href}
 					<a href={item.href} target="_blank" class="inline-block">
 						<img
 							class="eight-eight-ecks-thirty-one eight-eight-ecks-thirty-one-link"
@@ -28,7 +28,7 @@
 	<ul class="marquee" aria-hidden="true" style="animation-duration: {time}s;">
 		{#each list_items as item}
 			<li>
-				{#if link}
+				{#if item.href}
 					<a href={item.href} target="_blank" class="inline-block">
 						<img
 							class="eight-eight-ecks-thirty-one eight-eight-ecks-thirty-one-link"

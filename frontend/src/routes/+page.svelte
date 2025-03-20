@@ -7,6 +7,7 @@
 	import LastFm from '$components/LastFM.svelte';
 
 	import Icon from '@iconify/svelte';
+	import Mail from '$components/Mail.svelte';
 
 	import * as m from '$lib/paraglide/messages.js';
 	import { languageTag } from '$lib/paraglide/runtime';
@@ -39,7 +40,7 @@
 		<section class="me-card">
 			<Glass>
 				<div class="me-holder">
-					<img src="/me.webp" alt="me" class=" size-40 rounded-full object-cover" />
+					<img src="/me.jpg" alt="me" class=" size-40 rounded-full object-cover" />
 					<div class="greeting-cell-holder">
 						<div>
 							<div class="greeting-cell">
@@ -65,15 +66,7 @@
 							</p>
 						</div>
 						<div class="socials">
-							{#if isEmailOpen}
-								<div>
-									<a href="mailto:contact@h4rl.dev" target="_blank">contact@h4rl.dev</a>
-								</div>
-							{:else}
-								<button class="fake-link text-left" onclick={() => (isEmailOpen = !isEmailOpen)}>
-									{m.email()}
-								</button>
-							{/if}
+							<Mail />
 							<ul class="socials-list">
 								<li>
 									<a href="https://github.com/h4rldev" target="_blank">
@@ -98,6 +91,11 @@
 								<li>
 									<a href="https://steamcommunity.com/id/h4rl3h" target="_blank">
 										<Icon icon="simple-icons:steam" class="inline-block h-[2rem] w-[2rem]" />
+									</a>
+								</li>
+								<li>
+									<a href="https://ko-fi.com/h4rl3h" target="_blank">
+										<Icon icon="simple-icons:kofi" class="inline-block h-[2rem] w-[2rem]" />
 									</a>
 								</li>
 							</ul>
@@ -143,33 +141,36 @@
 				<p class="mt-2">
 					{m.specialities()}
 					<a href="https://www.rust-lang.org/" target="_blank" class="whitespace-nowrap"
-						><Icon icon="devicon:rust" class="mr-2 inline w-[1em] align-[-3px]" />Rust</a
+						><Icon icon="simple-icons:rust" class="mr-1 inline w-[1em] align-[-3px]" />Rust</a
 					>
 					{m.or()}
 					<a
 						href="https://en.wikipedia.org/wiki/C_(programming_language)"
 						target="_blank"
 						class="whitespace-nowrap"
-						><Icon icon="devicon:c" class="mr-2 inline w-[1em] align-[-3px]" />C</a
+						><Icon icon="simple-icons:c" class="mr-1 inline w-[1em] align-[-3px]" />C</a
 					>
 					{m.for_backend()}
 					<a href="https://svelte.dev/" target="_blank" class="whitespace-nowrap"
-						><Icon icon="devicon:svelte" class="mr-2 inline w-[1em] align-[-3px]" />Svelte</a
+						><Icon icon="simple-icons:svelte" class="mr-1 inline w-[1em] align-[-3px]" />Svelte</a
 					>
 					{m.or()}
 					<a href="https://Astro.build/" target="_blank" class="whitespace-nowrap"
-						><Icon icon="devicon:astro" class="mr-2 inline w-[1em] align-[-3px]" />Astro</a
+						><Icon icon="simple-icons:astro" class="mr-1 inline w-[1em] align-[-3px]" />Astro</a
 					>
 					{m._with()}
 					<a href="https://tailwindcss.com/" target="_blank" class="whitespace-nowrap"
 						><Icon
-							icon="devicon:tailwindcss"
-							class="mr-2 inline w-[1em] align-[-3px]"
+							icon="simple-icons:tailwindcss"
+							class="mr-1 inline w-[1em] align-[-3px]"
 						/>TailwindCSS</a
 					>
 					{m.and()}
 					<a href="https://typescriptlang.org/" target="_blank" class="whitespace-nowrap">
-						<Icon icon="devicon:typescript" class="mr-2 inline w-[1em] align-[-3px]" />TypeScript</a
+						<Icon
+							icon="simple-icons:typescript"
+							class="mr-1 inline w-[1em] align-[-3px]"
+						/>TypeScript</a
 					>
 					{m.or()}
 					<a
@@ -177,7 +178,10 @@
 						target="_blank"
 						class="whitespace-nowrap"
 					>
-						<Icon icon="devicon:javascript" class="mr-2 inline w-[1em] align-[-3px]" />JavaScript</a
+						<Icon
+							icon="simple-icons:javascript"
+							class="mr-1 inline w-[1em] align-[-3px]"
+						/>JavaScript</a
 					>
 					{m.for_frontend()}.
 					{m.picky()}
@@ -185,13 +189,11 @@
 				<p class="mt-2">
 					{m.for_the_last()}
 					<a href="https://nixos.org/" target="_blank" class="whitespace-nowrap">
-						<Icon icon="devicon:nixos" class="inline w-[1em] align-[-3px]" />
-						NixOS</a
+						<Icon icon="simple-icons:nixos" class="mr-1 inline w-[1em] align-[-3px]" />NixOS</a
 					>
 					{m.as_my_operating()}
 					<a href="https://neovim.io/" target="_blank" class="whitespace-nowrap">
-						<Icon icon="devicon:neovim" class="inline w-[1em] align-[-3px]" />
-						Neovim</a
+						<Icon icon="simple-icons:neovim" class="mr-1 inline w-[1em] align-[-3px]" />Neovim</a
 					>
 					{m.and()}
 					<a href="https://zellij.dev/" target="_blank" class="whitespace-nowrap">Zellij</a>.
@@ -208,7 +210,7 @@
 					<PausableButtonMarquee list_items={frens} />
 
 					<h1>{m.random()}</h1>
-					<PausableButtonMarquee list_items={random} link={false} />
+					<PausableButtonMarquee list_items={random} />
 				</div>
 			</Glass>
 		</section>

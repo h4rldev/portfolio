@@ -17,7 +17,7 @@
 	"years_old": "år gammal",
 	"birthday": "och jag föddes den",
 	"socials": "Mina sociala medier",
-	"email": "Visa e-post",
+	"email": "Klicka för att visa e-post",
 	"whoami": "Vem är jag?",
 	"recent": "Jag är nyexaminerad från NTI Gymnasiet i",
 	"freetime": "Och i min fritid gillar jag att spela spel, arbeta på projekt, titta på anime, och lyssna på musik.",
@@ -43,6 +43,7 @@
 	"this_websites_code_is": "Denna webbsidas kod är",
 	"open_source": "öppen källkod",
 	"licensed_under": "licensierad under",
+	"license": "licensen",
 	"it_s_contents_is": "dess innehåll är",
 	"server_info": "Serverinformation",
 	"feel_free_to_save": "Vänligen spara min 88x31! Länka dock inte till den, tack."

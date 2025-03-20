@@ -32,6 +32,9 @@ scripts_bootstrap := scripts_path / "bootstrap.sh"
 @dev-frontend:
   {{scripts_bootstrap}} dev-frontend
 
+@generate-compilation-database:
+  {{scripts_bootstrap}} generate-compilation-database
+
 @clear_cores:
   {{scripts_bootstrap}} clear-cores
 

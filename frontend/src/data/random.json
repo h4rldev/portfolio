@@ -25,11 +25,16 @@
   },
   {
     "image": "/88x31/random/made-with-neovim.gif",
-    "alt": "Made with Neovim"
+    "alt": "Made with Neovim",
+    "href": "https://neovim.io/"
   },
   {
     "image": "/88x31/random/linux-powered.gif",
     "alt": "Linux Powered"
+  },
+  {
+    "image": "/88x31/random/pansexual-pride.png",
+    "alt": "Pansexual Pride flag"
   },
   {
     "image": "/88x31/random/45deg-pride-flag.gif",
@@ -85,7 +90,8 @@
   },
   {
     "image": "/88x31/random/piracy-now.png",
-    "alt": "Piracy NOW!"
+    "alt": "Piracy NOW!",
+    "href": "https://piratpartiet.se/en/"
   },
   {
     "image": "/88x31/random/free-music-now.png",
@@ -93,11 +99,13 @@
   },
   {
     "image": "/88x31/random/soulseek.gif",
-    "alt": "Soulseek"
+    "alt": "Soulseek",
+    "href": "https://www.slsknet.org/"
   },
   {
     "image": "/88x31/random/lucida.gif",
-    "alt": "Lucida"
+    "alt": "Lucida",
+    "href": "https://www.lucida.su/"
   },
   {
     "image": "/88x31/random/minecraft.gif",

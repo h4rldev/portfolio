@@ -88,18 +88,23 @@
 {/key}
 
 <style>
-	:global(html) {
-		@apply bg-[url(/noise2.png)] text-white;
+	:global(body::before) {
+		content: '';
+		@apply fixed left-0 top-0 h-[100vh] w-[100vw] select-none bg-[url(/haunted-house.jpg)] bg-cover bg-no-repeat;
+	}
+
+	:global(body) {
+		@apply text-white;
 	}
 
 	:global(a) {
-		@apply text-blue-500 underline decoration-transparent underline-offset-4;
-		@apply transition-colors duration-300 ease-in-out hover:text-blue-300 hover:decoration-blue-500 active:text-blue-200;
+		@apply text-cyan-400 underline decoration-transparent underline-offset-4;
+		@apply transition-colors duration-300 ease-in-out hover:text-cyan-300 hover:decoration-cyan-500 active:text-cyan-200;
 	}
 
 	:global(.fake-link) {
-		@apply text-blue-500 underline decoration-transparent underline-offset-4;
-		@apply transition-colors duration-300 ease-in-out hover:text-blue-300 hover:decoration-blue-500 active:text-blue-200;
+		@apply text-cyan-400 underline decoration-transparent underline-offset-4;
+		@apply transition-colors duration-300 ease-in-out hover:text-cyan-300 hover:decoration-cyan-500 active:text-cyan-200;
 	}
 
 	.rest {
@@ -107,6 +112,6 @@
 	}
 
 	.linked-particles {
-		@apply z-[-1] w-full;
+		@apply z-[-1] w-full select-none;
 	}
 </style>

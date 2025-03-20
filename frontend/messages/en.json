@@ -17,7 +17,7 @@
 	"years_old": "years old,",
 	"birthday": "and I was born on",
 	"socials": "Socials",
-	"email": "Reveal email",
+	"email": "Click to reveal email address",
 	"whoami": "Who am I?",
 	"recent": "I'm a recent graduate at NTI Gymnasiet in",
 	"freetime": "And in my free time I like to play games, work on projects, watch anime, and listen to music.",
@@ -42,7 +42,8 @@
 	"not_available": "Not available",
 	"this_websites_code_is": "This website's code is",
 	"open_source": "open source",
-	"licensed_under": "licensed under",
+	"licensed_under": "licensed under the",
+	"license": "license",
 	"it_s_contents_is": "it's contents is",
 	"server_info": "Server info",
 	"feel_free_to_save": "Feel free to save my 88x31! Don't link to it please."

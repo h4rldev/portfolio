@@ -43,6 +43,13 @@ build-backend() {
   popd >/dev/null || handle_failure "Failed to popd"
 }
 
+generate-compilation-database() {
+  pushd "backend" >/dev/null || handle_failure "Failed to pushd to backend"
+  just generate-compilation-database
+  mv compile_commands.json ..
+  popd >/dev/null || handle_failure "Failed to popd"
+}
+
 dev-frontend() {
   pushd "frontend" >/dev/null || handle_failure "Failed to pushd to frontend"
   pnpm run dev
@@ -77,6 +84,10 @@ case $1 in
 
 "build-backend" | "--build-b" | "--build-backend" | "-bb")
   build-backend
+  ;;
+
+"generate-compilation-database" | "--gen-c" | "--generate-compilation-database" | "-gc")
+  generate-compilation-database
   ;;
 
 "dev-frontend" | "--dev-f" | "--dev-frontend" | "-df")
