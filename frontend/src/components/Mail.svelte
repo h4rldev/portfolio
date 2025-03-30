@@ -13,3 +13,12 @@
 		{m.email()}
 	</button>
 {/if}
+
+<style>
+	button {
+		@apply w-fit;
+	}
+	div {
+		@apply inline-block;
+	}
+</style>

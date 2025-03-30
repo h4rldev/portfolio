@@ -9,8 +9,8 @@
 	import Icon from '@iconify/svelte';
 	import Mail from '$components/Mail.svelte';
 
-	import * as m from '$lib/paraglide/messages.js';
-	import { languageTag } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
+	import { getLocale } from '$lib/paraglide/runtime';
 
 	let { data } = $props();
 
@@ -19,7 +19,7 @@
 
 	const birthday_date = new Date('2005-09-02');
 	const age = Math.floor((Date.now() - birthday_date.getTime()) / 1000 / 60 / 60 / 24 / 365.25);
-	const birthday = birthday_date.toLocaleDateString(languageTag(), {
+	const birthday = birthday_date.toLocaleDateString(getLocale(), {
 		year: 'numeric',
 		month: 'long',
 		day: 'numeric'

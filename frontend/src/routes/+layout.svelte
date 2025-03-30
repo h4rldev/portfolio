@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { i18n } from '$lib/i18n';
-	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	import Particles, { particlesInit } from '@tsparticles/svelte';
 	import { loadSlim } from '@tsparticles/slim';
 	import { fly } from 'svelte/transition';
+
+	import { page } from '$app/state';
+	import { localizeHref, locales } from '$lib/paraglide/runtime';
 
 	import '../app.css';
 	let { children, data } = $props();
@@ -79,11 +80,15 @@
 	<Particles id="tsparticles" options={linkedparticles} on:particlesLoaded={onParticlesLoaded} />
 </div>
 
+<div style="display:none">
+	{#each locales as locale}
+		<a href={localizeHref(page.url.pathname, { locale })}>{locale}</a>
+	{/each}
+</div>
+
 {#key data.url}
 	<div class="rest" in:fly={{ y: 10, duration: 500 }}>
-		<ParaglideJS {i18n}>
-			{@render children?.()}
-		</ParaglideJS>
+		{@render children?.()}
 	</div>
 {/key}
 

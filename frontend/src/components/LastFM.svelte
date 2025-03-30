@@ -1,11 +1,11 @@
 <script>
 	import { env } from '$env/dynamic/public';
 	import { browser } from '$app/environment';
-	import { languageTag } from '$lib/paraglide/runtime';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { onDestroy } from 'svelte';
 
 	import Icon from '@iconify/svelte';
-	import * as m from '$lib/paraglide/messages.js';
+	import { m } from '$lib/paraglide/messages.js';
 
 	let data = $state('');
 	let dataPromise = $state(0);
@@ -45,7 +45,7 @@
 				let time_gmt = new Date(track.date['#text']);
 				let time_offset = -time_gmt.getTimezoneOffset();
 				let time_local = new Date(time_gmt.getTime() + time_offset * 60 * 1000).toLocaleTimeString(
-					languageTag(),
+					getLocale(),
 					{
 						hour: 'numeric',
 						minute: 'numeric'

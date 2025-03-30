@@ -26,9 +26,9 @@
 		<li>&copy; h4rl {new Date().getFullYear()}.</li>
 		<li>
 			{m.this_websites_code_is()}
-			<a href="https://github.com/h4rldev/FLSC-portfolio">{m.open_source()}</a>{m.and()}
+			<a href="https://github.com/h4rldev/portfolio">{m.open_source()}</a>{m.and()}
 			{m.licensed_under()}
-			<a href="https://github.com/h4rldev/FLSC-portfolio/blob/main/LICENSE" target="_blank"
+			<a href="https://github.com/h4rldev/portfolio/blob/main/LICENSE" target="_blank"
 				>BSD 3-Clause {m.license()}</a
 			>, {m.it_s_contents_is()}
 			{m.licensed_under()}

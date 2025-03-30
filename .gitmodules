@@ -1,3 +1,0 @@
-[submodule "backend"]
-	path = backend
-	url = git@git.enstore.cloud:enstore.cloud/toast

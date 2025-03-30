@@ -1,44 +1,30 @@
 <script lang="ts">
-	import Container from '$components/Container.svelte';
+	import { getLocale, localizeHref, setLocale } from '$lib/paraglide/runtime';
+	import { m } from '$lib/paraglide/messages.js';
 
-	import type { AvailableLanguageTag } from '$lib/paraglide/runtime';
-	import { languageTag } from '$lib/paraglide/runtime';
-	import { i18n } from '$lib/i18n';
-	import { goto } from '$app/navigation';
-
-	let { data } = $props();
-
-	import * as m from '$lib/paraglide/messages.js';
-
-	let currentLanguageTag: AvailableLanguageTag = languageTag();
-
-	function switchToLanguage(newLanguage: AvailableLanguageTag) {
-		const canonicalPath = i18n.route(data.url);
-		const localisedPath = i18n.resolveRoute(canonicalPath, newLanguage);
-		goto(localisedPath);
-	}
+	const currentLanguageTag = getLocale();
 </script>
 
 <nav>
 	<ul>
 		<li><div>h4rl</div></li>
 		<li>
-			<a href="/">{m.home()}</a>
+			<a href={localizeHref('/')}>{m.home()}</a>
 		</li>
 		<li>
-			<a href="/posts">{m.posts()}</a>
+			<a href={localizeHref('/posts')}>{m.posts()}</a>
 		</li>
 		<li>
-			<a href="/portfolio">{m.portfolio()}</a>
+			<a href={localizeHref('/portfolio')}>{m.portfolio()}</a>
 		</li>
 		<li>
-			<a href="/commissions">{m.commissions()}</a>
+			<a href={localizeHref('/commissions')}>{m.commissions()}</a>
 		</li>
 		<li class="far-right">
 			{#if currentLanguageTag === 'sv'}
-				<button class="fake-link" onclick={() => switchToLanguage('en')}>🇬🇧</button>
+				<button class="fake-link" onclick={() => setLocale('en')}>🇬🇧</button>
 			{:else}
-				<button class="fake-link" onclick={() => switchToLanguage('sv')}>🇸🇪</button>
+				<button class="fake-link" onclick={() => setLocale('sv')}>🇸🇪</button>
 			{/if}
 		</li>
 	</ul>

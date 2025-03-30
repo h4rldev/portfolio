@@ -40,7 +40,8 @@
 		"typescript": "^5.8.2",
 		"typescript-eslint": "^8.27.0",
 		"typescript-language-server": "^4.3.4",
-		"vite": "^6.2.2"
+		"vite": "^6.2.2",
+		"@inlang/paraglide-js": "2.0.1"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [

@@ -1,4 +1,4 @@
-import { languageTag } from '$lib/paraglide/runtime';
+import { getLocale } from '$lib/paraglide/runtime';
 
 export const prerender = true;
 export const trailingSlash = 'always';
@@ -17,7 +17,7 @@ export async function load({ depends, url }) {
 	});
 
 	return {
-		serverLang: `The language on the server is ${languageTag()}`,
+		serverLang: `The language on the server is ${getLocale()}`,
 		posts: await Promise.all(postPromises),
 		url: url.pathname
 	};

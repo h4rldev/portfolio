@@ -4,6 +4,7 @@
 	import Glass from '$components/Glass.svelte';
 	import Container from '$components/Container.svelte';
 	import Icon from '@iconify/svelte';
+	import Mail from '$components/Mail.svelte';
 
 	let { data } = $props();
 </script>
@@ -48,9 +49,7 @@
 
 						<p>
 							I'm looking for a job opportunity, so if you're interested in working with me, feel
-							free to reach out to me: <a href="mailto:contact@h4rl.dev" target="_blank"
-								>contact@h4rl.dev</a
-							>
+							free to reach out to me: <Mail />
 						</p>
 					</div>
 				</Glass>
