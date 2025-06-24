@@ -32,7 +32,7 @@ EOF
 
 build-frontend() {
   pushd "frontend" >/dev/null || handle_failure "Failed to pushd to frontend"
-  pnpm run build
+  bun run build
   popd >/dev/null || handle_failure "Failed to popd"
 }
 
@@ -44,7 +44,7 @@ build-backend() {
 
 dev-frontend() {
   pushd "frontend" >/dev/null || handle_failure "Failed to pushd to frontend"
-  pnpm run dev
+  bun run dev
   popd >/dev/null || handle_failure "Failed to popd"
 }
 

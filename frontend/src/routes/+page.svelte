@@ -4,10 +4,10 @@
 	import Glass from '$components/Glass.svelte';
 	import Container from '$components/Container.svelte';
 	import PausableButtonMarquee from '$components/PausableButtonMarquee.svelte';
-	import LastFm from '$components/LastFM.svelte';
+	import ListenBrainz from '$components/ListenBrainz.svelte';
+	import Mail from '$components/Mail.svelte';
 
 	import Icon from '@iconify/svelte';
-	import Mail from '$components/Mail.svelte';
 
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
@@ -24,8 +24,6 @@
 		month: 'long',
 		day: 'numeric'
 	});
-
-	let isEmailOpen = $state(false);
 </script>
 
 <svelte:head>
@@ -198,7 +196,7 @@
 					{m.and()}
 					<a href="https://zellij.dev/" target="_blank" class="whitespace-nowrap">Zellij</a>.
 				</p>
-				<p class="mt-2">
+				<p class="mb-[14px] mt-2">
 					{m.all_my_views()}
 				</p>
 			</Glass>
@@ -216,7 +214,7 @@
 		</section>
 		<section class="lastfm">
 			<Glass>
-				<LastFm />
+				<ListenBrainz />
 			</Glass>
 		</section>
 	</main>

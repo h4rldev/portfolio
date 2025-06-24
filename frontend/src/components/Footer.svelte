@@ -1,24 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
 	import * as m from '$lib/paraglide/messages.js';
-
-	let uptime = m.loading();
-	async function fetchData() {
-		await new Promise((r) => setTimeout(r, 250)); // Fake waiting for data :3
-		if (browser) {
-			try {
-				const response = await fetch('/api/uptime');
-				let data = await response.json();
-				uptime = data.uptime;
-			} catch (error) {
-				uptime = m.error();
-			}
-		} else {
-			uptime = m.not_available();
-		}
-	}
-
-	fetchData();
 </script>
 
 <div>
@@ -34,10 +16,6 @@
 			{m.licensed_under()}
 			<a href="https://creativecommons.org/licenses/by/4.0" target="_blank">CC BY 4.0</a>.
 		</li>
-	</ul>
-	<ul>
-		<li>{m.uptime()}: {uptime}.</li>
-		<li>{m.server_info()}: <a href="/server-info">/server-info</a></li>
 	</ul>
 	<ul class="special-list mt-2">
 		<li>{m.feel_free_to_save()}</li>
