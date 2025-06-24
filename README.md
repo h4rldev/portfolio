@@ -1,6 +1,6 @@
 # portfolio
 
-Welcome, this is the mono-repo holding my portfolio written in the FLSC stack
+Welcome, this is the mono-repo holding my portfolio written in the FASR stack
 
 ## What is the FASR Stack?
 
@@ -17,5 +17,5 @@ Idk, it's funny
 
 ### What is this licensed under?
 
-The frontend is licensed under the BSD-3-Clause license, and the backend is licensed under the AGPL-3.0 license.
-See the LICENSE files [here](LICENSE) and [here](https://github.com/h4rldev/toast/blob/main/LICENSE) for more information.
+The frontend & backend is licensed under the BSD-3-Clause license.
+See the LICENSE file [here](LICENSE) for more information.
