@@ -21,7 +21,6 @@ USAGE: ${0} [FLAGS/OPTIONS]
 FLAGS/OPTIONS:
 
     help,           --help,    -h                     Prints this message
-    clear-cores,    --clear-c, --clear-cores     -c   Clears all vgcores
     build-frontend, --build-f, --build-frontend, -bf  Builds the frontend
     build-backend,  --build-b, --build-backend,  -bb  Builds the backend
     dev-frontend,   --dev-f,   --dev-frontend,   -df  Starts the frontend dev server
@@ -39,14 +38,7 @@ build-frontend() {
 
 build-backend() {
   pushd "backend" >/dev/null || handle_failure "Failed to pushd to backend"
-  just build-all
-  popd >/dev/null || handle_failure "Failed to popd"
-}
-
-generate-compilation-database() {
-  pushd "backend" >/dev/null || handle_failure "Failed to pushd to backend"
-  just generate-compilation-database
-  mv compile_commands.json ..
+  just build-release
   popd >/dev/null || handle_failure "Failed to popd"
 }
 
@@ -54,27 +46,6 @@ dev-frontend() {
   pushd "frontend" >/dev/null || handle_failure "Failed to pushd to frontend"
   pnpm run dev
   popd >/dev/null || handle_failure "Failed to popd"
-}
-
-clear_cores() {
-  local -a FILES
-  local FILE
-
-  FILES=$(find "${PWD}" -type f -name "vgcore.*")
-
-  if [[ -z ${FILES} ]]; then
-    echo -e "! No files found :("
-    return
-  fi
-
-  for FILE in ${FILES}; do
-    if [[ -f ${FILE} ]]; then
-      rm "${FILE}"
-      echo -e "✓ Deleted file \"${FILE}\""
-    else
-      echo -e "! File does not exist :("
-    fi
-  done
 }
 
 case $1 in
@@ -86,16 +57,8 @@ case $1 in
   build-backend
   ;;
 
-"generate-compilation-database" | "--gen-c" | "--generate-compilation-database" | "-gc")
-  generate-compilation-database
-  ;;
-
 "dev-frontend" | "--dev-f" | "--dev-frontend" | "-df")
   dev-frontend
-  ;;
-
-"clear-cores" | "--clear-c" | "--clear-cores" | "-c")
-  clear_cores
   ;;
 
 "help" | "--help" | "-h" | *)

@@ -1,15 +1,15 @@
-# FLSC Portfolio
+# portfolio
 
 Welcome, this is the mono-repo holding my portfolio written in the FLSC stack
 
-## What is the FLSC Stack?
+## What is the FASR Stack?
 
-The FLSC is an webapp stack consisting of:
+The FASR is an webapp stack consisting of:
 
 - Filesystem (cc: @rexim), using the filesystem of a host instead of a traditional database.
-- libh2o, A library for making webservers in C.
+- Axum, a rust web framework.
 - Svelte, an easy to use yet powerful way of designing a frontend, using the static adapter of course.
-- C, which is the language used for the backend, as libmicrohttpd utilizes it.
+- Rust, which is the language used for the backend, as axum is written in rust.
 
 ## What made you even think of this?
 

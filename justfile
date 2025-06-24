@@ -17,7 +17,7 @@ scripts_bootstrap := scripts_path / "bootstrap.sh"
   rm -fr dist/toast || true
   mkdir -p dist/site >/dev/null 2>&1 || true
   just build-backend
-  mv backend/toast dist/
+  mv backend/target/release/creme-brulee dist/
 
 @build-frontend-move:
   rm -fr dist/site/* || true
@@ -35,9 +35,6 @@ scripts_bootstrap := scripts_path / "bootstrap.sh"
 @generate-compilation-database:
   {{scripts_bootstrap}} generate-compilation-database
 
-@clear_cores:
-  {{scripts_bootstrap}} clear-cores
-
 @update-submodules:
   git submodule update --init --recursive
-  git submodule foreach git pull origin main
+  git submodule foreach git pull origin axum
