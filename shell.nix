@@ -1,7 +1,7 @@
 {pkgs ? import <nixpkgs> {}}:
 pkgs.mkShell {
   allowUnfree = true;
-  name = "FLSC Portfolio c:";
+  name = "portfolio";
   packages = with pkgs; [
     # backend
     cmake
