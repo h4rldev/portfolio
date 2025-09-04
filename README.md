@@ -4,7 +4,7 @@ Welcome, this is the mono-repo holding my portfolio written in the FASR stack
 
 ## What is the SASR Stack?
 
-The FASR is an website stack consisting of:
+The SASR is an website stack consisting of:
 
 - SQLite, stable single file db
 - Axum, a rust web framework.
