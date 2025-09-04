@@ -2,11 +2,11 @@
 
 Welcome, this is the mono-repo holding my portfolio written in the FASR stack
 
-## What is the FASR Stack?
+## What is the SASR Stack?
 
-The FASR is an webapp stack consisting of:
+The FASR is an website stack consisting of:
 
-- Filesystem (cc: @rexim), using the filesystem of a host instead of a traditional database.
+- SQLite, stable single file db
 - Axum, a rust web framework.
 - Svelte, an easy to use yet powerful way of designing a frontend, using the static adapter of course.
 - Rust, which is the language used for the backend, as axum is written in rust.
