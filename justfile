@@ -1,8 +1,5 @@
 backend_path := "." / "backend"
 frontend_path := "." / "frontend"
-scripts_path := "." / "scripts"
-
-scripts_bootstrap := scripts_path / "bootstrap.sh"
 
 @default:
   just --list

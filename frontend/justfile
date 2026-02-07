@@ -1,0 +1,14 @@
+default:
+    just --list
+
+@build:
+    bun run build
+
+@dev:
+    bun run dev
+
+@check:
+    bun run check
+
+@preview:
+    bun run preview

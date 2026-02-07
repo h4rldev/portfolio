@@ -1,5 +1,8 @@
 # frontend
 
-Implemented in [Svelte](https://svelte.dev) with [mdsvex](https://mdsvex.com), [tailwind](https://tailwindcss.com) and [Paraglide JS](https://inlang.com/m/gerre34r/library-inlang-paraglideJs).
+A simple SvelteKit static portfolio frontend.
 
-I've as of writing finally figured out what I will implement, so tune in.
+## Credits
+
+- [hyper.lol](<https://hyper.lol>) for inspiration
+- [oneko.js](https://github.com/adryd325/oneko.js) for the oneko.js implementation (with my edits)

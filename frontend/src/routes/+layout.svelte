@@ -1,122 +1,271 @@
 <script lang="ts">
-	import Particles, { particlesInit } from '@tsparticles/svelte';
-	import { loadSlim } from '@tsparticles/slim';
-	import { fly } from 'svelte/transition';
+  import "../app.css";
 
-	import { page } from '$app/state';
-	import { localizeHref, locales } from '$lib/paraglide/runtime';
+  import { browser } from "$app/environment";
+  import { page } from "$app/state";
+  import Footer from "$components/Footer.svelte";
+  import Header from "$components/Header.svelte";
+  import SlideWrapper from "$components/SlideWrapper.svelte";
+  import favicon from "$lib/assets/favicon.svg";
 
-	import '../app.css';
-	let { children, data } = $props();
+  const { children } = $props();
 
-	let linkedparticles: any = {
-		particles: {
-			number: {
-				value: 120,
-				density: {
-					enable: true,
-					value_area: 800
-				}
-			},
-			color: {
-				value: '#ffffff'
-			},
-			shape: {
-				type: 'circle',
-				style: {
-					animation: 'pulse 1s infinite',
-					width: 2,
-					height: 2
-				}
-			},
-			opacity: {
-				value: 0.5,
-				random: true
-			},
-			tilt: {
-				random: true,
-				enable: true,
-				limit: 15
-			},
-			move: {
-				enable: true,
-				speed: 3,
-				direction: 'bottom',
-				random: false,
-				straight: false,
-				outMode: 'out',
-				attract: {
-					enable: false,
-					speed: 2
-				},
-				bounded: false,
-				diagonal: false,
-				saturation: 180,
-				freeze: true,
-				shift: 0
-			}
-		}
-	};
+  let slide_direction = $state("none");
+  let is_animating = $state(false);
+  let touch_start = $state({ x: 0, y: 0 });
+  let key_sequence: string[] = $state([]);
+  let konami_ready = $state(false);
+  let konami_activated = $state(false);
 
-	let onParticlesLoaded = (event: any) => {
-		const particlesContainer = event.detail.particles;
+  let show_b_overlay = $state(false);
+  let show_a_overlay = $state(false);
+  const konami_code = [
+    "up",
+    "up",
+    "down",
+    "down",
+    "left",
+    "right",
+    "left",
+    "right",
+    "b",
+    "a",
+    "enter",
+  ];
 
-		// you can use particlesContainer to call all the Container class
-		// (from the core library) methods like play, pause, refresh, start, stop
-		particlesContainer.start();
-	};
+  const run_oneko = async () => {
+    if (browser) {
+      const { oneko } = await import("$lib/oneko");
 
-	void particlesInit(async (engine) => {
-		// call this once per app
-		// you can use main to customize the tsParticles instance adding presets or custom shapes
-		// this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-		// starting from v2 you can add only the features you need reducing the bundle size
-		//await loadFull(engine);
-		await loadSlim(engine);
-	});
+      oneko();
+    }
+  };
+
+  const arrays_equal = (a: string[], b: string[]): boolean => {
+    return a.length === b.length && a.every((val, index) => val === b[index]);
+  };
+
+  const reset_sequence = (): void => {
+    key_sequence = [];
+    konami_ready = false;
+  };
+
+  function activate_konami() {
+    konami_activated = true;
+    console.log("🎮🎮🎮 FULL KONAMI CODE ACTIVATED! (with Enter as Start)");
+
+    // Do something epic here!
+
+    setTimeout(() => {
+      konami_activated = false;
+      reset_sequence();
+    }, 3000);
+  }
+
+  const handle_navigation = (event: KeyboardEvent) => {
+    if (is_animating) return;
+
+    is_animating = true;
+
+    const key_map = {
+      ArrowUp: "up",
+      ArrowDown: "down",
+      ArrowLeft: "left",
+      ArrowRight: "right",
+      KeyB: "b",
+      KeyA: "a",
+      Enter: "enter",
+      Escape: "esc",
+    };
+
+    if (
+      ["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab"].includes(event.key)
+    ) {
+      reset_sequence();
+      return;
+    }
+
+    const code = event.code;
+    const key = code in key_map ? key_map[code as keyof typeof key_map] : null;
+    if (!key) return;
+
+    if (key === "esc") {
+      slide_direction = "none";
+      is_animating = false;
+      reset_sequence();
+      return;
+    }
+
+    if (key !== "b" && key !== "a" && key !== "enter" && key !== "esc") {
+      slide_direction = key;
+    }
+
+    key_sequence = [...key_sequence, key];
+
+    if (key_sequence.length === 8) {
+      if (
+        arrays_equal(key_sequence.slice(-8), [
+          "up",
+          "up",
+          "down",
+          "down",
+          "left",
+          "right",
+          "left",
+          "right",
+        ])
+      ) {
+        konami_ready = true;
+      } else {
+        reset_sequence();
+      }
+    }
+
+    if (
+      konami_ready &&
+      key === "b" &&
+      key_sequence[key_sequence.length - 2] !== "b"
+    ) {
+      show_b_overlay = true;
+      setTimeout(() => {
+        show_b_overlay = false;
+      }, 1500);
+    }
+
+    if (
+      konami_ready &&
+      key === "a" &&
+      key_sequence[key_sequence.length - 2] !== "a"
+    ) {
+      show_a_overlay = true;
+      setTimeout(() => {
+        show_a_overlay = false;
+      }, 1500);
+    }
+
+    if (key_sequence.length === 11) {
+      const last_eleven = key_sequence.slice(-11);
+
+      if (arrays_equal(last_eleven, konami_code)) {
+        activate_konami();
+        return;
+      }
+    }
+
+    if (key_sequence.length > 11) {
+      reset_sequence();
+      slide_direction = "none";
+      is_animating = false;
+      return;
+    }
+
+    // Reset after animation
+    setTimeout(() => {
+      slide_direction = "none";
+      is_animating = false;
+    }, 100);
+  };
+
+  const handle_touch_start = (event: TouchEvent) => {
+    touch_start.x = event.touches[0].clientX;
+    touch_start.y = event.touches[0].clientY;
+  };
+
+  const handle_touch_end = (event: TouchEvent) => {
+    const touch_end = {
+      x: event.changedTouches[0].clientX,
+      y: event.changedTouches[0].clientY,
+    };
+
+    const diffx = touch_start.x - touch_end.x;
+    const diffy = touch_start.y - touch_end.y;
+
+    // Only trigger if significant swipe
+    if (Math.abs(diffx) > 50 || Math.abs(diffy) > 50) {
+      const key =
+        Math.abs(diffx) > Math.abs(diffy)
+          ? diffx > 0
+            ? "ArrowLeft"
+            : "ArrowRight"
+          : diffy > 0
+            ? "ArrowUp"
+            : "ArrowDown";
+
+      handle_navigation(new KeyboardEvent("keyup", { key }));
+    }
+  };
+
+  // Event listener
+  $effect(() => {
+    const handler = (event: KeyboardEvent) => handle_navigation(event);
+    window.addEventListener("keyup", handler);
+
+    return () => window.removeEventListener("keyup", handler);
+  });
+
+  run_oneko();
 </script>
 
-<div class="linked-particles">
-	<Particles id="tsparticles" options={linkedparticles} on:particlesLoaded={onParticlesLoaded} />
-</div>
+<svelte:head>
+  <link rel="icon" href={favicon} />
+</svelte:head>
 
-<div style="display:none">
-	{#each locales as locale}
-		<a href={localizeHref(page.url.pathname, { locale })}>{locale}</a>
-	{/each}
-</div>
-
-{#key data.url}
-	<div class="rest" in:fly={{ y: 10, duration: 500 }}>
-		{@render children?.()}
-	</div>
-{/key}
+<SlideWrapper direction={slide_direction}>
+  <div
+    ontouchstart={handle_touch_start}
+    ontouchend={handle_touch_end}
+  >
+    <header>
+      <Header />
+    </header>
+    <main>
+      {@render children?.()}
+    </main>
+    <footer>
+      <Footer />
+    </footer>
+  </div>
+</SlideWrapper>
 
 <style>
-	:global(body::before) {
-		content: '';
-		@apply fixed left-0 top-0 h-[100vh] w-[100vw] select-none bg-[url(/haunted-house.jpg)] bg-cover bg-no-repeat;
-	}
+  @reference 'appcss';
 
-	:global(body) {
-		@apply text-white;
-	}
+  header {
+    @apply w-[100vw];
+  }
 
-	:global(a) {
-		@apply text-cyan-400 underline decoration-transparent underline-offset-4;
-		@apply transition-colors duration-300 ease-in-out hover:text-cyan-300 hover:decoration-cyan-500 active:text-cyan-200;
-	}
+  main {
+    @apply flex flex-col justify-center items-center mt-10 mb-6 py-4;
+    @apply bg-shadow-grey-dark;
+  }
 
-	:global(.fake-link) {
-		@apply text-cyan-400 underline decoration-transparent underline-offset-4;
-		@apply transition-colors duration-300 ease-in-out hover:text-cyan-300 hover:decoration-cyan-500 active:text-cyan-200;
-	}
+  header {
+    @apply max-w-[100vw];
+    @apply px-0;
+    @apply mx-0;
+  }
 
-	.rest {
-		@apply z-[1];
-	}
 
-	.linked-particles {
-		@apply z-[-1] w-full select-none;
-	}
+  :global(main) :global(*) {
+    @apply max-w-[800px];
+  }
+
+  :global(html) {
+    @apply font-arimo;
+  }
+
+  :global(body) {
+    @apply bg-shadow-grey-800 text-lavender-blush-100;
+  }
+
+  :global(a) {
+    @apply text-pearl-aqua-300 underline underline-offset-2 hover:underline-offset-4;
+    @apply transition-all duration-300 ease-in-out;
+    @apply hover:text-pearl-aqua-100;
+  }
+
+  :global(a:visited) {
+    @apply text-magenta-bloom-300;
+    @apply hover:text-magenta-bloom-100;
+  }
 </style>

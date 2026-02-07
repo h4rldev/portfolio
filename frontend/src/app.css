@@ -1,5 +1,68 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
 
-@import url(https://fonts.bunny.net/css?family=afacad:400,400i,500,500i,600,600i,700|akshar:300,400,500,600,700|nova-mono:400);
+@theme {
+  --font-arimo: "Arimo Nerd Font Propo", sans-serif;
+
+  --color-shadow-grey-50: #f0f0f5;
+  --color-shadow-grey-100: #e0e0eb;
+  --color-shadow-grey-200: #c1c1d7;
+  --color-shadow-grey-300: #a2a2c3;
+  --color-shadow-grey-400: #8484ae;
+  --color-shadow-grey-500: #65659a;
+  --color-shadow-grey-600: #51517b;
+  --color-shadow-grey-700: #3c3c5d;
+  --color-shadow-grey-800: #28283e;
+  --color-shadow-grey-900: #14141f;
+  --color-shadow-grey-950: #0e0e16;
+  --color-shadow-grey-dark: #202032;
+
+  --color-pearl-aqua-50: #ebfaf7;
+  --color-pearl-aqua-100: #d7f4ef;
+  --color-pearl-aqua-200: #afe9df;
+  --color-pearl-aqua-300: #87ded0;
+  --color-pearl-aqua-400: #5fd3c0;
+  --color-pearl-aqua-500: #37c8b0;
+  --color-pearl-aqua-600: #2ca08d;
+  --color-pearl-aqua-700: #21786a;
+  --color-pearl-aqua-800: #165046;
+  --color-pearl-aqua-900: #0b2823;
+  --color-pearl-aqua-950: #081c19;
+
+  --color-lavender-blush-50: #f4f1f3;
+  --color-lavender-blush-100: #e8e3e7;
+  --color-lavender-blush-200: #d2c6cf;
+  --color-lavender-blush-300: #bbaab7;
+  --color-lavender-blush-400: #a48e9f;
+  --color-lavender-blush-500: #8e7187;
+  --color-lavender-blush-600: #715b6c;
+  --color-lavender-blush-700: #554451;
+  --color-lavender-blush-800: #392d36;
+  --color-lavender-blush-900: #1c171b;
+  --color-lavender-blush-950: #141013;
+
+  --color-magenta-bloom-50: #fbeaee;
+  --color-magenta-bloom-100: #f7d4dd;
+  --color-magenta-bloom-200: #eeaabb;
+  --color-magenta-bloom-300: #e67f99;
+  --color-magenta-bloom-400: #dd5577;
+  --color-magenta-bloom-500: #d52a55;
+  --color-magenta-bloom-600: #aa2244;
+  --color-magenta-bloom-700: #801933;
+  --color-magenta-bloom-800: #551122;
+  --color-magenta-bloom-900: #2b0811;
+  --color-magenta-bloom-950: #1e060c;
+
+  --color-reddish-brown-50: #f8eeed;
+  --color-reddish-brown-100: #f0dddb;
+  --color-reddish-brown-200: #e1bbb7;
+  --color-reddish-brown-300: #d39992;
+  --color-reddish-brown-400: #c4776e;
+  --color-reddish-brown-500: #b5554a;
+  --color-reddish-brown-600: #91443b;
+  --color-reddish-brown-700: #6d332c;
+  --color-reddish-brown-800: #48221e;
+  --color-reddish-brown-900: #24110f;
+  --color-reddish-brown-950: #190c0a;
+}

@@ -1,19 +1,19 @@
 # portfolio
 
-Welcome, this is the mono-repo holding my portfolio written in the FASR stack
+Welcome, this is the mono-repo holding my cute little blog written in the SHSC Stack.
 
-## What is the SASR Stack?
+## What is the SHSC Stack?
 
-The SASR stack is an website stack consisting of:
+The SHSR stack is a website stack consisting of:
 
-- SQLite, stable single file db
-- Axum, a rust web framework.
+- SQLite, a powerful and stable file database.
+- h2o, the optimized HTTP/1, HTTP/2 and HTTP/3 server.
 - Svelte, an easy to use yet powerful way of designing a frontend, using the static adapter of course.
-- Rust, which is the language used for the backend, as axum is written in rust.
+- C, which is the language used for the blog api.
 
 ## What made you even think of this?
 
-Idk, it's funny
+Idk, im dumb
 
 ### What is this licensed under?
 

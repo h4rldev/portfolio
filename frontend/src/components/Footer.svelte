@@ -1,38 +1,19 @@
-<script>
-	import { browser } from '$app/environment';
-	import * as m from '$lib/paraglide/messages.js';
+<script lang="ts">
+  const current_year = new Date().getFullYear();
+  const commit_hash = __GIT_COMMIT_HASH__;
+  const repo_url = __REPO_URL__;
+  const commit_url = __COMMIT_URL__;
 </script>
 
-<div>
-	<ul>
-		<li>&copy; h4rl {new Date().getFullYear()}.</li>
-		<li>
-			{m.this_websites_code_is()}
-			<a href="https://github.com/h4rldev/portfolio">{m.open_source()}</a>{m.and()}
-			{m.licensed_under()}
-			<a href="https://github.com/h4rldev/portfolio/blob/main/LICENSE" target="_blank"
-				>BSD 3-Clause {m.license()}</a
-			>, {m.it_s_contents_is()}
-			{m.licensed_under()}
-			<a href="https://creativecommons.org/licenses/by/4.0" target="_blank">CC BY 4.0</a>.
-		</li>
-	</ul>
-	<ul class="special-list mt-2">
-		<li>{m.feel_free_to_save()}</li>
-		<li>
-			<img src="/88x31/me.png" class="eight-eight-ecks-thirty-one mx-auto mt-1" alt="me" />
-		</li>
-	</ul>
-</div>
+<p> &copy; h4rl - {current_year}, all meows reserved. [<a href="{commit_url}" target="_blank">{commit_hash}</a>]</p>
+<p>Made with <span class="text-magenta-bloom-300">&lt;3</span> in Sweden</p>
+<p>Content is licensed under <a href="{repo_url}/LICENSE_CONTENT" target="_blank">CC BY 4.0</a></p>
+<p>Code is licensed under <a href="{repo_url}/LICENSE" target="_blank">BSD-3 Clause</a></p>
 
 <style>
-	div {
-		@apply z-10 flex w-[80%] min-w-[330px] flex-col items-center justify-center gap-1 text-center;
-	}
-	ul {
-		@apply inline-flex flex-row flex-wrap justify-center gap-1 text-sm;
-	}
-	.special-list {
-		@apply flex flex-col items-center justify-center gap-1;
-	}
+  @reference 'appcss';
+
+  p {
+    @apply text-center text-shadow-grey-300;
+  }
 </style>
